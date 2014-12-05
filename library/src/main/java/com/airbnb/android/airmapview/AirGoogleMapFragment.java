@@ -5,36 +5,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.List;
 
 public class AirGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
-    private static final int CIRCLE_STROKE_WIDTH = 5;
-
     private GoogleMap mGoogleMap;
-    private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
 
     public static AirGoogleMapFragment newInstance(GoogleMapOptions options) {
-        AirGoogleMapFragment f =  new AirGoogleMapFragment();
+        AirGoogleMapFragment f = new AirGoogleMapFragment();
         Bundle args = new Bundle();
         // this is internal to SupportMapFragment
         args.putParcelable("MapOptions", options);
@@ -46,66 +37,48 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                if (mOnMapLoadedListener != null) {
-                    mOnMapLoadedListener.onMapLoaded();
-                }
-            }
-        };
-        v.getViewTreeObserver().addOnGlobalLayoutListener(mLayoutListener);
-
-        if (savedInstanceState != null) {
-            init();
-        }
+        init();
 
         return v;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        getView().getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
-    }
-
-    @Override
     public void init() {
-        mGoogleMap = getMap();
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                if (googleMap != null && getActivity() != null) {
+                    mGoogleMap = googleMap;
+                    UiSettings settings = mGoogleMap.getUiSettings();
+                    settings.setZoomControlsEnabled(false);
+                    settings.setMyLocationButtonEnabled(false);
+                    setMyLocationEnabled(true);
 
-        if (mGoogleMap != null) {
-            UiSettings settings = mGoogleMap.getUiSettings();
-            settings.setZoomControlsEnabled(false);
-            settings.setMyLocationButtonEnabled(false);
-            setMyLocationEnabled(true);
-        }
+                    if (mOnMapLoadedListener != null) {
+                        mOnMapLoadedListener.onMapLoaded();
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public boolean isInitialized() {
-        return mGoogleMap != null;
-    }
-
-    @Override
-    public void addMarker(LatLng latLng, long id) {
-        // no-op only used for web map view
-    }
-
-    @Override
-    public void addMarker(LatLng latLng, int icon, String title) {
-        mGoogleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(latLng.latitude, latLng.longitude))
-                .anchor(0.5f, 1.0f) // anchor at bottom middle of marker
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(icon)));
+        return mGoogleMap != null && getActivity() != null;
     }
 
     @Override
     public void clearMarkers() {
         mGoogleMap.clear();
+    }
+
+    @Override
+    public void addMarker(AirMapMarker airMarker) {
+        airMarker.addToGoogleMap(mGoogleMap);
+    }
+
+    @Override
+    public void removeMarker(AirMapMarker marker) {
+        marker.removeFromGoogleMap();
     }
 
     @Override
@@ -125,11 +98,26 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public void drawCircle(LatLng latLng, int radius) {
+        drawCircle(latLng, radius, CIRCLE_BORDER_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int borderColor) {
+        drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+        drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor) {
         mGoogleMap.addCircle(new CircleOptions()
                 .center(latLng)
-                .strokeColor(getResources().getColor(R.color.map_circle_border))
-                .strokeWidth(CIRCLE_STROKE_WIDTH)
-                .fillColor(getResources().getColor(R.color.map_circle))
+                .strokeColor(borderColor)
+                .strokeWidth(borderWidth)
+                .fillColor(fillColor)
                 .radius(radius));
     }
 
@@ -175,11 +163,11 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public int getZoom() {
-        return (int)mGoogleMap.getCameraPosition().zoom;
+        return (int) mGoogleMap.getCameraPosition().zoom;
     }
 
     @Override
-    public void setOnCameraChangeListener(final WebViewMapFragment.OnCameraChangeListener onCameraChangeListener) {
+    public void setOnCameraChangeListener(final AirMapView.OnCameraChangeListener onCameraChangeListener) {
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 
             @Override
@@ -239,19 +227,18 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public Polyline addPolyline(List<LatLng> points, int width, int color) {
-        return mGoogleMap.addPolyline(new PolylineOptions().addAll(points).width(width).color(color));
+    public void addPolyline(AirMapPolyline polyline) {
+        polyline.addToGoogleMap(mGoogleMap);
     }
 
     @Override
-    public void removePolyline(Polyline polyline) {
-        if (polyline != null) {
-            polyline.remove();
-        }
+    public void removePolyline(AirMapPolyline polyline) {
+        polyline.removeFromGoogleMap();
     }
 
     /**
      * This method will return the google map if initialized. Will return null otherwise
+     *
      * @return returns google map if initialized
      */
     public GoogleMap getGoogleMap() {

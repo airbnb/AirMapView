@@ -1,1 +1,18 @@
-/build
+# ant
+bin
+build
+gen
+out
+lib
+
+# intellij
+.idea
+*.iml
+
+# eclipse
+.classpath
+.project
+.settings
+.DS_Store
+local.properties
+.gradle

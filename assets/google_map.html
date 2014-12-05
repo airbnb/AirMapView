@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+        }
+    </style>
+    <script src="MAPURL?v=3.exp&sensor=false&language=LANGTOKEN&region=REGIONTOKEN"></script>
+    <script>
+var map;
+var markers = {};
+var polylines = {};
+var moveTimeout;
+function initialize() {
+  var mapOptions = {
+    zoom: 10,
+    disableDefaultUI: true,
+    center: new google.maps.LatLng(0, 0)
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  google.maps.event.addListener(map, 'click', mapClick);
+  google.maps.event.addListener(map, 'center_changed', mapMove)
+
+  Android.onMapLoaded();
+}
+
+function clearMarkers() {
+  for (var key in markers) {
+    markers[key].setMap(null);
+  }
+  markers = {};
+}
+
+function setBounds(neLat, neLng, swLat, swLng) {
+  var sw = new google.maps.LatLng(swLat, swLng);
+  var ne = new google.maps.LatLng(neLat, neLng);
+  var center = new google.maps.LatLngBounds(sw, ne);
+  map.fitBounds(center)
+}
+
+function centerMap(lat, lng) {
+  var latLng = new google.maps.LatLng(lat, lng);
+  map.setCenter(latLng);
+}
+
+function setZoom(zoom) {
+  map.setZoom(zoom);
+}
+
+function highlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/purple-dot.png');
+  }
+}
+
+function unhighlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+  }
+}
+
+function addMarker(lat, lng) {
+  var position = new google.maps.LatLng(lat, lng);
+  var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+  });
+}
+
+function addMarkerWithId(lat, lng, id) {
+  var position = new google.maps.LatLng(lat, lng);
+  var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    map.panTo(marker.position);
+    Android.markerClick(id);
+  });
+
+  markers[id] = marker;
+}
+
+function removeMarker(id) {
+  var marker = markers[id];
+  if (marker != null) {
+    markers[id].setMap(null);
+  }
+}
+
+function addPolyline(points, id, width, color) {
+  var pointsArray = [];
+
+  for (var i = 0; i < points.length; i++) {
+    var point = points[i];
+    var position = new google.maps.LatLng(point["lat"], point["lng"]);
+    pointsArray.push(point);
+  }
+
+  color = formatColor(color);
+  var polyLine = new google.maps.Polyline({
+    map: map,
+    path: pointsArray,
+    strokeColor: color,
+    strokeWeight: width / 2
+  });
+
+  polylines[id] = polyLine;
+}
+
+function removePolyline(id) {
+  var polyline = polylines[id];
+  if (polyline != null) {
+    polylines[id].setMap(null);
+  }
+}
+
+function removeAllPolylines() {
+  for (var key in polylines) {
+    removePolyline(key);
+  }
+  polylines = {};
+}
+
+function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
+  var position = new google.maps.LatLng(lat, lng);
+  var populationOptions = {
+      strokeColor: strokeColor,
+      strokeOpacity: 0.50,
+      strokeWeight: strokeWeight,
+      fillColor: fillColor,
+      fillOpacity: 0.35,
+      map: map,
+      center: position,
+      radius: radius
+    };
+    cityCircle = new google.maps.Circle(populationOptions);
+}
+
+function mapClick() {
+  Android.mapClick();
+}
+
+function mapMove() {
+  if (moveTimeout != null) {
+    clearTimeout(moveTimeout);
+  }
+  // javascript bridge not fast enough to handle events immediately.
+  moveTimeout = setTimeout(function() {
+    var latLng = map.getCenter();
+    if (latLng != null) {
+      Android.mapMove(latLng.lat(), latLng.lng(), map.getZoom());
+    }
+  }, 200);
+}
+
+function getCenter() {
+  var latLng = map.getCenter();
+  if (latLng != null) {
+    Android.mapCenterCallback(latLng.lat(), latLng.lng());
+  }
+}
+
+function getBounds() {
+  bounds = map.getBounds();
+  ne = bounds.getNorthEast();
+  sw = bounds.getSouthWest();
+  Android.getBoundsCallback(ne.lat(), ne.lng(), sw.lat(), sw.lng());
+}
+
+// converts an android int color to a web color :)
+function formatColor(color) {
+  return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+</head>
+<body>
+<div id="map-canvas"></div>
+</body>
+</html>
