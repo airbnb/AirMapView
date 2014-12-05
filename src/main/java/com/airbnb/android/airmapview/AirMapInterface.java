@@ -13,14 +13,9 @@ public interface AirMapInterface {
 
     boolean isInitialized();
 
-    void addMarker(LatLng latLng, long id);
-
-    void addMarker(LatLng latLng, int icon, String title);
-
     void clearMarkers();
 
-    // TODO move this to our abstraction layer
-    // void highlightListingMarker(long prevListingId, long currListingId);
+    void addMarker(AirMapMarker marker);
 
     void setOnInfoWindowClickListener(AirMapView.OnInfoWindowClickListener listener);
 

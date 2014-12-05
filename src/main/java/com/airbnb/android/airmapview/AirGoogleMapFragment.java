@@ -1,5 +1,6 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,13 +14,11 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -32,9 +31,11 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     private GoogleMap mGoogleMap;
     private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
+    private int mCircleFillColor = Color.BLUE & 0xAA000000;
+    private int mCircleBorderColor = Color.BLUE;
 
     public static AirGoogleMapFragment newInstance(GoogleMapOptions options) {
-        AirGoogleMapFragment f =  new AirGoogleMapFragment();
+        AirGoogleMapFragment f = new AirGoogleMapFragment();
         Bundle args = new Bundle();
         // this is internal to SupportMapFragment
         args.putParcelable("MapOptions", options);
@@ -84,28 +85,28 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
         }
     }
 
+    public void setCircleBorderColor(int color) {
+        mCircleBorderColor = color;
+    }
+
+    public void setCircleFillColor(int color) {
+        mCircleFillColor = color;
+    }
+
     @Override
     public boolean isInitialized() {
         return mGoogleMap != null;
     }
 
     @Override
-    public void addMarker(LatLng latLng, long id) {
-        // no-op only used for web map view
-    }
-
-    @Override
-    public void addMarker(LatLng latLng, int icon, String title) {
-        mGoogleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(latLng.latitude, latLng.longitude))
-                .anchor(0.5f, 1.0f) // anchor at bottom middle of marker
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(icon)));
-    }
-
-    @Override
     public void clearMarkers() {
         mGoogleMap.clear();
+    }
+
+    @Override
+    public void addMarker(AirMapMarker airMarker) {
+        mGoogleMap.addMarker(airMarker.getGoogleMarkerOptions());
+        // TODO .anchor(0.5f, 1.0f) // anchor at bottom middle of marker
     }
 
     @Override
@@ -123,13 +124,14 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
         mGoogleMap.setInfoWindowAdapter(adapter);
     }
 
+    // TODO make this return a circle
     @Override
     public void drawCircle(LatLng latLng, int radius) {
         mGoogleMap.addCircle(new CircleOptions()
                 .center(latLng)
-                .strokeColor(getResources().getColor(R.color.map_circle_border))
+                .strokeColor(mCircleBorderColor)
                 .strokeWidth(CIRCLE_STROKE_WIDTH)
-                .fillColor(getResources().getColor(R.color.map_circle))
+                .fillColor(mCircleFillColor)
                 .radius(radius));
     }
 
@@ -175,7 +177,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public int getZoom() {
-        return (int)mGoogleMap.getCameraPosition().zoom;
+        return (int) mGoogleMap.getCameraPosition().zoom;
     }
 
     @Override
@@ -239,7 +241,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public Polyline addPolyline(List<LatLng> points, int width, int color) {
+    public Polyline addPolyline(List points, int width, int color) {
         return mGoogleMap.addPolyline(new PolylineOptions().addAll(points).width(width).color(color));
     }
 
@@ -252,6 +254,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     /**
      * This method will return the google map if initialized. Will return null otherwise
+     *
      * @return returns google map if initialized
      */
     public GoogleMap getGoogleMap() {

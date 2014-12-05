@@ -9,11 +9,15 @@ import java.io.InputStreamReader;
 
 public class Utils {
 
-    public static String getStringFromFile(Resources resources, String filePath) throws IOException {
-        InputStream is = resources.getAssets().open(filePath);
-        String ret = convertStreamToString(is);
-        is.close();
-        return ret;
+    public static String getStringFromFile(Resources resources, String filePath) {
+        try {
+            InputStream is = resources.getAssets().open(filePath);
+            String ret = convertStreamToString(is);
+            is.close();
+            return ret;
+        } catch (IOException e) {
+            throw new RuntimeException("unable to load asset " + filePath);
+        }
     }
 
     public static String convertStreamToString(InputStream is) throws IOException {
