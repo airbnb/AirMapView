@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Polyline;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +33,7 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     private static final String ARG_MAP_DOMAIN = "map_domain";
     private static final String ARG_FILE_NAME = "map_file_name";
     private static final String ARG_MAP_URL = "map_url";
+    private static final String TAG = WebViewMapFragment.class.getSimpleName();
 
     public static WebViewMapFragment newInstance(AirMapType mapType) {
         WebViewMapFragment f = new WebViewMapFragment();
@@ -44,13 +45,9 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
         return f;
     }
 
-    public interface OnCameraChangeListener {
-        public void onCameraChanged(LatLng latLng, int zoom);
-    }
-
     private WebView mWebView;
     private ViewGroup mLayout;
-    private OnCameraChangeListener mOnCameraChangeListener;
+    private AirMapView.OnCameraChangeListener mOnCameraChangeListener;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
     private AirMapView.OnMapMarkerClickListener mOnMarkerClickListener;
     private AirMapView.OnInfoWindowClickListener mOnInfoWindowClickListener;
@@ -60,7 +57,7 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     private int mZoom;
     private boolean mLoaded;
     private boolean mIgnoreNextMapMove;
-    private View mMarker; // TODO rename
+    private View mInfoWindowView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +76,7 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
         String mapUrl = args.getString(ARG_MAP_URL, "");
         String mapDomain = args.getString(ARG_MAP_DOMAIN, "");
 
-        String urlData = Utils.getStringFromFile(getResources(), fileName)
+        String urlData = AirMapUtils.getStringFromFile(getResources(), fileName)
                 .replace("MAPURL", mapUrl)
                 .replace("LANGTOKEN", Locale.getDefault().getLanguage())
                 .replace("REGIONTOKEN", Locale.getDefault().getCountry());
@@ -104,7 +101,7 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     }
 
     public void animateCenter(LatLng latLng) {
-        mWebView.loadUrl(String.format("javascript:centerMap(%1$f, %2$f);", latLng.latitude, latLng.longitude));
+        setCenter(latLng);
     }
 
     public void setZoom(int zoom) {
@@ -112,12 +109,34 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     }
 
     public void drawCircle(LatLng latLng, int radius) {
-        mWebView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d);", latLng.latitude, latLng.longitude, radius));
+        drawCircle(latLng, radius, CIRCLE_STROKE_WIDTH);
     }
 
-    public void highlightMarker(long prevId, long currId) {
-        // TODO remove required prevId
-        mWebView.loadUrl(String.format("javascript:highlightMarker(%1$d, %2$d);", prevId, currId));
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth) {
+        drawCircle(latLng, radius, strokeWidth, CIRCLE_STROKE_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor) {
+        drawCircle(latLng, radius, strokeWidth, strokeColor, CIRCLE_FILL_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor, int fillColor) {
+        mWebView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);", latLng.latitude, latLng.longitude, radius, strokeWidth, strokeColor, fillColor));
+    }
+
+    public void highlightMarker(long markerId) {
+        if (markerId != -1) {
+            mWebView.loadUrl(String.format("javascript:highlightMarker(%1$d);", markerId));
+        }
+    }
+
+    public void unhighlightMarker(long markerId) {
+        if (markerId != -1) {
+            mWebView.loadUrl(String.format("javascript:unhighlightMarker(%1$d);", markerId));
+        }
     }
 
     @Override
@@ -136,11 +155,16 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
         mWebView.loadUrl(String.format("javascript:addMarkerWithId(%1$f, %2$f, %3$d);", latLng.latitude, latLng.longitude, marker.getId()));
     }
 
+    @Override
+    public void removeMarker(AirMapMarker marker) {
+        mWebView.loadUrl(String.format("javascript:removeMarker(%1$d);", marker.getId()));
+    }
+
     public void clearMarkers() {
         mWebView.loadUrl("javascript:clearMarkers();");
     }
 
-    public void setOnCameraChangeListener(OnCameraChangeListener listener) {
+    public void setOnCameraChangeListener(AirMapView.OnCameraChangeListener listener) {
         mOnCameraChangeListener = listener;
     }
 
@@ -177,21 +201,25 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     }
 
     @Override
-    public Polyline addPolyline(List<LatLng> points, int width, int color) {
+    public void addPolyline(AirMapPolyline polyline) {
         try {
             JSONArray array = new JSONArray();
-            for (LatLng point : points) {
+            for (LatLng point : (List<LatLng>)polyline.getPoints()) {
                 JSONObject json = new JSONObject();
                 json.put("lat", point.latitude);
                 json.put("lng", point.longitude);
                 array.put(json);
             }
 
-            mWebView.loadUrl(String.format("javascript:addPolyline(" + array.toString() + ", %1$d, %2$d);", width, color));
+            mWebView.loadUrl(String.format("javascript:addPolyline(" + array.toString() + ", %1$d, %2$d, %3$d);", polyline.getId(), polyline.getStrokeWidth(), polyline.getStrokeColor()));
         } catch (JSONException e) {
+            Log.e(TAG, "error constructing polyline JSON", e);
         }
+    }
 
-        return null;
+    @Override
+    public void removePolyline(AirMapPolyline polyline) {
+        mWebView.loadUrl(String.format("javascript:removePolyline(%1$d);", polyline.getId()));
     }
 
     @Override
@@ -212,11 +240,6 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
                 return clickDetector.onTouchEvent(event);
             }
         });
-    }
-
-    @Override
-    public void removePolyline(Polyline polyline) {
-        mWebView.loadUrl(String.format("javascript:removeAllPolylines();"));
     }
 
     public void setOnInfoWindowClickListener(AirMapView.OnInfoWindowClickListener listener) {
@@ -267,8 +290,8 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mMarker != null) {
-                        mLayout.removeView(mMarker);
+                    if (mInfoWindowView != null) {
+                        mLayout.removeView(mInfoWindowView);
                     }
                 }
             });
@@ -302,8 +325,8 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
                         return;
                     }
 
-                    if (mMarker != null) {
-                        mLayout.removeView(mMarker);
+                    if (mInfoWindowView != null) {
+                        mLayout.removeView(mInfoWindowView);
                     }
                 }
             });
@@ -318,23 +341,23 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
                         mOnMarkerClickListener.onMapMarkerClick(markerId);
                     }
 
-                    if (mMarker != null) {
-                        mLayout.removeView(mMarker);
+                    if (mInfoWindowView != null) {
+                        mLayout.removeView(mInfoWindowView);
                     }
 
                     // TODO convert to custom dialog fragment
                     if (mInfoWindowCreator != null) {
-                        mMarker = mInfoWindowCreator.createInfoWindow(markerId);
+                        mInfoWindowView = mInfoWindowCreator.createInfoWindow(markerId);
                         int height = (int) getResources().getDimension(R.dimen.map_marker_height);
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, height, Gravity.CENTER);
                         layoutParams.bottomMargin = height;
-                        mMarker.setLayoutParams(layoutParams);
-                        mLayout.addView(mMarker);
+                        mInfoWindowView.setLayoutParams(layoutParams);
+                        mLayout.addView(mInfoWindowView);
 
-                        mMarker.setOnClickListener(new View.OnClickListener() {
+                        mInfoWindowView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mLayout.removeView(mMarker);
+                                mLayout.removeView(mInfoWindowView);
                                 if (mOnInfoWindowClickListener != null) {
                                     mOnInfoWindowClickListener.onInfoWindowClick(markerId);
                                 }

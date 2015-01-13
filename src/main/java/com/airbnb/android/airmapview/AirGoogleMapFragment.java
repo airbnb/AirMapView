@@ -19,10 +19,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.List;
 
 public class AirGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
@@ -105,8 +101,12 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public void addMarker(AirMapMarker airMarker) {
-        mGoogleMap.addMarker(airMarker.getGoogleMarkerOptions());
-        // TODO .anchor(0.5f, 1.0f) // anchor at bottom middle of marker
+        airMarker.addToGoogleMap(mGoogleMap);
+    }
+
+    @Override
+    public void removeMarker(AirMapMarker marker) {
+        marker.removeFromGoogleMap();
     }
 
     @Override
@@ -124,9 +124,23 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
         mGoogleMap.setInfoWindowAdapter(adapter);
     }
 
-    // TODO make this return a circle
     @Override
     public void drawCircle(LatLng latLng, int radius) {
+        drawCircle(latLng, radius, CIRCLE_STROKE_WIDTH);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth) {
+        drawCircle(latLng, radius, strokeWidth, CIRCLE_STROKE_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor) {
+        drawCircle(latLng, radius, strokeWidth, strokeColor, CIRCLE_FILL_COLOR);
+    }
+
+    @Override
+    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor, int fillColor) {
         mGoogleMap.addCircle(new CircleOptions()
                 .center(latLng)
                 .strokeColor(mCircleBorderColor)
@@ -181,7 +195,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnCameraChangeListener(final WebViewMapFragment.OnCameraChangeListener onCameraChangeListener) {
+    public void setOnCameraChangeListener(final AirMapView.OnCameraChangeListener onCameraChangeListener) {
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 
             @Override
@@ -241,15 +255,13 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public Polyline addPolyline(List points, int width, int color) {
-        return mGoogleMap.addPolyline(new PolylineOptions().addAll(points).width(width).color(color));
+    public void addPolyline(AirMapPolyline polyline) {
+        polyline.addToGoogleMap(mGoogleMap);
     }
 
     @Override
-    public void removePolyline(Polyline polyline) {
-        if (polyline != null) {
-            polyline.remove();
-        }
+    public void removePolyline(AirMapPolyline polyline) {
+        polyline.removeFromGoogleMap();
     }
 
     /**

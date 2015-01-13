@@ -15,14 +15,12 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
-
-import java.util.List;
 
 public class AirMapView extends FrameLayout {
 
+    private static final int INVALID_ZOOM = -1;
+
     protected AirMapInterface mMapInterface;
-    private MapCallbacks mMapCallbacks;
     private boolean mZOrderOnTop;
 
     public AirMapView(Context context) {
@@ -44,22 +42,35 @@ public class AirMapView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.map_view, this);
     }
 
-    public void onCreateView(FragmentManager fm, boolean zOrderOnTop, MapCallbacks callbacks) {
-        if (callbacks == null) {
-            throw new NullPointerException("Map callbacks may not be null");
+    /**
+     * Used for initialization of the underlying map provider
+     *
+     * @param fragmentManager
+     *      required for initialization
+     * @param zOrderOnTop
+     *      only is used for Google Play Services maps
+     * @param mapInitializedListener
+     *      required {@link OnMapInitializedListener} callback
+ *          so the calling class knows when the map has been initialized
+     * @param onCameraChangeListener
+     *      optional {@link OnCameraChangeListener} callback
+     */
+    public void onCreateView(FragmentManager fragmentManager, boolean zOrderOnTop, final OnMapInitializedListener mapInitializedListener, final OnCameraChangeListener onCameraChangeListener) {
+        if (mapInitializedListener == null) {
+            throw new IllegalArgumentException("mapInitializedListener must not be null");
         }
-        mMapCallbacks = callbacks;
-        mMapInterface = (AirMapInterface) fm.findFragmentById(R.id.map_frame);
+
+        mMapInterface = (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
         mZOrderOnTop = zOrderOnTop;
 
         if (mMapInterface == null) {
             mMapInterface = createMapInterface();
 
-            fm.beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(R.id.map_frame, (Fragment) mMapInterface)
                     .commit();
 
-            fm.executePendingTransactions();
+            fragmentManager.executePendingTransactions();
         }
 
         mMapInterface.setOnMapLoadedListener(new OnMapLoadedListener() {
@@ -71,14 +82,9 @@ public class AirMapView extends FrameLayout {
                     // only send map Initialized callback if map initialized successfully
                     // initialization can fail if the map leaves the screen before it loads
 
-                    mMapCallbacks.onMapInitialized();
+                    mapInitializedListener.onMapInitialized();
 
-                    mMapInterface.setOnCameraChangeListener(new WebViewMapFragment.OnCameraChangeListener() {
-                        @Override
-                        public void onCameraChanged(LatLng latLng, int zoom) {
-                            mMapCallbacks.onCameraChanged(latLng, zoom);
-                        }
-                    });
+                    mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
                 }
             }
         });
@@ -110,7 +116,7 @@ public class AirMapView extends FrameLayout {
             return mMapInterface.getZoom();
         }
 
-        return -1;
+        return INVALID_ZOOM;
     }
 
     public LatLng getCenter() {
@@ -128,16 +134,20 @@ public class AirMapView extends FrameLayout {
         return false;
     }
 
-    public void animateCenter(LatLng latLng) {
+    public boolean animateCenter(LatLng latLng) {
         if (isInitialized()) {
             mMapInterface.animateCenter(latLng);
+            return true;
         }
+        return false;
     }
 
-    public void setZoom(int zoom) {
+    public boolean setZoom(int zoom) {
         if (isInitialized()) {
             mMapInterface.setZoom(zoom);
+            return true;
         }
+        return false;
     }
 
     public boolean setCenterZoom(LatLng latLng, int zoom) {
@@ -212,18 +222,20 @@ public class AirMapView extends FrameLayout {
         }
     }
 
-    public Polyline addPolyline(List<LatLng> points, int width, int color) {
-        Polyline polyline = null;
+    public boolean addPolyline(AirMapPolyline polyline) {
         if (isInitialized()) {
-            polyline = mMapInterface.addPolyline(points, width, color);
+            mMapInterface.addPolyline(polyline);
+            return true;
         }
-        return polyline;
+        return false;
     }
 
-    public void removePolyline(Polyline polyline) {
+    public boolean removePolyline(AirMapPolyline polyline) {
         if (isInitialized()) {
             mMapInterface.removePolyline(polyline);
+            return true;
         }
+        return false;
     }
 
     public boolean isInitialized() {
@@ -238,20 +250,18 @@ public class AirMapView extends FrameLayout {
         return false;
     }
 
-    public interface MapCallbacks {
-        public void onMapInitialized();
-
-        public void onCameraChanged(LatLng center, int zoom);
+    public interface OnMapInitializedListener {
+        void onMapInitialized();
     }
 
     public interface OnMapLoadedListener {
-        public void onMapLoaded();
+        void onMapLoaded();
     }
 
     public interface OnMapMarkerClickListener {
-        public void onMapMarkerClick(long id);
+        void onMapMarkerClick(long id);
 
-        public void onMapMarkerClick(Marker marker);
+        void onMapMarkerClick(Marker marker);
     }
 
     public interface OnMapClickListener {
@@ -259,79 +269,20 @@ public class AirMapView extends FrameLayout {
     }
 
     public interface OnInfoWindowClickListener {
-        public void onInfoWindowClick(long id);
+        void onInfoWindowClick(long id);
 
-        public void onInfoWindowClick(Marker marker);
+        void onInfoWindowClick(Marker marker);
     }
 
     public interface InfoWindowCreator {
-        public View createInfoWindow(long id);
+        View createInfoWindow(long id);
     }
 
     public interface OnMapBoundsCallback {
-        public void onMapBoundsReady(LatLngBounds bounds);
+        void onMapBoundsReady(LatLngBounds bounds);
     }
 
-    // TODO extract these to our abstraction layer
-    //    /**
-    //     * This method is for GOOGLE Native maps only
-    //     * adds a map marker
-    //     *
-    //     * @param listing
-    //     * @return map marker if marker was added
-    //     */
-    //    public Marker addGoogleListingMarker(Listing listing, int markerColor) {
-    //        if (isInitialized()) {
-    //            return GoogleMapMarkerManager.createListingMarker(getContext(), ((AirGoogleMapFragment) mMapInterface).getGoogleMap(), listing, markerColor);
-    //        }
-    //        return null;
-    //    }
-    //
-    //    public Marker addGoogleLocalAttractionMarker(LocalAttraction attraction) {
-    //        if (isInitialized()) {
-    //            return GoogleMapMarkerManager.createLocalAttractionMarker(getContext(), ((AirGoogleMapFragment) mMapInterface).getGoogleMap(), attraction);
-    //        }
-    //        return null;
-    //    }
-    //
-    //    public boolean addMarker(LatLng latLng, int icon, String title) {
-    //        if (isInitialized()) {
-    //            mMapInterface.addMarker(latLng, icon, title);
-    //            return true;
-    //        }
-    //        return false;
-    //    }
-    //
-    //    /**
-    //     * This method is for WEB maps only
-    //     * adds a map marker
-    //     *
-    //     * @param listing
-    //     * @return true if added
-    //     */
-    //    public boolean addWebListingMarker(Listing listing) {
-    //        if (isInitialized()) {
-    //            LatLng latLng = new LatLng(listing.getLatitude(), listing.getLongitude());
-    //            mMapInterface.addMarker(latLng, listing.getId());
-    //            return true;
-    //        }
-    //        return false;
-    //    }
-    //
-    //    public boolean addWebLocalAttractionMarker(LocalAttraction attraction) {
-    //        if (isInitialized()) {
-    //            LatLng latLng = new LatLng(attraction.getLatitude(), attraction.getLongitude());
-    //            mMapInterface.addMarker(latLng, attraction.getResourceId());
-    //            return true;
-    //        }
-    //        return false;
-    //    }
-    //
-    //    public void highlightWebListingMarker(Listing prevListing, Listing currListing) {
-    //        if (isInitialized()) {
-    //            long prevListingId = prevListing != null ? prevListing.getId() : -1;
-    //            long currListingId = currListing != null ? currListing.getId() : -1;
-    //            mMapInterface.highlightListingMarker(prevListingId, currListingId);
-    //        }
-    //    }
+    public interface OnCameraChangeListener {
+        void onCameraChanged(LatLng latLng, int zoom);
+    }
 }

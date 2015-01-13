@@ -14,7 +14,7 @@
     <script>
 var map;
 var markers = {};
-var polylines = [];
+var polylines = {};
 var moveTimeout;
 function initialize() {
   var mapOptions = {
@@ -54,14 +54,17 @@ function setZoom(zoom) {
   map.setZoom(zoom);
 }
 
-function highlightMarker(prevId, currId) {
-  var prevMarker = markers[prevId];
-  if (prevMarker != null) {
-    prevMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+function highlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/purple-dot.png');
   }
-  var currMarker = markers[currId];
-  if (currMarker != null) {
-    currMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/purple-dot.png');
+}
+
+function unhighlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
   }
 }
 
@@ -90,7 +93,14 @@ function addMarkerWithId(lat, lng, id) {
   markers[id] = marker;
 }
 
-function addPolyline(points, width, color) {
+function removeMarker(id) {
+  var marker = markers[id];
+  if (marker != null) {
+    markers[id].setMap(null);
+  }
+}
+
+function addPolyline(points, id, width, color) {
   var pointsArray = [];
 
   for (var i = 0; i < points.length; i++) {
@@ -107,23 +117,30 @@ function addPolyline(points, width, color) {
     strokeWeight: width / 2
   });
 
-  polylines.push(polyLine);
+  polylines[id] = polyLine;
+}
+
+function removePolyline(id) {
+  var polyline = polylines[id];
+  if (polyline != null) {
+    polylines[id].setMap(null);
+  }
 }
 
 function removeAllPolylines() {
-  for (var i = 0; i < polylines.length; i++) {
-    polylines[i].setMap(null);
+  for (var key in polylines) {
+    removePolyline(key);
   }
-  polylines = [];
+  polylines = {};
 }
 
-function addCircle(lat, lng, radius) {
+function addCircle(lat, lng, radius, strokeWeight, strokeColor, fillColor) {
   var position = new google.maps.LatLng(lat, lng);
   var populationOptions = {
-      strokeColor: '#000000',
-      strokeOpacity: 0,
-      strokeWeight: 0,
-      fillColor: '#00D1C1',
+      strokeColor: strokeColor,
+      strokeOpacity: 0.50,
+      strokeWeight: strokeWeight,
+      fillColor: fillColor,
       fillOpacity: 0.35,
       map: map,
       center: position,
@@ -151,9 +168,9 @@ function mapMove() {
 
 function getCenter() {
   var latLng = map.getCenter();
-    if (latLng != null) {
-      Android.mapCenterCallback(latLng.lat(), latLng.lng());
-    }
+  if (latLng != null) {
+    Android.mapCenterCallback(latLng.lat(), latLng.lng());
+  }
 }
 
 function getBounds() {
