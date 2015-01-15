@@ -76,8 +76,6 @@ public class AirMapView extends FrameLayout {
         mMapInterface.setOnMapLoadedListener(new OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                mMapInterface.init();
-
                 if (isInitialized()) {
                     // only send map Initialized callback if map initialized successfully
                     // initialization can fail if the map leaves the screen before it loads

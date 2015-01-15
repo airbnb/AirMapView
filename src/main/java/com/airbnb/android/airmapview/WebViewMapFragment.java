@@ -140,11 +140,6 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     }
 
     @Override
-    public void init() {
-        // no-op
-    }
-
-    @Override
     public boolean isInitialized() {
         return mWebView != null && mLoaded;
     }

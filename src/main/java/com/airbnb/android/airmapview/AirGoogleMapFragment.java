@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -25,7 +25,6 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     private static final int CIRCLE_STROKE_WIDTH = 5;
 
     private GoogleMap mGoogleMap;
-    private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
     private int mCircleFillColor = Color.BLUE & 0xAA000000;
     private int mCircleBorderColor = Color.BLUE;
@@ -43,42 +42,28 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                if (mOnMapLoadedListener != null) {
-                    mOnMapLoadedListener.onMapLoaded();
-                }
-            }
-        };
-        v.getViewTreeObserver().addOnGlobalLayoutListener(mLayoutListener);
-
-        if (savedInstanceState != null) {
-            init();
-        }
+        init();
 
         return v;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        getView().getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
-    }
-
-    @Override
     public void init() {
-        mGoogleMap = getMap();
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                if (googleMap != null && getActivity() != null) {
+                    mGoogleMap = googleMap;
+                    UiSettings settings = mGoogleMap.getUiSettings();
+                    settings.setZoomControlsEnabled(false);
+                    settings.setMyLocationButtonEnabled(false);
+                    setMyLocationEnabled(true);
 
-        if (mGoogleMap != null) {
-            UiSettings settings = mGoogleMap.getUiSettings();
-            settings.setZoomControlsEnabled(false);
-            settings.setMyLocationButtonEnabled(false);
-            setMyLocationEnabled(true);
-        }
+                    if (mOnMapLoadedListener != null) {
+                        mOnMapLoadedListener.onMapLoaded();
+                    }
+                }
+            }
+        });
     }
 
     public void setCircleBorderColor(int color) {
@@ -91,7 +76,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public boolean isInitialized() {
-        return mGoogleMap != null;
+        return mGoogleMap != null && getActivity() != null;
     }
 
     @Override

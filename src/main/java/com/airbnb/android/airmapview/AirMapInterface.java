@@ -12,11 +12,6 @@ public interface AirMapInterface {
     static final int CIRCLE_STROKE_WIDTH = 0;
 
     /**
-     * Contains any initialization logic
-     */
-    void init();
-
-    /**
      * @return true if the map is fully loaded/initialized.
      */
     boolean isInitialized();
