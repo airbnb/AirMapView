@@ -82,7 +82,9 @@ public class AirMapView extends FrameLayout {
 
                     mapInitializedListener.onMapInitialized();
 
-                    mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
+                    if (onCameraChangeListener != null) {
+                        mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
+                    }
                 }
             }
         });
