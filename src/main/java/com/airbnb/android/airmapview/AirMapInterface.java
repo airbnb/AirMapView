@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.Polyline;
 public interface AirMapInterface {
 
     static final int CIRCLE_FILL_COLOR = 0x00D1C1;
-    static final int CIRCLE_STROKE_COLOR = 0x000000;
-    static final int CIRCLE_STROKE_WIDTH = 0;
+    static final int CIRCLE_BORDER_COLOR = 0x000000;
+    static final int CIRCLE_BORDER_WIDTH = 0;
 
     /**
      * @return true if the map is fully loaded/initialized.
@@ -60,30 +60,30 @@ public interface AirMapInterface {
      *
      * @param latLng
      * @param radius
-     * @param strokeWidth
+     * @param borderColor
      */
-    void drawCircle(LatLng latLng, int radius, int strokeWidth);
+    void drawCircle(LatLng latLng, int radius, int borderColor);
 
     /**
      * Draw a circle at the given LatLng, with the given radius, stroke width, and stroke color
      *
      * @param latLng
      * @param radius
-     * @param strokeWidth
-     * @param strokeColor
+     * @param borderWidth
+     * @param borderWidth
      */
-    void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor);
+    void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth);
 
     /**
      * Draw a circle at the given LatLng, with the given radius, stroke width, stroke and fill colors
      *
      * @param latLng
      * @param radius
-     * @param strokeWidth
-     * @param strokeColor
+     * @param borderWidth
+     * @param borderWidth
      * @param fillColor
      */
-    void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor, int fillColor);
+    void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor);
 
     /**
      * Returns the map screen bounds to the supplied {@link AirMapView.OnMapBoundsCallback}

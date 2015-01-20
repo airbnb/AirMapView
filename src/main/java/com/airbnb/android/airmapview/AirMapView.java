@@ -186,6 +186,24 @@ public class AirMapView extends FrameLayout {
         }
     }
 
+    public void drawCircle(LatLng latLng, int radius, int strokeColor) {
+        if (isInitialized()) {
+            mMapInterface.drawCircle(latLng, radius, strokeColor);
+        }
+    }
+
+    public void drawCircle(LatLng latLng, int radius, int strokeColor, int strokeWidth) {
+        if (isInitialized()) {
+            mMapInterface.drawCircle(latLng, radius, strokeColor, strokeWidth);
+        }
+    }
+
+    public void drawCircle(LatLng latLng, int radius, int strokeColor, int strokeWidth, int fillColor) {
+        if (isInitialized()) {
+            mMapInterface.drawCircle(latLng, radius, strokeColor, strokeWidth, fillColor);
+        }
+    }
+
     public void setPadding(int left, int top, int right, int bottom) {
         if (isInitialized()) {
             mMapInterface.setPadding(left, top, right, bottom);

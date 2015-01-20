@@ -109,22 +109,22 @@ public class WebViewMapFragment extends Fragment implements AirMapInterface {
     }
 
     public void drawCircle(LatLng latLng, int radius) {
-        drawCircle(latLng, radius, CIRCLE_STROKE_WIDTH);
+        drawCircle(latLng, radius, CIRCLE_BORDER_COLOR);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth) {
-        drawCircle(latLng, radius, strokeWidth, CIRCLE_STROKE_COLOR);
+    public void drawCircle(LatLng latLng, int radius, int borderColor) {
+        drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor) {
-        drawCircle(latLng, radius, strokeWidth, strokeColor, CIRCLE_FILL_COLOR);
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+        drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor, int fillColor) {
-        mWebView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);", latLng.latitude, latLng.longitude, radius, strokeWidth, strokeColor, fillColor));
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor) {
+        mWebView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);", latLng.latitude, latLng.longitude, radius, borderColor, borderWidth, fillColor));
     }
 
     public void highlightMarker(long markerId) {

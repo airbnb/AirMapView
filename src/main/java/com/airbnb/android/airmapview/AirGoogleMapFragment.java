@@ -1,6 +1,5 @@
 package com.airbnb.android.airmapview;
 
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,12 +21,8 @@ import com.google.android.gms.maps.model.Marker;
 
 public class AirGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
-    private static final int CIRCLE_STROKE_WIDTH = 5;
-
     private GoogleMap mGoogleMap;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
-    private int mCircleFillColor = Color.BLUE & 0xAA000000;
-    private int mCircleBorderColor = Color.BLUE;
 
     public static AirGoogleMapFragment newInstance(GoogleMapOptions options) {
         AirGoogleMapFragment f = new AirGoogleMapFragment();
@@ -64,14 +59,6 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
                 }
             }
         });
-    }
-
-    public void setCircleBorderColor(int color) {
-        mCircleBorderColor = color;
-    }
-
-    public void setCircleFillColor(int color) {
-        mCircleFillColor = color;
     }
 
     @Override
@@ -111,26 +98,26 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public void drawCircle(LatLng latLng, int radius) {
-        drawCircle(latLng, radius, CIRCLE_STROKE_WIDTH);
+        drawCircle(latLng, radius, CIRCLE_BORDER_COLOR);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth) {
-        drawCircle(latLng, radius, strokeWidth, CIRCLE_STROKE_COLOR);
+    public void drawCircle(LatLng latLng, int radius, int borderColor) {
+        drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor) {
-        drawCircle(latLng, radius, strokeWidth, strokeColor, CIRCLE_FILL_COLOR);
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+        drawCircle(latLng, radius, borderWidth, borderColor, CIRCLE_FILL_COLOR);
     }
 
     @Override
-    public void drawCircle(LatLng latLng, int radius, int strokeWidth, int strokeColor, int fillColor) {
+    public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor) {
         mGoogleMap.addCircle(new CircleOptions()
                 .center(latLng)
-                .strokeColor(mCircleBorderColor)
-                .strokeWidth(CIRCLE_STROKE_WIDTH)
-                .fillColor(mCircleFillColor)
+                .strokeColor(borderColor)
+                .strokeWidth(borderWidth)
+                .fillColor(fillColor)
                 .radius(radius));
     }
 
