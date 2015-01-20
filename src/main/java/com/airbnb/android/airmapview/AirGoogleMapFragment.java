@@ -108,7 +108,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
 
     @Override
     public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
-        drawCircle(latLng, radius, borderWidth, borderColor, CIRCLE_FILL_COLOR);
+        drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
     }
 
     @Override
