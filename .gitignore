@@ -15,3 +15,4 @@ lib
 .settings
 .DS_Store
 local.properties
+.gradle
