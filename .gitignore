@@ -14,3 +14,4 @@ lib
 .project
 .settings
 .DS_Store
+local.properties
