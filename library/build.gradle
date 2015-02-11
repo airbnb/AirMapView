@@ -24,14 +24,6 @@ android {
     }
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: MAVEN_REPO_PATH)
-        pom.groupId = GROUP
-        pom.artifactId = POM_ARTIFACT_ID
-        pom.version = VERSION_NAME
-    }
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
