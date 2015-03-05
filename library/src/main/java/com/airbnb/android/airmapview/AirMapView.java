@@ -1,10 +1,12 @@
 package com.airbnb.android.airmapview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -18,8 +20,8 @@ public class AirMapView extends FrameLayout {
     private static final int INVALID_ZOOM = -1;
 
     protected AirMapInterface mMapInterface;
-    private boolean mZOrderOnTop;
-    private OnCameraChangeListener mOnCameraChangeListener;
+    private OnCameraMoveListener mOnCameraMoveListener;
+    private boolean mOnCameraMoveTriggered;
 
     public AirMapView(Context context) {
         super(context);
@@ -38,34 +40,43 @@ public class AirMapView extends FrameLayout {
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.map_view, this);
+        mMapInterface = new DefaultAirMapViewBuilder(getContext()).builder().build();
+    }
+
+    public void setMapInterface(FragmentManager fragmentManager, AirMapInterface mapInterface) {
+        mMapInterface = mapInterface;
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.map_frame, (Fragment) mMapInterface)
+                .commit();
+
+        fragmentManager.executePendingTransactions();
     }
 
     /**
      * Used for initialization of the underlying map provider
      *
      * @param fragmentManager        required for initialization
-     * @param zOrderOnTop            only is used for Google Play Services maps
      * @param mapInitializedListener required {@link OnMapInitializedListener} callback
      *                               so the calling class knows when the map has been initialized
      */
-    public void onCreateView(FragmentManager fragmentManager, boolean zOrderOnTop,
+    public void onCreateView(FragmentManager fragmentManager,
                              final OnMapInitializedListener mapInitializedListener) {
         if (mapInitializedListener == null) {
             throw new IllegalArgumentException("mapInitializedListener must not be null");
         }
 
-        mMapInterface = (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
-        mZOrderOnTop = zOrderOnTop;
+        AirMapInterface mapInterface = (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
 
-        if (mMapInterface == null) {
-            mMapInterface = createMapFragment();
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.map_frame, (Fragment) mMapInterface)
-                    .commit();
-
-            fragmentManager.executePendingTransactions();
+        if (mapInterface != null) {
+            mMapInterface = mapInterface;
         }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.map_frame, (Fragment) mMapInterface)
+                .commit();
+
+        fragmentManager.executePendingTransactions();
 
         mMapInterface.setOnMapLoadedListener(new OnMapLoadedListener() {
             @Override
@@ -75,31 +86,42 @@ public class AirMapView extends FrameLayout {
                     // initialization can fail if the map leaves the screen before it loads
 
                     mapInitializedListener.onMapInitialized();
-
-                    if (mOnCameraChangeListener != null) {
-                        mMapInterface.setOnCameraChangeListener(mOnCameraChangeListener);
-                    }
                 }
             }
         });
     }
 
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+            if (mOnCameraMoveListener != null && !mOnCameraMoveTriggered) {
+                mOnCameraMoveListener.onCameraMove();
+                mOnCameraMoveTriggered = true;
+            }
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            mOnCameraMoveTriggered = false;
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
     public void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener) {
-        mOnCameraChangeListener = onCameraChangeListener;
+        if (isInitialized()) {
+            mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
+        }
+    }
+
+    /**
+     * Sets the map {@link com.airbnb.android.airmapview.AirMapView.OnCameraMoveListener}
+     *
+     * @param onCameraMoveListener The OnCameraMoveListener to be set
+     */
+    public void setOnCameraMoveListener(OnCameraMoveListener onCameraMoveListener) {
+        mOnCameraMoveListener = onCameraMoveListener;
     }
 
     public final AirMapInterface getMapInterface() {
         return mMapInterface;
-    }
-
-    /**
-     * Override this if you wish to add more map types
-     */
-    protected AirMapInterface createMapFragment() {
-//        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-//            return AirGoogleMapFragment.newInstance(new GoogleMapOptions().zOrderOnTop(mZOrderOnTop));
-//        }
-        return new DefaultAirMapViewBuilder(getContext()).builder().build();
     }
 
     public void onDestroyView() {
@@ -299,5 +321,15 @@ public class AirMapView extends FrameLayout {
 
     public interface OnCameraChangeListener {
         void onCameraChanged(LatLng latLng, int zoom);
+    }
+
+    /**
+     * This event is triggered once as soon as the map camera starts moving and then is not triggered
+     * again until the next time the user moves the map camera again.
+     * This is handled by AirMapView instead of the actual GoogleMap implementation since this is not
+     * supported by them.
+     */
+    public interface OnCameraMoveListener {
+        void onCameraMove();
     }
 }

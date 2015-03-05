@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -24,13 +23,13 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     private GoogleMap mGoogleMap;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
 
-    public static AirGoogleMapFragment newInstance(GoogleMapOptions options) {
-        AirGoogleMapFragment f = new AirGoogleMapFragment();
-        Bundle args = new Bundle();
-        // this is internal to SupportMapFragment
-        args.putParcelable("MapOptions", options);
-        f.setArguments(args);
-        return f;
+    public static AirGoogleMapFragment newInstance(AirGoogleMapOptions options) {
+        return new AirGoogleMapFragment().setArguments(options);
+    }
+
+    public AirGoogleMapFragment setArguments(AirGoogleMapOptions options) {
+        setArguments(options.toBundle());
+        return this;
     }
 
     @Override

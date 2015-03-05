@@ -1,17 +1,14 @@
 package com.airbnb.android.airmapview;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -35,6 +32,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     private WebView mWebView;
     private ViewGroup mLayout;
+    private AirMapView.OnMapClickListener mOnMapClickListener;
     private AirMapView.OnCameraChangeListener mOnCameraChangeListener;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
     private AirMapView.OnMapMarkerClickListener mOnMarkerClickListener;
@@ -69,7 +67,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
         mWebView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
                 "text/html", "base64", null);
-        mWebView.addJavascriptInterface(new MapsJavaScriptInterface(getActivity()), "Android");
+        mWebView.addJavascriptInterface(new MapsJavaScriptInterface(), "Android");
 
         return view;
     }
@@ -210,22 +208,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     @Override
     public void setOnMapClickListener(final AirMapView.OnMapClickListener listener) {
-        final GestureDetector clickDetector = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
-                        listener.onMapClick(null);
-                        return super.onSingleTapUp(e);
-                    }
-                });
-
-        mWebView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View view, @NonNull MotionEvent event) {
-                return clickDetector.onTouchEvent(event);
-            }
-        });
+        mOnMapClickListener = listener;
     }
 
     public void setOnInfoWindowClickListener(AirMapView.OnInfoWindowClickListener listener) {
@@ -252,12 +235,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     private class MapsJavaScriptInterface {
 
-        Context mContext;
         private final Handler handler = new Handler(Looper.getMainLooper());
-
-        public MapsJavaScriptInterface(Context c) {
-            mContext = c;
-        }
 
         @JavascriptInterface
         public void onMapLoaded() {
@@ -275,10 +253,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         }
 
         @JavascriptInterface
-        public void mapClick() {
+        public void mapClick(final double lat, final double lng) {
+            Log.d(TAG, "mapClick - " + lat + ", " + lng);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    if (mOnMapClickListener != null) {
+                        mOnMapClickListener.onMapClick(new LatLng(lat, lng));
+                    }
                     if (mInfoWindowView != null) {
                         mLayout.removeView(mInfoWindowView);
                     }
@@ -347,7 +329,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
                         mInfoWindowView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(@NonNull View v) {
                                 mLayout.removeView(mInfoWindowView);
                                 if (mOnInfoWindowClickListener != null) {
                                     mOnInfoWindowClickListener.onInfoWindowClick(markerId);

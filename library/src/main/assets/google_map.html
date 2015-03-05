@@ -149,8 +149,8 @@ function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
     cityCircle = new google.maps.Circle(populationOptions);
 }
 
-function mapClick() {
-  Android.mapClick();
+function mapClick(event) {
+  Android.mapClick(event.latLng.lat(), event.latLng.lng());
 }
 
 function mapMove() {

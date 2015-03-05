@@ -12,4 +12,9 @@
           android:title="Use Web Map"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/action_clear_logs"
+          android:title="Clear logs"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>
