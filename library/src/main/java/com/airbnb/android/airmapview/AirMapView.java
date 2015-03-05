@@ -8,10 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -22,6 +19,7 @@ public class AirMapView extends FrameLayout {
 
     protected AirMapInterface mMapInterface;
     private boolean mZOrderOnTop;
+    private OnCameraChangeListener mOnCameraChangeListener;
 
     public AirMapView(Context context) {
         super(context);
@@ -45,17 +43,13 @@ public class AirMapView extends FrameLayout {
     /**
      * Used for initialization of the underlying map provider
      *
-     * @param fragmentManager
-     *      required for initialization
-     * @param zOrderOnTop
-     *      only is used for Google Play Services maps
-     * @param mapInitializedListener
-     *      required {@link OnMapInitializedListener} callback
- *          so the calling class knows when the map has been initialized
-     * @param onCameraChangeListener
-     *      optional {@link OnCameraChangeListener} callback
+     * @param fragmentManager        required for initialization
+     * @param zOrderOnTop            only is used for Google Play Services maps
+     * @param mapInitializedListener required {@link OnMapInitializedListener} callback
+     *                               so the calling class knows when the map has been initialized
      */
-    public void onCreateView(FragmentManager fragmentManager, boolean zOrderOnTop, final OnMapInitializedListener mapInitializedListener, final OnCameraChangeListener onCameraChangeListener) {
+    public void onCreateView(FragmentManager fragmentManager, boolean zOrderOnTop,
+                             final OnMapInitializedListener mapInitializedListener) {
         if (mapInitializedListener == null) {
             throw new IllegalArgumentException("mapInitializedListener must not be null");
         }
@@ -64,7 +58,7 @@ public class AirMapView extends FrameLayout {
         mZOrderOnTop = zOrderOnTop;
 
         if (mMapInterface == null) {
-            mMapInterface = createMapInterface();
+            mMapInterface = createMapFragment();
 
             fragmentManager.beginTransaction()
                     .replace(R.id.map_frame, (Fragment) mMapInterface)
@@ -82,12 +76,16 @@ public class AirMapView extends FrameLayout {
 
                     mapInitializedListener.onMapInitialized();
 
-                    if (onCameraChangeListener != null) {
-                        mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
+                    if (mOnCameraChangeListener != null) {
+                        mMapInterface.setOnCameraChangeListener(mOnCameraChangeListener);
                     }
                 }
             }
         });
+    }
+
+    public void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener) {
+        mOnCameraChangeListener = onCameraChangeListener;
     }
 
     public final AirMapInterface getMapInterface() {
@@ -97,12 +95,11 @@ public class AirMapView extends FrameLayout {
     /**
      * Override this if you wish to add more map types
      */
-    protected AirMapInterface createMapInterface() {
-        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-            return AirGoogleMapFragment.newInstance(new GoogleMapOptions().zOrderOnTop(mZOrderOnTop));
-        } else {
-            return WebViewMapFragment.newInstance(new GoogleWebMapType());
-        }
+    protected AirMapInterface createMapFragment() {
+//        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
+//            return AirGoogleMapFragment.newInstance(new GoogleMapOptions().zOrderOnTop(mZOrderOnTop));
+//        }
+        return new DefaultAirMapViewBuilder(getContext()).builder().build();
     }
 
     public void onDestroyView() {
