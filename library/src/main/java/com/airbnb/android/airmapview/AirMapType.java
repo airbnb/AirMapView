@@ -16,7 +16,7 @@ public class AirMapType {
     private final String mapUrl;
     private final String domain;
 
-    AirMapType(String fileName, String mapUrl, String domain) {
+    public AirMapType(String fileName, String mapUrl, String domain) {
         this.fileName = fileName;
         this.mapUrl = mapUrl;
         this.domain = domain;
