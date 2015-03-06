@@ -254,7 +254,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
         @JavascriptInterface
         public void mapClick(final double lat, final double lng) {
-            Log.d(TAG, "mapClick - " + lat + ", " + lng);
             handler.post(new Runnable() {
                 @Override
                 public void run() {

@@ -25,6 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+            DISCLAIMER: The Google Maps API Key below is for test purposes, therefore not intended
+            to be used in production/real apps. Please DO NOT copy-paste it as it may stop working
+            at any moment with no further notice
+        -->
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyC4l3iaY3PWIzj6f-tv4HkX80Vu8L55crs" />
