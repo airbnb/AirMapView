@@ -67,7 +67,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
         mWebView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
                 "text/html", "base64", null);
-        mWebView.addJavascriptInterface(new MapsJavaScriptInterface(), "Android");
+        mWebView.addJavascriptInterface(new MapsJavaScriptInterface(), "AirMapView");
 
         return view;
     }

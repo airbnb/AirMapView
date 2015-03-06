@@ -15,6 +15,6 @@ public class NativeAirMapViewBuilderTest {
         NativeAirMapViewBuilder builder = new NativeAirMapViewBuilder();
         AirGoogleMapOptions options = mock(AirGoogleMapOptions.class);
         when(options.toBundle()).thenReturn(new Bundle());
-        assertThat(builder.withOptions(options).build(), instanceOf(AirGoogleMapFragment.class));
+        assertThat(builder.withOptions(options).build(), instanceOf(NativeGoogleMapFragment.class));
     }
 }

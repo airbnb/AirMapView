@@ -3,22 +3,22 @@ package com.airbnb.android.airmapview;
 import com.google.android.gms.maps.GoogleMapOptions;
 
 public class NativeAirMapViewBuilder
-        implements AirMapViewBuilder<AirGoogleMapFragment, AirGoogleMapOptions> {
+        implements AirMapViewBuilder<NativeGoogleMapFragment, AirGoogleMapOptions> {
 
     private AirGoogleMapOptions options;
 
     @Override
-    public AirMapViewBuilder<AirGoogleMapFragment, AirGoogleMapOptions> withOptions(
+    public AirMapViewBuilder<NativeGoogleMapFragment, AirGoogleMapOptions> withOptions(
             AirGoogleMapOptions options) {
         this.options = options;
         return this;
     }
 
     @Override
-    public AirGoogleMapFragment build() {
+    public NativeGoogleMapFragment build() {
         if (options == null) {
             options = new AirGoogleMapOptions(new GoogleMapOptions());
         }
-        return AirGoogleMapFragment.newInstance(options);
+        return NativeGoogleMapFragment.newInstance(options);
     }
 }

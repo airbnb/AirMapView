@@ -18,16 +18,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-public class AirGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
+public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
     private GoogleMap mGoogleMap;
     private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
 
-    public static AirGoogleMapFragment newInstance(AirGoogleMapOptions options) {
-        return new AirGoogleMapFragment().setArguments(options);
+    public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
+        return new NativeGoogleMapFragment().setArguments(options);
     }
 
-    public AirGoogleMapFragment setArguments(AirGoogleMapOptions options) {
+    public NativeGoogleMapFragment setArguments(AirGoogleMapOptions options) {
         setArguments(options.toBundle());
         return this;
     }
