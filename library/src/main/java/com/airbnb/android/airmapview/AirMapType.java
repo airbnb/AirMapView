@@ -6,7 +6,7 @@ import android.os.Bundle;
 import java.util.Locale;
 
 /**
- * Interface for defining maps to be used with {@link WebViewMapFragment}
+ * Defines maps to be used with {@link com.airbnb.android.airmapview.WebViewMapFragment}
  */
 public class AirMapType {
     private static final String ARG_MAP_DOMAIN = "map_domain";
