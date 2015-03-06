@@ -15,10 +15,12 @@ public class AirGoogleMapOptions {
     }
 
     public AirGoogleMapOptions zOrderOnTop(boolean zOrderOnTop) {
+        options.zOrderOnTop(zOrderOnTop);
         return this;
     }
 
     public AirGoogleMapOptions useViewLifecycleInFragment(boolean useViewLifecycleInFragment) {
+        options.useViewLifecycleInFragment(useViewLifecycleInFragment);
         return this;
     }
 
@@ -58,6 +60,7 @@ public class AirGoogleMapOptions {
     }
 
     public AirGoogleMapOptions rotateGesturesEnabled(boolean enabled) {
+        options.rotateGesturesEnabled(enabled);
         return this;
     }
 
