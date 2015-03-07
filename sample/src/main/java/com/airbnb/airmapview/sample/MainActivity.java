@@ -13,13 +13,19 @@ import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 
 public class MainActivity extends ActionBarActivity
-        implements AirMapView.OnCameraChangeListener, AirMapView.OnMapInitializedListener,
-        AirMapView.OnMapClickListener, AirMapView.OnCameraMoveListener, AirMapView.OnMapMarkerClickListener {
+        implements OnCameraChangeListener, OnMapInitializedListener,
+        OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener, OnInfoWindowClickListener {
 
     private AirMapView map;
     private DefaultAirMapViewBuilder mapViewBuilder;
@@ -37,7 +43,13 @@ public class MainActivity extends ActionBarActivity
         textLogs = (TextView) findViewById(R.id.textLogs);
         logsScrollView = (ScrollView) findViewById(R.id.logsScrollView);
 
-        map.onCreateView(getSupportFragmentManager(), this);
+        map.setOnMapClickListener(this);
+        map.setOnCameraChangeListener(this);
+        map.setOnCameraMoveListener(this);
+        map.setOnMarkerClickListener(this);
+        map.setOnMapInitializedListener(this);
+        map.setOnInfoWindowClickListener(this);
+        map.initialize(getSupportFragmentManager());
     }
 
     @Override
@@ -62,13 +74,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         if (airMapInterface != null) {
-            map.setMapInterface(getSupportFragmentManager(), airMapInterface);
-            map.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onMapInitialized();
-                }
-            }, 2000);
+            map.initialize(getSupportFragmentManager(), airMapInterface);
         }
 
         return super.onOptionsItemSelected(item);
@@ -82,10 +88,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onMapInitialized() {
         appendLog("Map onMapInitialized triggered");
-        map.setOnMapClickListener(this);
-        map.setOnCameraChangeListener(this);
-        map.setOnCameraMoveListener(this);
-        map.setOnMarkerClickListener(this);
         map.animateCenterZoom(latLng, 10);
         map.addMarker(new AirMapMarker(latLng, 1)
                 .setTitle("Airbnb HQ")
@@ -118,5 +120,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onMapMarkerClick(Marker marker) {
         appendLog("Map onMapMarkerClick triggered with marker " + marker.getId());
+    }
+
+    @Override
+    public void onInfoWindowClick(long id) {
+        appendLog("Map onInfoWindowClick triggered with id " + id);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        appendLog("Map onInfoWindowClick triggered with marker " + marker.getId());
     }
 }

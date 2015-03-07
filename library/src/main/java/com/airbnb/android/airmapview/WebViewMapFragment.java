@@ -16,6 +16,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -32,13 +39,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     private WebView mWebView;
     private ViewGroup mLayout;
-    private AirMapView.OnMapClickListener mOnMapClickListener;
-    private AirMapView.OnCameraChangeListener mOnCameraChangeListener;
-    private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
-    private AirMapView.OnMapMarkerClickListener mOnMarkerClickListener;
-    private AirMapView.OnInfoWindowClickListener mOnInfoWindowClickListener;
-    private AirMapView.InfoWindowCreator mInfoWindowCreator;
-    private AirMapView.OnMapBoundsCallback mMapBoundsCallback;
+    private OnMapClickListener mOnMapClickListener;
+    private OnCameraChangeListener mOnCameraChangeListener;
+    private OnMapLoadedListener mOnMapLoadedListener;
+    private OnMapMarkerClickListener mOnMarkerClickListener;
+    private OnInfoWindowClickListener mOnInfoWindowClickListener;
+    private InfoWindowCreator mInfoWindowCreator;
+    private OnMapBoundsCallback mMapBoundsCallback;
     private LatLng mCenter;
     private int mZoom;
     private boolean mLoaded;
@@ -146,11 +153,11 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         mWebView.loadUrl("javascript:clearMarkers();");
     }
 
-    public void setOnCameraChangeListener(AirMapView.OnCameraChangeListener listener) {
+    public void setOnCameraChangeListener(OnCameraChangeListener listener) {
         mOnCameraChangeListener = listener;
     }
 
-    public void setOnMapLoadedListener(AirMapView.OnMapLoadedListener listener) {
+    public void setOnMapLoadedListener(OnMapLoadedListener listener) {
         mOnMapLoadedListener = listener;
         if (mLoaded) {
             mOnMapLoadedListener.onMapLoaded();
@@ -168,7 +175,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         setCenterZoom(latLng, zoom);
     }
 
-    public void setOnMarkerClickListener(AirMapView.OnMapMarkerClickListener listener) {
+    public void setOnMarkerClickListener(OnMapMarkerClickListener listener) {
         mOnMarkerClickListener = listener;
     }
 
@@ -207,21 +214,21 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
 
     @Override
-    public void setOnMapClickListener(final AirMapView.OnMapClickListener listener) {
+    public void setOnMapClickListener(final OnMapClickListener listener) {
         mOnMapClickListener = listener;
     }
 
-    public void setOnInfoWindowClickListener(AirMapView.OnInfoWindowClickListener listener) {
+    public void setOnInfoWindowClickListener(OnInfoWindowClickListener listener) {
         mOnInfoWindowClickListener = listener;
     }
 
     @Override
     public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,
-                                     AirMapView.InfoWindowCreator creator) {
+                                     InfoWindowCreator creator) {
         mInfoWindowCreator = creator;
     }
 
-    public void getMapScreenBounds(AirMapView.OnMapBoundsCallback callback) {
+    public void getMapScreenBounds(OnMapBoundsCallback callback) {
         mMapBoundsCallback = callback;
         mWebView.loadUrl("javascript:getBounds();");
     }

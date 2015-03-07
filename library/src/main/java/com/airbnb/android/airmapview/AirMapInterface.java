@@ -1,5 +1,12 @@
 package com.airbnb.android.airmapview;
 
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -38,14 +45,14 @@ public interface AirMapInterface {
     /**
      * Set the callback for info window click events
      *
-     * @param listener {@link AirMapView.OnInfoWindowClickListener} instance
+     * @param listener {@link com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener} instance
      */
-    void setOnInfoWindowClickListener(AirMapView.OnInfoWindowClickListener listener);
+    void setOnInfoWindowClickListener(OnInfoWindowClickListener listener);
 
     /**
-     * Specific to Google Play Services maps. Sets the {@link GoogleMap.InfoWindowAdapter} and {@link AirMapView.InfoWindowCreator}
+     * Specific to Google Play Services maps. Sets the {@link GoogleMap.InfoWindowAdapter} and {@link com.airbnb.android.airmapview.listeners.InfoWindowCreator}
      */
-    public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, AirMapView.InfoWindowCreator creator);
+    public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator);
 
     /**
      * Draw a circle at the given LatLng, with the given radius
@@ -86,11 +93,11 @@ public interface AirMapInterface {
     void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor);
 
     /**
-     * Returns the map screen bounds to the supplied {@link AirMapView.OnMapBoundsCallback}
+     * Returns the map screen bounds to the supplied {@link com.airbnb.android.airmapview.listeners.OnMapBoundsCallback}
      *
      * @param callback
      */
-    void getMapScreenBounds(AirMapView.OnMapBoundsCallback callback);
+    void getMapScreenBounds(OnMapBoundsCallback callback);
 
     /**
      * Sets the given {@link LatLngBounds} on the map with the specified padding
@@ -137,9 +144,9 @@ public interface AirMapInterface {
      *
      * @param onCameraChangeListener
      */
-    void setOnCameraChangeListener(AirMapView.OnCameraChangeListener onCameraChangeListener);
+    void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener);
 
-    void setOnMapLoadedListener(AirMapView.OnMapLoadedListener onMapLoadedListener);
+    void setOnMapLoadedListener(OnMapLoadedListener onMapLoadedListener);
 
     /**
      * Set the center of the map, and zoom level
@@ -160,16 +167,16 @@ public interface AirMapInterface {
     /**
      * Register a callback to be invoked when a map marker is clicked
      *
-     * @param listener {@link AirMapView.OnMapMarkerClickListener} callback
+     * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener} callback
      */
-    void setOnMarkerClickListener(AirMapView.OnMapMarkerClickListener listener);
+    void setOnMarkerClickListener(OnMapMarkerClickListener listener);
 
     /**
      * Register a callback to be invoked when the map is clicked
      *
-     * @param listener {@link AirMapView.OnMapClickListener} callback
+     * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapClickListener} callback
      */
-    void setOnMapClickListener(AirMapView.OnMapClickListener listener);
+    void setOnMapClickListener(OnMapClickListener listener);
 
     /**
      * Set the map's padding.
