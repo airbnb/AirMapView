@@ -1,19 +1,8 @@
 package com.airbnb.android.airmapview;
 
-public class GoogleChinaMapType implements AirMapType {
+public class GoogleChinaMapType extends AirMapType {
 
-    @Override
-    public String getFileName() {
-        return "google_map.html";
-    }
-
-    @Override
-    public String getMapUrl() {
-        return "http://ditu.google.cn/maps/api/js";
-    }
-
-    @Override
-    public String getDomain() {
-        return "www.google.cn";
+    public GoogleChinaMapType() {
+        super("google_map.html", "http://ditu.google.cn/maps/api/js", "www.google.cn");
     }
 }

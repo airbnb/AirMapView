@@ -35,46 +35,52 @@ public class AirMapMarker<T> {
         return mId;
     }
 
-    public void setId(long id) {
+    public AirMapMarker<T> setId(long id) {
         mId = id;
+        return this;
     }
 
     public LatLng getLatLng() {
         return mLatLng;
     }
 
-    public void setLatLng(LatLng latLng) {
+    public AirMapMarker<T> setLatLng(LatLng latLng) {
         mLatLng = latLng;
+        return this;
     }
 
     public String getTitle() {
         return mTitle;
     }
 
-    public void setTitle(String title) {
+    public AirMapMarker<T> setTitle(String title) {
         mTitle = title;
+        return this;
     }
 
     public int getIconId() {
         return mIconId;
     }
 
-    public void setIconId(int iconId) {
+    public AirMapMarker<T> setIconId(int iconId) {
         mIconId = iconId;
+        return this;
     }
 
     public T getObject() {
         return mObject;
     }
 
-    public void setObject(T object) {
+    public AirMapMarker<T> setObject(T object) {
         mObject = object;
+        return this;
     }
 
     /**
-     * Add this marker to the given {@link GoogleMap} instance
+     * Add this marker to the given {@link com.google.android.gms.maps.GoogleMap} instance
      *
-     * @param googleMap the {@link GoogleMap} instance to which the marker will be added
+     * @param googleMap the {@link com.google.android.gms.maps.GoogleMap} instance to which the
+     *                  marker will be added
      */
     public void addToGoogleMap(GoogleMap googleMap) {
         MarkerOptions options = new MarkerOptions();

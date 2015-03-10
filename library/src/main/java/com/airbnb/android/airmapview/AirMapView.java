@@ -1,108 +1,126 @@
 package com.airbnb.android.airmapview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
+import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-public class AirMapView extends FrameLayout {
+public class AirMapView extends FrameLayout
+        implements OnCameraChangeListener, OnMapClickListener,
+        OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
 
     private static final int INVALID_ZOOM = -1;
 
     protected AirMapInterface mMapInterface;
-    private boolean mZOrderOnTop;
+    private OnCameraMoveListener mOnCameraMoveListener;
+    private OnCameraChangeListener mOnCameraChangeListener;
+    private boolean mOnCameraMoveTriggered;
+    private OnMapInitializedListener mOnMapInitializedListener;
+    private OnMapClickListener mOnMapClickListener;
+    private OnMapMarkerClickListener mOnMapMarkerClickListener;
+    private OnInfoWindowClickListener mOnInfoWIndowClickListener;
 
     public AirMapView(Context context) {
         super(context);
-        init();
+        inflateView();
     }
 
     public AirMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        inflateView();
     }
 
     public AirMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        inflateView();
     }
 
-    private void init() {
+    private void inflateView() {
         LayoutInflater.from(getContext()).inflate(R.layout.map_view, this);
     }
 
+    public void initialize(FragmentManager fragmentManager, AirMapInterface mapInterface) {
+        if (mapInterface == null || fragmentManager == null) {
+            throw new IllegalArgumentException("Either mapInterface or fragmentManager is null");
+        }
+
+        mMapInterface = mapInterface;
+        mMapInterface.setOnMapLoadedListener(this);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.map_frame, (Fragment) mMapInterface)
+                .commit();
+
+        fragmentManager.executePendingTransactions();
+    }
+
     /**
-     * Used for initialization of the underlying map provider
+     * Used for initialization of the underlying map provider. Uses the default preferred map
+     * provider (currently Native Google Maps, then Web Google Maps).
      *
-     * @param fragmentManager
-     *      required for initialization
-     * @param zOrderOnTop
-     *      only is used for Google Play Services maps
-     * @param mapInitializedListener
-     *      required {@link OnMapInitializedListener} callback
- *          so the calling class knows when the map has been initialized
-     * @param onCameraChangeListener
-     *      optional {@link OnCameraChangeListener} callback
+     * @param fragmentManager required for initialization
      */
-    public void onCreateView(FragmentManager fragmentManager, boolean zOrderOnTop, final OnMapInitializedListener mapInitializedListener, final OnCameraChangeListener onCameraChangeListener) {
-        if (mapInitializedListener == null) {
-            throw new IllegalArgumentException("mapInitializedListener must not be null");
+    public void initialize(FragmentManager fragmentManager) {
+        AirMapInterface mapInterface = (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
+
+        if (mapInterface != null) {
+            initialize(fragmentManager, mapInterface);
+        } else {
+            initialize(fragmentManager, new DefaultAirMapViewBuilder(getContext()).builder().build());
         }
+    }
 
-        mMapInterface = (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
-        mZOrderOnTop = zOrderOnTop;
+    public void setOnMapInitializedListener(OnMapInitializedListener mapInitializedListener) {
+        mOnMapInitializedListener = mapInitializedListener;
+    }
 
-        if (mMapInterface == null) {
-            mMapInterface = createMapInterface();
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.map_frame, (Fragment) mMapInterface)
-                    .commit();
-
-            fragmentManager.executePendingTransactions();
-        }
-
-        mMapInterface.setOnMapLoadedListener(new OnMapLoadedListener() {
-            @Override
-            public void onMapLoaded() {
-                if (isInitialized()) {
-                    // only send map Initialized callback if map initialized successfully
-                    // initialization can fail if the map leaves the screen before it loads
-
-                    mapInitializedListener.onMapInitialized();
-
-                    if (onCameraChangeListener != null) {
-                        mMapInterface.setOnCameraChangeListener(onCameraChangeListener);
-                    }
-                }
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+            if (mOnCameraMoveListener != null && !mOnCameraMoveTriggered) {
+                mOnCameraMoveListener.onCameraMove();
+                mOnCameraMoveTriggered = true;
             }
-        });
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            mOnCameraMoveTriggered = false;
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener) {
+        mOnCameraChangeListener = onCameraChangeListener;
+    }
+
+    /**
+     * Sets the map {@link com.airbnb.android.airmapview.listeners.OnCameraMoveListener}
+     *
+     * @param onCameraMoveListener The OnCameraMoveListener to be set
+     */
+    public void setOnCameraMoveListener(OnCameraMoveListener onCameraMoveListener) {
+        mOnCameraMoveListener = onCameraMoveListener;
     }
 
     public final AirMapInterface getMapInterface() {
         return mMapInterface;
-    }
-
-    /**
-     * Override this if you wish to add more map types
-     */
-    protected AirMapInterface createMapInterface() {
-        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-            return AirGoogleMapFragment.newInstance(new GoogleMapOptions().zOrderOnTop(mZOrderOnTop));
-        } else {
-            return WebViewMapFragment.newInstance(new GoogleWebMapType());
-        }
     }
 
     public void onDestroyView() {
@@ -211,15 +229,11 @@ public class AirMapView extends FrameLayout {
     }
 
     public void setOnMarkerClickListener(OnMapMarkerClickListener listener) {
-        if (isInitialized()) {
-            mMapInterface.setOnMarkerClickListener(listener);
-        }
+        mOnMapMarkerClickListener = listener;
     }
 
     public void setOnMapClickListener(OnMapClickListener listener) {
-        if (isInitialized()) {
-            mMapInterface.setOnMapClickListener(listener);
-        }
+        mOnMapClickListener = listener;
     }
 
     public void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
@@ -229,9 +243,7 @@ public class AirMapView extends FrameLayout {
     }
 
     public void setOnInfoWindowClickListener(OnInfoWindowClickListener listener) {
-        if (isInitialized()) {
-            mMapInterface.setOnInfoWindowClickListener(listener);
-        }
+        mOnInfoWIndowClickListener = listener;
     }
 
     public void clearMarkers() {
@@ -268,39 +280,61 @@ public class AirMapView extends FrameLayout {
         return false;
     }
 
-    public interface OnMapInitializedListener {
-        void onMapInitialized();
+    @Override
+    public void onCameraChanged(LatLng latLng, int zoom) {
+        if (mOnCameraChangeListener != null) {
+            mOnCameraChangeListener.onCameraChanged(latLng, zoom);
+        }
     }
 
-    public interface OnMapLoadedListener {
-        void onMapLoaded();
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (mOnMapClickListener != null) {
+            mOnMapClickListener.onMapClick(latLng);
+        }
     }
 
-    public interface OnMapMarkerClickListener {
-        void onMapMarkerClick(long id);
-
-        void onMapMarkerClick(Marker marker);
+    @Override
+    public void onMapMarkerClick(long id) {
+        if (mOnMapMarkerClickListener != null) {
+            mOnMapMarkerClickListener.onMapMarkerClick(id);
+        }
     }
 
-    public interface OnMapClickListener {
-        void onMapClick(LatLng latLng);
+    @Override
+    public void onMapMarkerClick(Marker marker) {
+        if (mOnMapMarkerClickListener != null) {
+            mOnMapMarkerClickListener.onMapMarkerClick(marker);
+        }
     }
 
-    public interface OnInfoWindowClickListener {
-        void onInfoWindowClick(long id);
+    @Override
+    public void onMapLoaded() {
+        if (isInitialized()) {
+            mMapInterface.setOnCameraChangeListener(this);
+            mMapInterface.setOnMapClickListener(this);
+            mMapInterface.setOnMarkerClickListener(this);
+            mMapInterface.setOnInfoWindowClickListener(this);
 
-        void onInfoWindowClick(Marker marker);
+            if (mOnMapInitializedListener != null) {
+                // only send map Initialized callback if map initialized successfully
+                // initialization can fail if the map leaves the screen before it loads
+                mOnMapInitializedListener.onMapInitialized();
+            }
+        }
     }
 
-    public interface InfoWindowCreator {
-        View createInfoWindow(long id);
+    @Override
+    public void onInfoWindowClick(long id) {
+        if (mOnInfoWIndowClickListener != null) {
+            mOnInfoWIndowClickListener.onInfoWindowClick(id);
+        }
     }
 
-    public interface OnMapBoundsCallback {
-        void onMapBoundsReady(LatLngBounds bounds);
-    }
-
-    public interface OnCameraChangeListener {
-        void onCameraChanged(LatLng latLng, int zoom);
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (mOnInfoWIndowClickListener != null) {
+            mOnInfoWIndowClickListener.onInfoWindowClick(marker);
+        }
     }
 }

@@ -6,9 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -19,18 +25,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-public class AirGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
+public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
     private GoogleMap mGoogleMap;
-    private AirMapView.OnMapLoadedListener mOnMapLoadedListener;
+    private OnMapLoadedListener mOnMapLoadedListener;
 
-    public static AirGoogleMapFragment newInstance(GoogleMapOptions options) {
-        AirGoogleMapFragment f = new AirGoogleMapFragment();
-        Bundle args = new Bundle();
-        // this is internal to SupportMapFragment
-        args.putParcelable("MapOptions", options);
-        f.setArguments(args);
-        return f;
+    public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
+        return new NativeGoogleMapFragment().setArguments(options);
+    }
+
+    public NativeGoogleMapFragment setArguments(AirGoogleMapOptions options) {
+        setArguments(options.toBundle());
+        return this;
     }
 
     @Override
@@ -82,7 +88,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnInfoWindowClickListener(final AirMapView.OnInfoWindowClickListener listener) {
+    public void setOnInfoWindowClickListener(final OnInfoWindowClickListener listener) {
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -92,7 +98,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, AirMapView.InfoWindowCreator creator) {
+    public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
         mGoogleMap.setInfoWindowAdapter(adapter);
     }
 
@@ -122,7 +128,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void getMapScreenBounds(AirMapView.OnMapBoundsCallback callback) {
+    public void getMapScreenBounds(OnMapBoundsCallback callback) {
         final Projection projection = mGoogleMap.getProjection();
         int hOffset = getResources().getDimensionPixelOffset(R.dimen.map_horizontal_padding);
         int vOffset = getResources().getDimensionPixelOffset(R.dimen.map_vertical_padding);
@@ -167,7 +173,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnCameraChangeListener(final AirMapView.OnCameraChangeListener onCameraChangeListener) {
+    public void setOnCameraChangeListener(final OnCameraChangeListener onCameraChangeListener) {
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 
             @Override
@@ -181,7 +187,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnMapLoadedListener(AirMapView.OnMapLoadedListener onMapLoadedListener) {
+    public void setOnMapLoadedListener(OnMapLoadedListener onMapLoadedListener) {
         mOnMapLoadedListener = onMapLoadedListener;
     }
 
@@ -196,7 +202,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnMarkerClickListener(final AirMapView.OnMapMarkerClickListener listener) {
+    public void setOnMarkerClickListener(final OnMapMarkerClickListener listener) {
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -207,7 +213,7 @@ public class AirGoogleMapFragment extends SupportMapFragment implements AirMapIn
     }
 
     @Override
-    public void setOnMapClickListener(final AirMapView.OnMapClickListener listener) {
+    public void setOnMapClickListener(final OnMapClickListener listener) {
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
