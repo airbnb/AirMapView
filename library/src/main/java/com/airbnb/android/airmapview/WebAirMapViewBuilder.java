@@ -1,5 +1,8 @@
 package com.airbnb.android.airmapview;
 
+/**
+ * AirMapView map that uses the web based Google Maps implementation.
+ */
 public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragment, AirMapType> {
 
     private AirMapType options;
@@ -10,6 +13,10 @@ public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragmen
         return this;
     }
 
+    /**
+     * Build the map fragment with the requested options
+     * @return The {@link WebViewMapFragment} map fragment.
+     */
     @Override
     public WebViewMapFragment build() {
         if (options == null) {
