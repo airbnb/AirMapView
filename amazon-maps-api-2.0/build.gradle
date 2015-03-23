@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('amazon-maps-api-2.0.aar'))
