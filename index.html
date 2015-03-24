@@ -1,49 +1,99 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang=en>
+  <meta charset=utf-8>
+  <title>AirMapView</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Lato:400,900'>
+  <link rel=stylesheet href=style.css>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="AirMapView : A library to enable map user interfaces for device with and without Google Play Services">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>AirMapView</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/airbnb/AirMapView">View on GitHub</a>
-
-          <h1 id="project_title">AirMapView</h1>
-          <h2 id="project_tagline">A library to enable map user interfaces for device with and without Google Play Services</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/airbnb/AirMapView/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/airbnb/AirMapView/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+  <div>
+    <div class='nav-container'>
+      <nav class='container'>
+        <div class='pull-left'>
+          <a href='http://nerds.airbnb.com' target='_blank'>
+            <div class='brand'></div>
+          </a>
+        </div>
+        <div class='links'>
+          <a href='https://github.com/airbnb/AirMapView/' target='_blank' class='link'>
+            Github
+          </a>
+        </div>
+      </nav>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>AirMapView</p>
-      </section>
+    <div class='hero'>
+      <div class='container text-center'>
+        <h1 class='color-blue'>AirMapView</h1>
+        <h4 class='subtitle color-dark-gray'>
+          A library to enable map user interfaces for device with and without Google Play Services.
+        </h4>
+        <div class='callouts'>
+          <a href='https://github.com/airbnb/AirMapView' target='_blank'
+             class='btn color-blue border-blue'>
+              Get Started
+          </a>
+        </div>
+        <div class='container github'>
+          <iframe src="https://ghbtns.com/github-btn.html?user=airbnb&repo=AirMapView&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+          <iframe src="https://ghbtns.com/github-btn.html?user=airbnb&repo=AirMapView&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+        </div>
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">AirMapView maintained by <a href="https://github.com/airbnb">airbnb</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <div class='flex-row container features'>
+      <div>
+        <h3 class='color-dark-gray'>Multiple Providers</h3>
+        <p>
+          Supports multiple native map providers to
+          provide the best map experience for different
+          device types such as Google Nexus vs Amazon Fire.
+        </p>
+      </div>
+      <div>
+        <h3 class='color-dark-gray'>All the Maps</h3>
+        <p>
+          Swap between supported providers at runtime
+          to provide the best experience based on context.
+        </p>
+      </div>
+      <div>
+        <h3 class='color-dark-gray'>Maps for Everyone</h3>
+        <p>
+          AirMapView will fallback to a web based
+          map implementation for devices that do
+          not support any native map provider.
+        </p>
+      </div>
     </div>
+    <div class='container text-center github footer'>
+      <a href='http://nerds.airbnb.com' target='_blank' class='link'>
+        Blog
+      </a>
+      <a href='https://github.com/airbnb' target='_blank' class='link'>
+        Open Source
+      </a>
+      <a href='http://nerds.airbnb.com/engineering-culture-airbnb/' target='_blank' class='link'>
+        Culture
+      </a>
+      <a href='https://www.airbnb.com/jobs/departments/engineering' target='_blank' class='link'>
+        Careers
+      </a>
+    </div>
+  </div>
 
-    
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2725447-14']);
+    _gaq.push(['_gat._forceSSL']);
+    _gaq.push(['_trackPageview']);
 
-  </body>
+    (function () {
+      var ga = document.createElement('script');
+      ga.type = 'text/javascript';
+      ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </html>
