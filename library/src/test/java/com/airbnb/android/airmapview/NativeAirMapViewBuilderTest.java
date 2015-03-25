@@ -10,11 +10,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class NativeAirMapViewBuilderTest {
-    @Test
-    public void shouldBuildNativeAirMapView() {
-        NativeAirMapViewBuilder builder = new NativeAirMapViewBuilder();
-        AirGoogleMapOptions options = mock(AirGoogleMapOptions.class);
-        when(options.toBundle()).thenReturn(new Bundle());
-        assertThat(builder.withOptions(options).build(), instanceOf(NativeGoogleMapFragment.class));
-    }
+
+  @Test public void shouldBuildNativeAirMapView() {
+    NativeAirMapViewBuilder builder = new NativeAirMapViewBuilder();
+    AirGoogleMapOptions options = mock(AirGoogleMapOptions.class);
+    when(options.toBundle()).thenReturn(new Bundle());
+    assertThat(builder.withOptions(options).build(), instanceOf(NativeGoogleMapFragment.class));
+  }
 }
