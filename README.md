@@ -16,8 +16,8 @@ will fallback to a web based map provider (currently Google Maps).
 * Swap map providers at runtime
 * Web based maps for devices withotu Google Play Services
 
-![](screenshots/google_maps_v2.png =250x)
-![](screenshots/google_web_maps.png =250x)
+![](screenshots/google_maps_v2.png)
+![](screenshots/google_web_maps.png)
 
 
 
