@@ -1,9 +1,57 @@
-AirMapView
-=======
+# AirMapView
 
-A library to enable map user interfaces for device with and without Google Play Services
+AirMapView is a view abstraction that enables interactive maps
+for devices with and without Google Play Services. AirMapView is built
+to support multiple native map providers including Google Maps V2 and soon Amazon Maps V2.
+If a device does not have any supported native map provider, AirMapView
+will fallback to a web based map provider (currently Google Maps).
 
-For more information please see [the website][1]
+* [Features](#features)
+* [Download](#download)
+* [How to Use](#how-to-use)
+
+## Features
+
+* Google Maps V2
+* Swap map providers at runtime
+* Web based maps for devices withotu Google Play Services
+
+![](screenshots/google_maps_v2.png =250x)
+![](screenshots/google_web_maps.png =250x)
+
+
+
+## Download
+
+Grab via Gradle:
+
+```groovy
+compile 'com.airbnb.android:airmapview:1.1.1'
+```
+
+
+## How to Use
+
+1. Define `AirMapView` in your layout file
+```xml
+<com.airbnb.android.airmapview.AirMapView
+    android:id="@+id/map_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+```
+
+2. Initialize in code
+```java
+mapView = (AirMapView) findViewById(R.id.map_view);
+mapView.initialize(getSupportFragmentManager());
+```
+
+3. Add markers/polylines
+```java
+map.addMarker(new AirMapMarker(latLng, markerId)
+        .setTitle("Airbnb HQ")
+        .setIconId(R.drawable.icon_location_pin));
+```
 
 
 License
@@ -24,4 +72,4 @@ License
     limitations under the License.
 
 
- [1]: http://airbnb.github.io/airbnb/airmapview/
+ [1]: http://airbnb.github.io/airbnb/AirMapView/
