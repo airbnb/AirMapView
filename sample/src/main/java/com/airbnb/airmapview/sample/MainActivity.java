@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
@@ -65,7 +66,13 @@ public class MainActivity extends ActionBarActivity
     AirMapInterface airMapInterface = null;
 
     if (id == R.id.action_native_map) {
-      airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
+      try {
+        airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
+      } catch (UnsupportedOperationException e) {
+        Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
+                       "Please make sure you have Google Play Services installed.",
+                       Toast.LENGTH_SHORT).show();
+      }
     } else if (id == R.id.action_web_map) {
       airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
     } else if (id == R.id.action_clear_logs) {
