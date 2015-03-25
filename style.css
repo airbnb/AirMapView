@@ -30,6 +30,12 @@ div {
   box-shadow: 0 4px 15px 0px #D6D9DC;
 }
 
+.demo-video {
+  width:200px;
+  height:355px;
+  margin:10px
+}
+
 .demo img {
   width: 100%;
   height: auto;
