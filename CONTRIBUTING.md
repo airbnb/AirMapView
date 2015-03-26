@@ -1,4 +1,4 @@
-# AirMapView is an OPEN Open Source Project
+# AirMapView is an Open Source Project
 
 (borrowed from the excellent [node-levelup CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONTRIBUTING.md)
 
