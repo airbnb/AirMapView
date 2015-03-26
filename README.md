@@ -14,7 +14,7 @@ will fallback to a web based map provider (currently Google Maps). AirMapView's 
 
 * Google Maps V2
 * Swap map providers at runtime
-* Web based maps for devices withotu Google Play Services
+* Web based maps for devices without Google Play Services
 
 ![](screenshots/google_maps_v2.png)
 ![](screenshots/google_web_maps.png)
