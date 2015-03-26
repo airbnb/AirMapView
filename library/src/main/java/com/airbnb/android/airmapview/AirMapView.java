@@ -203,7 +203,7 @@ public class AirMapView extends FrameLayout
 
   public void getMapMarkerScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
     if (isInitialized()) {
-      mapInterface.getLatLngScreenLocation(latLng, callback);
+      mapInterface.getScreenLocation(latLng, callback);
     }
   }
 

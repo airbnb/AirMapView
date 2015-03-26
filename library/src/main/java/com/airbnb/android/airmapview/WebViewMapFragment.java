@@ -111,8 +111,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
   }
 
-  @Override
-  public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+  @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
     drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
   }
 
@@ -220,16 +219,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     infoWindowCreator = creator;
   }
 
-  @Override
-  public void getMapScreenBounds(OnMapBoundsCallback callback) {
+  @Override public void getMapScreenBounds(OnMapBoundsCallback callback) {
     onMapBoundsCallback = callback;
     webView.loadUrl("javascript:getBounds();");
   }
 
-  @Override
-  public void getLatLngScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+  @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
     onLatLngScreenLocationCallback = callback;
-    webView.loadUrl(String.format("javascript:getLatLngScreenLocation(%1$f, %2$f);",
+    webView.loadUrl(String.format("javascript:getScreenLocation(%1$f, %2$f);",
                                   latLng.latitude, latLng.longitude));
   }
 

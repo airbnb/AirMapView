@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity
           "Map onMapClick triggered with lat: " + latLng.latitude + ", lng: "
           + latLng.longitude);
 
-      map.getMapInterface().getLatLngScreenLocation(latLng, this);
+      map.getMapInterface().getScreenLocation(latLng, this);
     } else {
       appendLog("Map onMapClick triggered with null latLng");
     }
@@ -131,8 +131,7 @@ public class MainActivity extends ActionBarActivity
     appendLog("Map onMapMarkerClick triggered with id " + id);
   }
 
-  @Override
-  public void onMapMarkerClick(Marker marker) {
+  @Override public void onMapMarkerClick(Marker marker) {
     appendLog("Map onMapMarkerClick triggered with marker " + marker.getId());
   }
 
@@ -144,8 +143,7 @@ public class MainActivity extends ActionBarActivity
     appendLog("Map onInfoWindowClick triggered with marker " + marker.getId());
   }
 
-  @Override
-  public void onLatLngScreenLocationReady(Point point) {
+  @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
   }
 }

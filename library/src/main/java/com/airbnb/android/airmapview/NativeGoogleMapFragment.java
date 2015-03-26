@@ -138,8 +138,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     callback.onMapBoundsReady(builder.build());
   }
 
-  @Override
-  public void getLatLngScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+  @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
     callback.onLatLngScreenLocationReady(googleMap.getProjection().toScreenLocation(latLng));
   }
 

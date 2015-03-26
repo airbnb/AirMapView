@@ -88,7 +88,7 @@ public interface AirMapInterface {
    * {@link OnLatLngScreenLocationCallback}
    */
 
-  void getLatLngScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
+  void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
 
   /**
    * Sets the given {@link LatLngBounds} on the map with the specified padding
