@@ -35,25 +35,25 @@ compile 'com.airbnb.android:airmapview:1.1.1'
 ## How to Use
 
 1. Define `AirMapView` in your layout file
-```xml
-<com.airbnb.android.airmapview.AirMapView
-    android:id="@+id/map_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
-```
+    ```xml
+    <com.airbnb.android.airmapview.AirMapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    ```
 
 1. Initialize in code
-```java
-mapView = (AirMapView) findViewById(R.id.map_view);
-mapView.initialize(getSupportFragmentManager());
-```
+    ```java
+    mapView = (AirMapView) findViewById(R.id.map_view);
+    mapView.initialize(getSupportFragmentManager());
+    ```
 
 1. Add markers/polylines
-```java
-map.addMarker(new AirMapMarker(latLng, markerId)
-        .setTitle("Airbnb HQ")
-        .setIconId(R.drawable.icon_location_pin));
-```
+    ```java
+    map.addMarker(new AirMapMarker(latLng, markerId)
+            .setTitle("Airbnb HQ")
+            .setIconId(R.drawable.icon_location_pin));
+    ```
 
 
 License
