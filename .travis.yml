@@ -1,0 +1,27 @@
+language: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools 21.1.2
+    - android-21
+    - extra-google-google_play_services
+    - extra-android-m2repository
+    - extra-android-support
+    - extra-google-m2repository
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+script: ./gradlew assemble testDebug
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
