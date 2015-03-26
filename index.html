@@ -26,8 +26,17 @@
       <div class='container text-center'>
         <h1 class='color-blue'>AirMapView</h1>
         <h4 class='subtitle color-dark-gray'>
-          A library to enable map user interfaces for device with and without Google Play Services.
+          A view abstraction to provide a map user
+          interface with varying underlying map providers.
         </h4>
+        <div class='container'>
+            <video class='demo-video' autoplay>
+                <source src="gmv2.webm" type="video/webm">
+            </video>
+            <video class='demo-video' autoplay >
+                <source src="webmap.webm" type="video/webm">
+            </video>
+        </div>
         <div class='callouts'>
           <a href='https://github.com/airbnb/AirMapView' target='_blank'
              class='btn color-blue border-blue'>
@@ -95,5 +104,10 @@
       var s = document.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(ga, s);
     })();
+
+    var vids=document.getElementsByTagName("video");
+    for (i=0; i<vids.length; i++) {
+      vids[i].setAttribute("loop", "true");
+    }
   </script>
 </html>
