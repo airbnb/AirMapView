@@ -3,10 +3,10 @@
 [![Build Status](https://travis-ci.org/airbnb/AirMapView.svg)](https://travis-ci.org/airbnb/AirMapView)
 
 AirMapView is a view abstraction that enables interactive maps
-for devices with and without Google Play Services. AirMapView is built
+for devices with and without Google Play Services. It is built
 to support multiple native map providers including Google Maps V2 and soon Amazon Maps V2.
 If a device does not have any supported native map provider, AirMapView
-will fallback to a web based map provider (currently Google Maps). AirMapView's original author is [Nick Adams](https://github.com/nwadams).
+will fallback to a web based map provider (currently Google Maps). Easy to integrate, it is a drop-in replacement for the Google Maps V2 package. AirMapView's original author is [Nick Adams](https://github.com/nwadams).
 
 * [Features](#features)
 * [Download](#download)
