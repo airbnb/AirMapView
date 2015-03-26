@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 /**
@@ -19,6 +20,7 @@ public class AirMapMarker<T> {
   private LatLng latLng;
   private String title;
   private int iconId;
+  private Bitmap bitmap;
   private Marker googleMarker;
 
   public AirMapMarker(LatLng latLng, long id) {
@@ -67,6 +69,11 @@ public class AirMapMarker<T> {
     return this;
   }
 
+  public AirMapMarker<T> setIcon(Bitmap bitmap) {
+    this.bitmap = bitmap;
+    return this;
+  }
+
   public T getObject() {
     return object;
   }
@@ -91,7 +98,9 @@ public class AirMapMarker<T> {
       options.title(title);
     }
 
-    if (iconId > 0) {
+    if (bitmap != null) {
+      options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+    } else if (iconId > 0) {
       options.icon(BitmapDescriptorFactory.fromResource(iconId));
     }
 

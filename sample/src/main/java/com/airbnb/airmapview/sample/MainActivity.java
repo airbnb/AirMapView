@@ -34,7 +34,6 @@ public class MainActivity extends ActionBarActivity
   private DefaultAirMapViewBuilder mapViewBuilder;
   private TextView textLogs;
   private ScrollView logsScrollView;
-  private final LatLng latLng = new LatLng(37.771883, -122.405224); // Airbnb HQ
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -70,7 +69,7 @@ public class MainActivity extends ActionBarActivity
         airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
       } catch (UnsupportedOperationException e) {
         Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                       "Please make sure you have Google Play Services installed.",
+                             "Please make sure you have Google Play Services installed.",
                        Toast.LENGTH_SHORT).show();
       }
     } else if (id == R.id.action_web_map) {
@@ -93,9 +92,16 @@ public class MainActivity extends ActionBarActivity
 
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
-    map.animateCenterZoom(latLng, 10);
+    final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
+    addMarker("Airbnb HQ", airbnbLatLng);
+    addMarker("Performance Bikes", new LatLng(37.773975,-122.40205));
+    addMarker("REI", new LatLng(37.772127, -122.404411));
+    map.animateCenterZoom(airbnbLatLng, 10);
+  }
+
+  private void addMarker(String title, LatLng latLng) {
     map.addMarker(new AirMapMarker(latLng, 1)
-                      .setTitle("Airbnb HQ")
+                      .setTitle(title)
                       .setIconId(R.mipmap.icon_location_pin));
   }
 
