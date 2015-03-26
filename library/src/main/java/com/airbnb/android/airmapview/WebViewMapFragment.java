@@ -1,10 +1,7 @@
 package com.airbnb.android.airmapview;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import android.annotation.SuppressLint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,11 +19,15 @@ import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private OnInfoWindowClickListener onInfoWindowClickListener;
   private InfoWindowCreator infoWindowCreator;
   private OnMapBoundsCallback onMapBoundsCallback;
+  private OnLatLngScreenLocationCallback onLatLngScreenLocationCallback;
   private LatLng center;
   private int zoom;
   private boolean loaded;
@@ -90,7 +92,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   public void setCenter(LatLng latLng) {
     webView.loadUrl(String.format("javascript:centerMap(%1$f, %2$f);", latLng.latitude,
-                                   latLng.longitude));
+                                  latLng.longitude));
   }
 
   public void animateCenter(LatLng latLng) {
@@ -117,8 +119,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth,
                          int fillColor) {
     webView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);",
-                                   latLng.latitude, latLng.longitude, radius, borderColor,
-                                   borderWidth, fillColor));
+                                  latLng.latitude, latLng.longitude, radius, borderColor,
+                                  borderWidth, fillColor));
   }
 
   public void highlightMarker(long markerId) {
@@ -218,9 +220,17 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     infoWindowCreator = creator;
   }
 
+  @Override
   public void getMapScreenBounds(OnMapBoundsCallback callback) {
     onMapBoundsCallback = callback;
     webView.loadUrl("javascript:getBounds();");
+  }
+
+  @Override
+  public void getLatLngScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+    onLatLngScreenLocationCallback = callback;
+    webView.loadUrl(String.format("javascript:getLatLngScreenLocation(%1$f, %2$f);",
+                                  latLng.latitude, latLng.longitude));
   }
 
   @Override public void setCenter(LatLngBounds bounds, int boundsPadding) {
@@ -270,6 +280,16 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         @Override
         public void run() {
           onMapBoundsCallback.onMapBoundsReady(bounds);
+        }
+      });
+    }
+
+    @JavascriptInterface public void getLatLngScreenLocationCallback(int x, int y) {
+      final Point point = new Point(x, y);
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          onLatLngScreenLocationCallback.onLatLngScreenLocationReady(point);
         }
       });
     }

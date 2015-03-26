@@ -1,8 +1,6 @@
 package com.airbnb.airmapview.sample;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -19,16 +17,19 @@ import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 
 public class MainActivity extends ActionBarActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
                OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
-               OnInfoWindowClickListener {
+               OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
 
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
@@ -110,6 +111,8 @@ public class MainActivity extends ActionBarActivity
       appendLog(
           "Map onMapClick triggered with lat: " + latLng.latitude + ", lng: "
           + latLng.longitude);
+
+      map.getMapInterface().getLatLngScreenLocation(latLng, this);
     } else {
       appendLog("Map onMapClick triggered with null latLng");
     }
@@ -128,7 +131,8 @@ public class MainActivity extends ActionBarActivity
     appendLog("Map onMapMarkerClick triggered with id " + id);
   }
 
-  @Override public void onMapMarkerClick(Marker marker) {
+  @Override
+  public void onMapMarkerClick(Marker marker) {
     appendLog("Map onMapMarkerClick triggered with marker " + marker.getId());
   }
 
@@ -138,5 +142,10 @@ public class MainActivity extends ActionBarActivity
 
   @Override public void onInfoWindowClick(Marker marker) {
     appendLog("Map onInfoWindowClick triggered with marker " + marker.getId());
+  }
+
+  @Override
+  public void onLatLngScreenLocationReady(Point point) {
+    appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
   }
 }

@@ -1,5 +1,6 @@
 package com.airbnb.android.airmapview;
 
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -81,6 +82,13 @@ public interface AirMapInterface {
    * Returns the map screen bounds to the supplied {@link com.airbnb.android.airmapview.listeners.OnMapBoundsCallback}
    */
   void getMapScreenBounds(OnMapBoundsCallback callback);
+
+  /**
+   * Returns the point coordinates of the LatLng in the container to the supplied
+   * {@link OnLatLngScreenLocationCallback}
+   */
+
+  void getLatLngScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
 
   /**
    * Sets the given {@link LatLngBounds} on the map with the specified padding
