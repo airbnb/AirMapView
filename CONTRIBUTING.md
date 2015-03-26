@@ -17,6 +17,7 @@ There are a few basic ground-rules for contributors:
 1. **External API changes and significant modifications** ought to be subject to an **internal pull-request** to solicit feedback from other contributors.
 1. Internal pull-requests to solicit feedback are *encouraged* for any other non-trivial contribution but left to the discretion of the contributor.
 1. Contributors should attempt to adhere to the prevailing code-style.
+1. Please follow the [Google Java Code Style Guide](https://google-styleguide.googlecode.com/svn/trunk/javaguide.html). You can import the [XML scheme](https://code.google.com/p/google-styleguide/source/browse/trunk/intellij-java-google-style.xml) and import it into Android Studio by copying it into the ``~/Library/Preferences/AndroidStudio/codestyles`` directory.
 
 ## Releases
 
