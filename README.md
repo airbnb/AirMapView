@@ -40,13 +40,13 @@ compile 'com.airbnb.android:airmapview:1.1.1'
     android:layout_height="match_parent"/>
 ```
 
-2. Initialize in code
+1. Initialize in code
 ```java
 mapView = (AirMapView) findViewById(R.id.map_view);
 mapView.initialize(getSupportFragmentManager());
 ```
 
-3. Add markers/polylines
+1. Add markers/polylines
 ```java
 map.addMarker(new AirMapMarker(latLng, markerId)
         .setTitle("Airbnb HQ")
