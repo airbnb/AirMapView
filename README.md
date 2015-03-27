@@ -55,6 +55,9 @@ compile 'com.airbnb.android:airmapview:1.1.1'
             .setIconId(R.drawable.icon_location_pin));
     ```
 
+## Native Google Maps setup
+
+With AirMapView, to support native Google maps using the [Google Maps v2](https://developers.google.com/maps/documentation/android/) SDK you will still need to set up the Google Maps SDK as described [here](https://developers.google.com/maps/documentation/android/start#getting_the_google_maps_android_api_v2)
 
 License
 --------
