@@ -1,5 +1,19 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Point;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
+import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
+import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -11,20 +25,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-
-import android.graphics.Point;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
-import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
-import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
-import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
-import com.airbnb.android.airmapview.listeners.OnMapClickListener;
-import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
-import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
@@ -136,6 +136,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
                                                             - vOffset))); // bottom-right
 
     callback.onMapBoundsReady(builder.build());
+  }
+
+  @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+    callback.onLatLngScreenLocationReady(googleMap.getProjection().toScreenLocation(latLng));
   }
 
   @Override public void setCenter(LatLngBounds latLngBounds, int boundsPadding) {

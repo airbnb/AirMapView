@@ -25,6 +25,11 @@ function initialize() {
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
+  // Access to an overlay allows us to easily find pixel location on the map
+  overlay = new google.maps.OverlayView();
+  overlay.draw = function() {};
+  overlay.setMap(map);
+
   google.maps.event.addListener(map, 'click', mapClick);
   google.maps.event.addListener(map, 'center_changed', mapMove)
 
@@ -178,6 +183,12 @@ function getBounds() {
   ne = bounds.getNorthEast();
   sw = bounds.getSouthWest();
   AirMapView.getBoundsCallback(ne.lat(), ne.lng(), sw.lat(), sw.lng());
+}
+
+function getLatLngScreenLocation(lat, lng) {
+    latLng = new google.maps.LatLng(lat, lng)
+    screenLocation = overlay.getProjection().fromLatLngToContainerPixel(latLng);
+    AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y)
 }
 
 // converts an android int color to a web color :)
