@@ -8,6 +8,8 @@ to support multiple native map providers including Google Maps V2 and soon Amazo
 If a device does not have any supported native map provider, AirMapView
 will fallback to a web based map provider (currently Google Maps). Easy to integrate, it is a drop-in replacement for the Google Maps V2 package. AirMapView's original author is [Nick Adams](https://github.com/nwadams).
 
+Download the sample app APK [here](https://www.dropbox.com/s/8gcxn2ouc44t53x/AirMapView-Sample.apk?dl=0).
+
 * [Features](#features)
 * [Download](#download)
 * [How to Use](#how-to-use)
