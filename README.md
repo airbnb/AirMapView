@@ -11,6 +11,7 @@ will fallback to a web based map provider (currently Google Maps). Easy to integ
 * [Features](#features)
 * [Download](#download)
 * [How to Use](#how-to-use)
+* [Sample App](#sample-app)
 
 ## Features
 
@@ -31,6 +32,8 @@ Grab via Gradle:
 compile 'com.airbnb.android:airmapview:1.1.1'
 ```
 
+## Sample App
+The project includes a sample app which uses AirMapView. The sample app allows toggling between map providers, exemplifies adding map markers, and displays various callback information. The sample project can be built manually or you can [download the APK](https://www.dropbox.com/s/8gcxn2ouc44t53x/AirMapView-Sample.apk?dl=0).
 
 ## How to Use
 
