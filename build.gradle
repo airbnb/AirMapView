@@ -15,8 +15,5 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            dirs 'aars'
-        }
     }
 }
