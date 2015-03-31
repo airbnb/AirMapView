@@ -185,7 +185,7 @@ function getBounds() {
   AirMapView.getBoundsCallback(ne.lat(), ne.lng(), sw.lat(), sw.lng());
 }
 
-function getLatLngScreenLocation(lat, lng) {
+function getScreenLocation(lat, lng) {
     latLng = new google.maps.LatLng(lat, lng)
     screenLocation = overlay.getProjection().fromLatLngToContainerPixel(latLng);
     AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y)

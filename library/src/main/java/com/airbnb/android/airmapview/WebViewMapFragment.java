@@ -1,5 +1,9 @@
 package com.airbnb.android.airmapview;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -19,15 +23,12 @@ import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
-import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -269,8 +270,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface
-    public void getBoundsCallback(double neLat, double neLng, double swLat, double swLng) {
+    @JavascriptInterface public void getBoundsCallback(double neLat, double neLng, double swLat, double swLng) {
       final LatLngBounds bounds = new LatLngBounds(new LatLng(swLat, swLng),
                                                    new LatLng(neLat, neLng));
       handler.post(new Runnable() {
