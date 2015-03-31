@@ -1,3 +1,7 @@
+# 1.1.4
+
+* Re-add Amazon SDK dependency and mark it as optional in the AirMapView POM.
+
 # 1.1.3
 
 * Remove Amazon AAR temporarily until we make it an optional dependency

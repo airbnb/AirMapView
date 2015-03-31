@@ -49,6 +49,22 @@ afterEvaluate { project ->
                 pom.artifactId = POM_ARTIFACT_ID
                 pom.version = VERSION_NAME
 
+                pom.withXml {
+                    asNode().dependencies.dependency.findAll { xmlDep ->
+                        // mark optional dependencies
+                        if (project.configurations.optional.allDependencies.findAll { dep ->
+                            xmlDep.groupId.text() == dep.group && xmlDep.artifactId.text() ==
+                            dep.name
+                        }) {
+                            def xmlOptional = xmlDep.optional[0];
+                            if (!xmlOptional) {
+                                xmlOptional = xmlDep.appendNode('optional')
+                            }
+                            xmlOptional.value = 'true';
+                        }
+                    }
+                }
+
                 repository(url: getReleaseRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
                 }
