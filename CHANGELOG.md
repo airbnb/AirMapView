@@ -1,3 +1,7 @@
+# 1.1.4
+
+* Fix getScreenLocation for web maps
+
 # 1.1.3
 
 * Remove Amazon AAR temporarily until we make it an optional dependency
