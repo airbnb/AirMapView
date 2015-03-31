@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply from: 'gradle-maven-push.gradle'
 
+configurations {
+    optional
+    compile.extendsFrom optional
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -26,9 +31,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.amazon.android:amazon-maps-api:2.0@aar'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.google.android.gms:play-services-maps:7.0.0'
+
+    optional 'com.amazon.android:amazon-maps-api:2.0@aar'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
