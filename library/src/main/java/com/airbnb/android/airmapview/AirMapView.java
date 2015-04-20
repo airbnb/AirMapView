@@ -67,7 +67,7 @@ public class AirMapView extends FrameLayout
     this.mapInterface.setOnMapLoadedListener(this);
 
     fragmentManager.beginTransaction()
-        .replace(R.id.map_frame, (Fragment) this.mapInterface)
+        .replace(getId(), (Fragment) this.mapInterface)
         .commit();
 
     fragmentManager.executePendingTransactions();
