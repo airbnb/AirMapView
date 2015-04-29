@@ -171,6 +171,11 @@ public interface AirMapInterface {
   void setMyLocationEnabled(boolean enabled);
 
   /**
+   * Enable a toolbar that displays various context-dependent actions.
+   */
+  void setMapToolbarEnabled(boolean enabled);
+
+  /**
    * Construct a polyline with the given {@link LatLng} points
    *
    * @param {@link AirMapPolyline} instance
