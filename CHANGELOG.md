@@ -1,3 +1,8 @@
+# 1.1.5
+
+* Add the ability to enable/disable the map toolbar (#37)
+* Updates appcompat GMS dependencies. Removes ic_launcher icon from library code (#38)
+
 # 1.1.4
 
 * Fix getScreenLocation for web maps
