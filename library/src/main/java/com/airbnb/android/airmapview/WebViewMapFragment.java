@@ -1,9 +1,5 @@
 package com.airbnb.android.airmapview;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -29,6 +25,9 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -182,6 +181,10 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void setMyLocationEnabled(boolean b) {
+    // no-op
+  }
+
+  @Override public void setMapToolbarEnabled(boolean enabled){
     // no-op
   }
 

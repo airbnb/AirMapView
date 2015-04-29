@@ -219,6 +219,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setMyLocationEnabled(enabled);
   }
 
+  @Override public void setMapToolbarEnabled(boolean enabled){
+    googleMap.getUiSettings().setMapToolbarEnabled(enabled);
+  }
+
   @Override public void addPolyline(AirMapPolyline polyline) {
     polyline.addToGoogleMap(googleMap);
   }
