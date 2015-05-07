@@ -94,20 +94,20 @@ public class MainActivity extends ActionBarActivity
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
     final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
-    addMarker("Airbnb HQ", airbnbLatLng);
-    addMarker("Performance Bikes", new LatLng(37.773975, -122.40205));
-    addMarker("REI", new LatLng(37.772127, -122.404411));
+    addMarker("Airbnb HQ", airbnbLatLng, 1);
+    addMarker("Performance Bikes", new LatLng(37.773975, -122.40205), 2);
+    addMarker("REI", new LatLng(37.772127, -122.404411), 3);
     map.animateCenterZoom(airbnbLatLng, 10);
   }
 
-  private void addMarker(String title, LatLng latLng) {
-    map.addMarker(new AirMapMarker(latLng, 1)
+  private void addMarker(String title, LatLng latLng, int id) {
+    map.addMarker(new AirMapMarker(latLng, id)
             .setTitle(title)
             .setIconId(R.mipmap.icon_location_pin));
   }
 
-  private void addMarker(String title, String snippet, LatLng latLng){
-    map.addMarker(new AirMapMarker(latLng, 1)
+  private void addMarker(String title, String snippet, LatLng latLng, int id){
+    map.addMarker(new AirMapMarker(latLng, id)
             .setTitle(title)
             .setSnippet(snippet)
             .setIconId(R.mipmap.icon_location_pin));
