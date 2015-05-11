@@ -92,22 +92,15 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
   });
 
-  if (title == "null" && snippet == "null") {
-        <!-- Title and snippet not set, don't create default InfoWindow -->
-  } else if (title != "null" && snippet == "null") {
+  if(title != "null" || snippet != "null") {
     var content = document.createElement("div");
-    content.innerHTML = '<div id="title"><b>' + title + '</b></div>';
+    if(title != "null")  {
+        content.innerHTML += '<div id="title"><b>' + title + '</b></div>';
+    }
 
-    infoWindowContent[id] = content;
-  } else if (title == "null" && snippet != "null") {
-    var content = document.createElement("div");
-    content.innerHTML = '<div id="snippet">' + snippet + '</div>';
-
-    infoWindowContent[id] = content;
-  } else if (title != "null" && snippet != "null") {
-    var content = document.createElement("div");
-    content.innerHTML = '<div id="title"><b>' + title + '</b></div>' +
-                        '<div id="snippet">' + snippet + '</div>';
+    if(snippet != "null") {
+        content.innerHTML += '<div id="snippet">' + snippet + '</div>';
+    }
 
     infoWindowContent[id] = content;
   }
