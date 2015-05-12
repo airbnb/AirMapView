@@ -106,13 +106,6 @@ public class MainActivity extends ActionBarActivity
             .setIconId(R.mipmap.icon_location_pin));
   }
 
-  private void addMarker(String title, String snippet, LatLng latLng, int id){
-    map.addMarker(new AirMapMarker(latLng, id)
-            .setTitle(title)
-            .setSnippet(snippet)
-            .setIconId(R.mipmap.icon_location_pin));
-  }
-
   @Override public void onMapClick(LatLng latLng) {
     if (latLng != null) {
       appendLog(
