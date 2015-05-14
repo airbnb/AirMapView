@@ -13,7 +13,9 @@
     <script src="MAPURL?v=3.exp&sensor=false&language=LANGTOKEN&region=REGIONTOKEN"></script>
     <script>
 var map;
+var infoWindow = null;
 var markers = {};
+var infoWindowContent = {};
 var polylines = {};
 var moveTimeout;
 function initialize() {
@@ -82,7 +84,7 @@ function addMarker(lat, lng) {
   });
 }
 
-function addMarkerWithId(lat, lng, id) {
+function addMarkerWithId(lat, lng, id, title, snippet) {
   var position = new google.maps.LatLng(lat, lng);
   var marker = new google.maps.Marker({
       position: position,
@@ -90,12 +92,40 @@ function addMarkerWithId(lat, lng, id) {
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
   });
 
+  if(title != "null" || snippet != "null") {
+    var content = document.createElement("div");
+    if(title != "null")  {
+        content.innerHTML += '<div id="title"><b>' + title + '</b></div>';
+    }
+
+    if(snippet != "null") {
+        content.innerHTML += '<div id="snippet">' + snippet + '</div>';
+    }
+
+    infoWindowContent[id] = content;
+  }
+
   google.maps.event.addListener(marker, 'click', function() {
     map.panTo(marker.position);
     AirMapView.markerClick(id);
   });
 
   markers[id] = marker;
+}
+
+function showDefaultInfoWindow(id){
+    if(infoWindow){
+        infoWindow.close();
+    }
+    if(id in infoWindowContent){
+        infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent[id]
+        });
+        infoWindow.open(map, markers[id]);
+        google.maps.event.addDomListener(infoWindowContent[id], 'click', function() {
+            AirMapView.defaultInfoWindowClick(id);
+        });
+    }
 }
 
 function removeMarker(id) {
@@ -156,6 +186,9 @@ function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
 
 function mapClick(event) {
   AirMapView.mapClick(event.latLng.lat(), event.latLng.lng());
+  if(infoWindow){
+    infoWindow.close();
+  }
 }
 
 function mapMove() {

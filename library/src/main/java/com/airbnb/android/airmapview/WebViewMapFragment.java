@@ -140,8 +140,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   @Override public void addMarker(AirMapMarker marker) {
     LatLng latLng = marker.getLatLng();
-    webView.loadUrl(String.format("javascript:addMarkerWithId(%1$f, %2$f, %3$d);",
-                                   latLng.latitude, latLng.longitude, marker.getId()));
+    webView.loadUrl(String.format("javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
+                                   latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(), marker.getSnippet()));
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
@@ -348,9 +348,22 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
                 }
               }
             });
+          } else {
+            webView.loadUrl(String.format("javascript:showDefaultInfoWindow(%1$d);", markerId));
           }
 
           ignoreNextMapMove = true;
+        }
+      });
+    }
+
+    @JavascriptInterface public void defaultInfoWindowClick(final long markerId) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          if(onInfoWindowClickListener != null){
+            onInfoWindowClickListener.onInfoWindowClick(markerId);
+          }
         }
       });
     }

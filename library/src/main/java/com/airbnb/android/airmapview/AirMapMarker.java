@@ -1,13 +1,13 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Bitmap;
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.graphics.Bitmap;
-import android.text.TextUtils;
 
 /**
  * Helper class for keeping record of data needed to display map markers, as well as an object T
@@ -19,6 +19,7 @@ public class AirMapMarker<T> {
   private long id;
   private LatLng latLng;
   private String title;
+  private String snippet;
   private int iconId;
   private Bitmap bitmap;
   private Marker googleMarker;
@@ -60,6 +61,15 @@ public class AirMapMarker<T> {
     return this;
   }
 
+  public String getSnippet() {
+    return snippet;
+  }
+
+  public AirMapMarker<T> setSnippet(String snippet) {
+    this.snippet = snippet;
+    return this;
+  }
+
   public int getIconId() {
     return iconId;
   }
@@ -96,6 +106,10 @@ public class AirMapMarker<T> {
 
     if (!TextUtils.isEmpty(title)) {
       options.title(title);
+    }
+
+    if (!TextUtils.isEmpty(snippet)) {
+      options.snippet(snippet);
     }
 
     if (bitmap != null) {
