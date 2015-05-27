@@ -60,6 +60,9 @@ function startTrackingUserLocation() {
 function stopTrackingUserLocation() {
     GeoMarker.setMap(null);
 }
+function setTouchEnabled(enabled) {
+  map.setOptions({draggable: enabled, zoomControl: enabled, scrollwheel: enabled, disableDoubleClickZoom: !enabled});
+}
 
 function clearMarkers() {
   for (var key in markers) {

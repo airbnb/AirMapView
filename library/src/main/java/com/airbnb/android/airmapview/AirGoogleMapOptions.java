@@ -76,6 +76,14 @@ public class AirGoogleMapOptions {
     return this;
   }
 
+  public AirGoogleMapOptions setTouchEnabled(boolean enabled) {
+    tiltGesturesEnabled(enabled);
+    rotateGesturesEnabled(enabled);
+    zoomGesturesEnabled(enabled);
+    scrollGesturesEnabled(enabled);
+    return this;
+  }
+
   public Boolean getZOrderOnTop() {
     return options.getZOrderOnTop();
   }

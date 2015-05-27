@@ -248,4 +248,9 @@ public interface AirMapInterface {
    * Remove GeoJson layer from map, if any.
    */
   void clearGeoJsonLayer();
+  /**
+   * Set to whether to enable touch. If it's disabled then the user won't be allowed to drag, zoom or pan.
+   * @param enabled
+   */
+  void setTouchEnabled(boolean enabled);
 }

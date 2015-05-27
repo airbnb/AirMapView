@@ -243,6 +243,11 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     // no-op
   }
 
+  @Override
+  public void setTouchEnabled(boolean enabled) {
+    webView.loadUrl("javascript:setTouchEnabled(" + enabled + ");");
+  }
+
   @Override public <T> void addPolyline(AirMapPolyline<T> polyline) {
     try {
       JSONArray array = new JSONArray();
