@@ -48,6 +48,35 @@ function setZoom(zoom) {
 }
 
 
+function highlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(L.mapbox.marker.icon({
+        'marker-color': '8a8acb'
+    }));
+  }
+}
+
+function unhighlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(L.mapbox.marker.icon({
+        'marker-color': 'e55e5e'
+    }));
+  }
+}
+
+function addMarker(lat, lng) {
+  var marker = L.marker(new L.LatLng(lat, lng), {
+      icon: L.mapbox.marker.icon({
+          'marker-color': 'e55e5e'
+      })
+  });
+  marker.addTo(map);
+}
+
+
+
 </script>
 
 </body>
