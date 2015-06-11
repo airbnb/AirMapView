@@ -17,8 +17,37 @@
 
 <div id='map'></div>
 <script>
+var map;
+var markers = {};
+
 L.mapbox.accessToken = 'pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA';
-var map = L.mapbox.map('map', 'mapbox.streets').setView([40, -74.50], 9);
+map = L.mapbox.map('map', 'mapbox.streets').setView([0, 0], 10);
+
+
+function clearMarkers() {
+  for (lc = 0; lc < markers.length; lc++) {
+    map.removeLayer(markers[lc]);
+  }
+  markers = {};
+}
+
+function setBounds(neLat, neLng, swLat, swLng) {
+  var southWest = L.latLng(swLat, swLng);
+  var northEast = L.latLng(neLat, neLng);
+  var bounds = L.latLngBounds(southWest, northEast);
+  map.fitBounds(bounds);
+}
+
+function centerMap(lat, lng) {
+  var latLng = L.latLng(lat, lng);
+  map.panTo(latLng);
+}
+
+function setZoom(zoom) {
+  map.setZoom(zoom);
+}
+
+
 </script>
 
 </body>
