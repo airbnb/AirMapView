@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+    <script src="MAPURL/mapbox.js"></script>
+    <link href='MAPURL/mapbox.css' rel='stylesheet' />
+</head>
+
+<body>
+
+
+
+<div id='map'></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA';
+var map = L.mapbox.map('map', 'mapbox.streets').setView([40, -74.50], 9);
+</script>
+
+</body>
+
+</html>
