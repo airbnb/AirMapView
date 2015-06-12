@@ -22,7 +22,7 @@ var markers = {};
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA';
 map = L.mapbox.map('map', 'mapbox.streets').setView([0, 0], 10);
-
+AirMapView.onMapLoaded();
 
 function clearMarkers() {
   for (lc = 0; lc < markers.length; lc++) {
