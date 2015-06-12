@@ -20,6 +20,7 @@ public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragmen
   @Override public WebViewMapFragment build() {
     if (options == null) {
       options = new MapboxWebMapType();
+//      options = new GoogleWebMapType();
     }
     if (options instanceof MapboxWebMapType) {
       return MapboxWebViewMapFragment.newInstance(options);
