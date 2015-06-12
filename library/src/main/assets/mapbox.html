@@ -141,18 +141,9 @@ function removeAllPolylines() {
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
-  var position = new google.maps.LatLng(lat, lng);
-  var populationOptions = {
-      strokeColor: strokeColor,
-      strokeOpacity: 0.50,
-      strokeWeight: strokeWeight,
-      fillColor: fillColor,
-      fillOpacity: 0.35,
-      map: map,
-      center: position,
-      radius: radius
-    };
-    cityCircle = new google.maps.Circle(populationOptions);
+
+    L.circle([lat, lng], radius).addTo(map);
+
 }
 
 function mapClick(event) {

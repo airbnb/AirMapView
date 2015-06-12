@@ -109,6 +109,9 @@ public class MainActivity extends ActionBarActivity
     latLngs.add(new LatLng(37.77811, -122.39160));
     latLngs.add(new LatLng(37.77787, -122.38864));
     map.addPolyline(new AirMapPolyline(latLngs, 5));
+
+    // Add Circle
+    map.drawCircle(new LatLng(37.78443, -122.40805), 1000);
   }
 
   private void addMarker(String title, LatLng latLng, int id) {
