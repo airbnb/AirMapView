@@ -142,7 +142,7 @@ function removeAllPolylines() {
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
 
-    L.circle([lat, lng], radius).addTo(map);
+    L.circle([lat, lng], radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
 
 }
 
