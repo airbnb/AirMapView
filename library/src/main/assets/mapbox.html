@@ -111,6 +111,41 @@ function removeMarker(id) {
   }
 }
 
+function addPolyline(points, id, width, color) {
+  var pointsArray = [];
+
+  for (var i = 0; i < points.length; i++) {
+    var point = points[i];
+    var position = L.latLng(point["lat"], point["lng"]);
+    pointsArray.push(point);
+  }
+
+  color = formatColor(color);
+
+  var polyLine = L.polyLine(pointsArray, {color: color, weight: width / 2}).addTo(map);
+
+  polylines[id] = polyLine;
+}
+
+function removePolyline(id) {
+  var polyline = polylines[id];
+  if (polyline != null) {
+    map.removeLayer(polyLine);
+  }
+}
+
+function removeAllPolylines() {
+  for (var key in polylines) {
+    removePolyline(key);
+  }
+  polylines = {};
+}
+
+// converts an android int color to a web color :)
+function formatColor(color) {
+  return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
+}
+
 </script>
 
 </body>
