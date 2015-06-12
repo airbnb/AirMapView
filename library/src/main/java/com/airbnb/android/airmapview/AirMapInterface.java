@@ -188,4 +188,10 @@ public interface AirMapInterface {
    * @param polyline the {@link Polyline} to remove
    */
   void removePolyline(AirMapPolyline polyline);
+
+  /**
+   * Zoom map to fit the given {@Link AirMapMarker} markers
+   */
+
+  void zoomToFitMarkers(int padding, AirMapMarker... markers);
 }
