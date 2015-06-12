@@ -224,6 +224,16 @@ function getScreenLocation(lat, lng) {
     AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y)
 }
 
+function zoomToFitMarkers(markers) {
+    var bounds = new google.maps.LatLngBounds();
+
+    for (var i in markers) {
+        bounds.extend(new google.maps.LatLng(markers[i].lat, markers[i].lng));
+    }
+
+    map.fitBounds(bounds);
+}
+
 // converts an android int color to a web color :)
 function formatColor(color) {
   return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);

@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
-import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -229,6 +230,23 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void removePolyline(AirMapPolyline polyline) {
     polyline.removeFromGoogleMap();
+  }
+
+  @Override
+  public void zoomToFitMarkers(int padding, AirMapMarker... markers) {
+    LatLngBounds.Builder b = new LatLngBounds.Builder();
+    for(AirMapMarker marker : markers){
+      b.include(marker.getLatLng());
+    }
+    LatLngBounds bounds = b.build();
+    final CameraUpdate cu = CameraUpdateFactory
+            .newLatLngBounds(bounds, padding);
+    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+      @Override
+      public void onMapLoaded() {
+        googleMap.animateCamera(cu);
+      }
+    });
   }
 
   /**

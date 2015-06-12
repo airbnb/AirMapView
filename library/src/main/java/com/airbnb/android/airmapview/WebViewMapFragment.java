@@ -241,6 +241,22 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
                                    bounds.southwest.longitude));
   }
 
+  @Override public void zoomToFitMarkers(int padding, AirMapMarker... markers) {
+    try {
+      JSONArray markerArray = new JSONArray();
+      for (AirMapMarker marker : markers) {
+        JSONObject jsonMarker = new JSONObject();
+        jsonMarker.put("lat", marker.getLatLng().latitude);
+        jsonMarker.put("lng", marker.getLatLng().longitude);
+        markerArray.put(jsonMarker);
+      }
+
+      webView.loadUrl("javascript:zoomToFitMarkers(" + markerArray.toString() + ");");
+    } catch (JSONException e) {
+      Log.e(TAG, "Error zooming to fit markers,");
+    }
+  }
+
   private class MapsJavaScriptInterface {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
