@@ -120,7 +120,8 @@ function addPolyline(points, id, width, color) {
     pointsArray.push(point);
   }
 
-  var polyLine = L.polyline(pointsArray, {color: 'red'}).addTo(map);
+  color = formatColor(color);
+  var polyLine = L.polyline(pointsArray, {color: color}).addTo(map);
 
   polylines[id] = polyLine;
 }
