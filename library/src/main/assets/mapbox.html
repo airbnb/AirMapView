@@ -141,6 +141,58 @@ function removeAllPolylines() {
   polylines = {};
 }
 
+function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
+  var position = new google.maps.LatLng(lat, lng);
+  var populationOptions = {
+      strokeColor: strokeColor,
+      strokeOpacity: 0.50,
+      strokeWeight: strokeWeight,
+      fillColor: fillColor,
+      fillOpacity: 0.35,
+      map: map,
+      center: position,
+      radius: radius
+    };
+    cityCircle = new google.maps.Circle(populationOptions);
+}
+
+function mapClick(event) {
+  AirMapView.mapClick(event.latLng.lat(), event.latLng.lng());
+}
+
+function mapMove() {
+  if (moveTimeout != null) {
+    clearTimeout(moveTimeout);
+  }
+  // javascript bridge not fast enough to handle events immediately.
+  moveTimeout = setTimeout(function() {
+    var latLng = map.getCenter();
+    if (latLng != null) {
+      AirMapView.mapMove(latLng.lat(), latLng.lng(), map.getZoom());
+    }
+  }, 200);
+}
+
+function getCenter() {
+  var latLng = map.getCenter();
+  if (latLng != null) {
+    AirMapView.mapCenterCallback(latLng.lat(), latLng.lng());
+  }
+}
+
+function getBounds() {
+  bounds = map.getBounds();
+  ne = bounds.getNorthEast();
+  sw = bounds.getSouthWest();
+  AirMapView.getBoundsCallback(ne.lat(), ne.lng(), sw.lat(), sw.lng());
+}
+
+function getScreenLocation(lat, lng) {
+    latLng = L.latLng(lat, lng)
+    screenLocation = latLngToLayerPoint(latLng);
+    AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y)
+}
+
 // converts an android int color to a web color :)
 function formatColor(color) {
   return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
