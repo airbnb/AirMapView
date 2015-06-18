@@ -198,9 +198,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     // no-op
   }
 
-  @Override public void setMyLocationEnabled(boolean b) {
-    this.trackUserLocation = b;
-    if (b) {
+  @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
+    this.trackUserLocation = trackUserLocationEnabled;
+    if (trackUserLocationEnabled) {
       webView.loadUrl("javascript:startTrackingUserLocation();");
     } else {
       webView.loadUrl("javascript:stopTrackingUserLocation();");
