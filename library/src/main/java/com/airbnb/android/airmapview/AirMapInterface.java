@@ -188,4 +188,14 @@ public interface AirMapInterface {
    * @param polyline the {@link Polyline} to remove
    */
   void removePolyline(AirMapPolyline polyline);
+
+  /**
+   * Start tracking the user location, adding a marker for that
+   */
+  void startTrackingUserLocation();
+
+  /**
+   * Stop tracking the user location
+   */
+  void stopTrackingUserLocation();
 }

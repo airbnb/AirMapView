@@ -12,9 +12,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
@@ -60,6 +63,16 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     return this;
   }
 
+  public class GeoWebChromeClient extends WebChromeClient {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin,
+                                                   GeolocationPermissions.Callback callback) {
+      // Always grant permission since the app itself requires location
+      // permission and the user has therefore already granted it
+      callback.invoke(origin, true, false);
+    }
+  }
+
   @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +85,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webViewSettings.setSupportZoom(true);
     webViewSettings.setBuiltInZoomControls(false);
     webViewSettings.setJavaScriptEnabled(true);
+    webViewSettings.setGeolocationEnabled(true);
+
+    webView.setWebChromeClient(new GeoWebChromeClient());
 
     AirMapType mapType = AirMapType.fromBundle(getArguments());
 
@@ -239,6 +255,16 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
                                    bounds.northeast.latitude, bounds.northeast.longitude,
                                    bounds.southwest.latitude,
                                    bounds.southwest.longitude));
+  }
+
+  @Override
+  public void startTrackingUserLocation() {
+    webView.loadUrl("javascript:startTrackingUserLocation();");
+  }
+
+  @Override
+  public void stopTrackingUserLocation() {
+    webView.loadUrl("javascript:stopTrackingUserLocation();");
   }
 
   private class MapsJavaScriptInterface {

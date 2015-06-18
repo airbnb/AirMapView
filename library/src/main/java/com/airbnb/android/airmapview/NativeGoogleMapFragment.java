@@ -231,6 +231,16 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     polyline.removeFromGoogleMap();
   }
 
+  @Override
+  public void startTrackingUserLocation() {
+    googleMap.setMyLocationEnabled(true);
+  }
+
+  @Override
+  public void stopTrackingUserLocation() {
+    googleMap.setMyLocationEnabled(false);
+  }
+
   /**
    * This method will return the google map if initialized. Will return null otherwise
    *
