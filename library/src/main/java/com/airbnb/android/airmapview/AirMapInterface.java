@@ -165,10 +165,14 @@ public interface AirMapInterface {
   void setPadding(int left, int top, int right, int bottom);
 
   /**
-   * Enable an indicator for the user's location on the map. This is currently only supported on
-   * Google Play Services maps
+   * Enable an indicator for the user's location on the map.
    */
   void setMyLocationEnabled(boolean enabled);
+
+  /**
+   * Check if the user location is being tracked and shown on te map.
+   */
+  boolean isMyLocationEnabled();
 
   /**
    * Enable a toolbar that displays various context-dependent actions.
@@ -188,14 +192,4 @@ public interface AirMapInterface {
    * @param polyline the {@link Polyline} to remove
    */
   void removePolyline(AirMapPolyline polyline);
-
-  /**
-   * Start tracking the user location, adding a marker for that
-   */
-  void startTrackingUserLocation();
-
-  /**
-   * Stop tracking the user location
-   */
-  void stopTrackingUserLocation();
 }

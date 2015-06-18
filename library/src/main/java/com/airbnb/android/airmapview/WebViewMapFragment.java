@@ -58,6 +58,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean ignoreNextMapMove;
   private View infoWindowView;
 
+  private boolean trackUserLocation = false;
+
   public WebViewMapFragment setArguments(AirMapType mapType) {
     setArguments(mapType.toBundle());
     return this;
@@ -197,7 +199,17 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void setMyLocationEnabled(boolean b) {
-    // no-op
+    this.trackUserLocation = b;
+    if (b) {
+      webView.loadUrl("javascript:startTrackingUserLocation();");
+    } else {
+      webView.loadUrl("javascript:stopTrackingUserLocation();");
+    }
+  }
+
+  @Override
+  public boolean isMyLocationEnabled() {
+    return trackUserLocation;
   }
 
   @Override public void setMapToolbarEnabled(boolean enabled){
@@ -255,16 +267,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
                                    bounds.northeast.latitude, bounds.northeast.longitude,
                                    bounds.southwest.latitude,
                                    bounds.southwest.longitude));
-  }
-
-  @Override
-  public void startTrackingUserLocation() {
-    webView.loadUrl("javascript:startTrackingUserLocation();");
-  }
-
-  @Override
-  public void stopTrackingUserLocation() {
-    webView.loadUrl("javascript:stopTrackingUserLocation();");
   }
 
   private class MapsJavaScriptInterface {

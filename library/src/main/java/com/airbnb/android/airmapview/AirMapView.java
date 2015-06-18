@@ -39,8 +39,6 @@ public class AirMapView extends FrameLayout
   private OnMapMarkerClickListener onMapMarkerClickListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
 
-  private boolean trackUserLocation = false;
-
   public AirMapView(Context context) {
     super(context);
     inflateView();
@@ -292,13 +290,8 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
-  public void setTrackUserLocation(boolean trackUserLocation) {
-    this.trackUserLocation = trackUserLocation;
-    if (trackUserLocation) {
-      mapInterface.startTrackingUserLocation();
-    } else {
-      mapInterface.stopTrackingUserLocation();
-    }
+  public void setMyLocationEnabled(boolean trackUserLocation) {
+    mapInterface.setMyLocationEnabled(trackUserLocation);
   }
 
   @Override public void onCameraChanged(LatLng latLng, int zoom) {
