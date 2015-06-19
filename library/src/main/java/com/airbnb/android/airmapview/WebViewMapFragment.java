@@ -241,7 +241,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
                                    bounds.southwest.longitude));
   }
 
-  @Override public void zoomToFitMarkers(int padding, AirMapMarker... markers) {
+  @Override public void zoomToFitMarkers(int padding, List<AirMapMarker> markers) {
     try {
       JSONArray markerArray = new JSONArray();
       for (AirMapMarker marker : markers) {

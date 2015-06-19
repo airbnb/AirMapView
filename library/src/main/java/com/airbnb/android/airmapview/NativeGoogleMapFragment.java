@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.List;
+
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
   private GoogleMap googleMap;
@@ -233,18 +235,18 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override
-  public void zoomToFitMarkers(int padding, AirMapMarker... markers) {
-    LatLngBounds.Builder b = new LatLngBounds.Builder();
+  public void zoomToFitMarkers(int padding, List<AirMapMarker> markers) {
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
     for(AirMapMarker marker : markers){
-      b.include(marker.getLatLng());
+      builder.include(marker.getLatLng());
     }
-    LatLngBounds bounds = b.build();
-    final CameraUpdate cu = CameraUpdateFactory
+    LatLngBounds bounds = builder.build();
+    final CameraUpdate cameraUpdate = CameraUpdateFactory
             .newLatLngBounds(bounds, padding);
     googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
       @Override
       public void onMapLoaded() {
-        googleMap.animateCamera(cu);
+        googleMap.animateCamera(cameraUpdate);
       }
     });
   }

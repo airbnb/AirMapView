@@ -14,6 +14,8 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 
+import java.util.List;
+
 public interface AirMapInterface {
 
   int CIRCLE_FILL_COLOR = 0x00D1C1;
@@ -193,5 +195,5 @@ public interface AirMapInterface {
    * Zoom map to fit the given {@Link AirMapMarker} markers
    */
 
-  void zoomToFitMarkers(int padding, AirMapMarker... markers);
+  void zoomToFitMarkers(int padding, List<AirMapMarker> markers);
 }
