@@ -12,9 +12,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
@@ -55,9 +58,21 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean ignoreNextMapMove;
   private View infoWindowView;
 
+  private boolean trackUserLocation = false;
+
   public WebViewMapFragment setArguments(AirMapType mapType) {
     setArguments(mapType.toBundle());
     return this;
+  }
+
+  public class GeoWebChromeClient extends WebChromeClient {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin,
+                                                   GeolocationPermissions.Callback callback) {
+      // Always grant permission since the app itself requires location
+      // permission and the user has therefore already granted it
+      callback.invoke(origin, true, false);
+    }
   }
 
   @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
@@ -72,6 +87,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webViewSettings.setSupportZoom(true);
     webViewSettings.setBuiltInZoomControls(false);
     webViewSettings.setJavaScriptEnabled(true);
+    webViewSettings.setGeolocationEnabled(true);
+
+    webView.setWebChromeClient(new GeoWebChromeClient());
 
     AirMapType mapType = AirMapType.fromBundle(getArguments());
 
@@ -180,8 +198,18 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     // no-op
   }
 
-  @Override public void setMyLocationEnabled(boolean b) {
-    // no-op
+  @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
+    this.trackUserLocation = trackUserLocationEnabled;
+    if (trackUserLocationEnabled) {
+      webView.loadUrl("javascript:startTrackingUserLocation();");
+    } else {
+      webView.loadUrl("javascript:stopTrackingUserLocation();");
+    }
+  }
+
+  @Override
+  public boolean isMyLocationEnabled() {
+    return trackUserLocation;
   }
 
   @Override public void setMapToolbarEnabled(boolean enabled){
