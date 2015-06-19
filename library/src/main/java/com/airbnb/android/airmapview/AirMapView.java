@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.Marker;
 
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener,
-               OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
+        OnMapMarkerClickListener, OnMapInitializedListener, OnInfoWindowClickListener, OnMapLoadedListener {
 
   private static final int INVALID_ZOOM = -1;
 
@@ -38,6 +38,7 @@ public class AirMapView extends FrameLayout
   private OnMapClickListener onMapClickListener;
   private OnMapMarkerClickListener onMapMarkerClickListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
+  private OnMapLoadedListener onMapLoadedListener;
 
   public AirMapView(Context context) {
     super(context);
@@ -64,6 +65,7 @@ public class AirMapView extends FrameLayout
     }
 
     this.mapInterface = mapInterface;
+    this.mapInterface.setOnMapInitialisedListener(this);
     this.mapInterface.setOnMapLoadedListener(this);
 
     fragmentManager.beginTransaction()
@@ -93,6 +95,10 @@ public class AirMapView extends FrameLayout
 
   public void setOnMapInitializedListener(OnMapInitializedListener mapInitializedListener) {
     onMapInitializedListener = mapInitializedListener;
+  }
+
+  public void setOnMapLoadedListener(OnMapLoadedListener mapLoadedListener) {
+    onMapLoadedListener = mapLoadedListener;
   }
 
   @Override
@@ -316,17 +322,8 @@ public class AirMapView extends FrameLayout
   }
 
   @Override public void onMapLoaded() {
-    if (isInitialized()) {
-      mapInterface.setOnCameraChangeListener(this);
-      mapInterface.setOnMapClickListener(this);
-      mapInterface.setOnMarkerClickListener(this);
-      mapInterface.setOnInfoWindowClickListener(this);
-
-      if (onMapInitializedListener != null) {
-        // only send map Initialized callback if map initialized successfully
-        // initialization can fail if the map leaves the screen before it loads
-        onMapInitializedListener.onMapInitialized();
-      }
+    if (onMapLoadedListener != null) {
+      onMapLoadedListener.onMapLoaded();
     }
   }
 
@@ -339,6 +336,22 @@ public class AirMapView extends FrameLayout
   @Override public void onInfoWindowClick(Marker marker) {
     if (onInfoWindowClickListener != null) {
       onInfoWindowClickListener.onInfoWindowClick(marker);
+    }
+  }
+
+  @Override
+  public void onMapInitialized() {
+    if (isInitialized()) {
+      mapInterface.setOnCameraChangeListener(this);
+      mapInterface.setOnMapClickListener(this);
+      mapInterface.setOnMarkerClickListener(this);
+      mapInterface.setOnInfoWindowClickListener(this);
+
+      if (onMapInitializedListener != null) {
+        // only send map Initialized callback if map initialized successfully
+        // initialization can fail if the map leaves the screen before it loads
+        onMapInitializedListener.onMapInitialized();
+      }
     }
   }
 }

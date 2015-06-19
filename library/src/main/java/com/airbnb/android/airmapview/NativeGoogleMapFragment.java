@@ -2,6 +2,7 @@ package com.airbnb.android.airmapview;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,7 +33,10 @@ import java.util.List;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
+  private static final String TAG = NativeGoogleMapFragment.class.getSimpleName();
+
   private GoogleMap googleMap;
+  private OnMapInitializedListener onMapInitializedListener;
   private OnMapLoadedListener onMapLoadedListener;
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
@@ -63,9 +68,18 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
           settings.setMyLocationButtonEnabled(false);
           setMyLocationEnabled(true);
 
-          if (onMapLoadedListener != null) {
-            onMapLoadedListener.onMapLoaded();
+          if (onMapInitializedListener != null) {
+            onMapInitializedListener.onMapInitialized();
           }
+
+          googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+              if (onMapLoadedListener != null) {
+                onMapLoadedListener.onMapLoaded();
+              }
+            }
+          });
         }
       }
     });
@@ -187,6 +201,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     this.onMapLoadedListener = onMapLoadedListener;
   }
 
+  @Override
+  public void setOnMapInitialisedListener(OnMapInitializedListener onMapInitialisedListener) {
+    this.onMapInitializedListener = onMapInitialisedListener;
+  }
+
   @Override public void setCenterZoom(LatLng latLng, int zoom) {
     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
   }
@@ -241,14 +260,13 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       builder.include(marker.getLatLng());
     }
     LatLngBounds bounds = builder.build();
-    final CameraUpdate cameraUpdate = CameraUpdateFactory
+    CameraUpdate cameraUpdate = CameraUpdateFactory
             .newLatLngBounds(bounds, padding);
-    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-      @Override
-      public void onMapLoaded() {
-        googleMap.animateCamera(cameraUpdate);
-      }
-    });
+    try {
+      googleMap.animateCamera(cameraUpdate);
+    } catch (IllegalStateException e) {
+      Log.e(TAG, e.getMessage());
+    }
   }
 
   /**

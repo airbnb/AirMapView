@@ -1,6 +1,7 @@
 package com.airbnb.android.airmapview;
 
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -129,6 +130,8 @@ public interface AirMapInterface {
   void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener);
 
   void setOnMapLoadedListener(OnMapLoadedListener onMapLoadedListener);
+
+  void setOnMapInitialisedListener(OnMapInitializedListener onMapInitialisedListener);
 
   /**
    * Set the center of the map, and zoom level

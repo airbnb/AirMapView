@@ -23,6 +23,7 @@ import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +44,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private ViewGroup mLayout;
   private OnMapClickListener onMapClickListener;
   private OnCameraChangeListener onCameraChangeListener;
+  private OnMapInitializedListener onMapInitializedListener;
   private OnMapLoadedListener onMapLoadedListener;
   private OnMapMarkerClickListener onMapMarkerClickListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
@@ -156,6 +158,15 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     onCameraChangeListener = listener;
   }
 
+  @Override
+  public void setOnMapInitialisedListener(OnMapInitializedListener listener) {
+    this.onMapInitializedListener = listener;
+    if (loaded) {
+      onMapInitializedListener.onMapInitialized();
+    }
+  }
+
+  @Override
   public void setOnMapLoadedListener(OnMapLoadedListener listener) {
     onMapLoadedListener = listener;
     if (loaded) {
@@ -269,6 +280,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             loaded = true;
             if (onMapLoadedListener != null) {
               onMapLoadedListener.onMapLoaded();
+            }
+            if (onMapInitializedListener != null) {
+              onMapInitializedListener.onMapInitialized();
             }
           }
         }
