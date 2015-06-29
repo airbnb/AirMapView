@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Updates project dependencies (compile sdk version, build tools, appcompat and play services) to latest
+
 # 1.1.5
 
 * Add the ability to enable/disable the map toolbar (#37)
