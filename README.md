@@ -29,7 +29,7 @@ will fallback to a web based map provider (currently Google Maps). Easy to integ
 Grab via Gradle:
 
 ```groovy
-compile 'com.airbnb.android:airmapview:1.1.5'
+compile 'com.airbnb.android:airmapview:1.2.0'
 ```
 
 ## Sample App
