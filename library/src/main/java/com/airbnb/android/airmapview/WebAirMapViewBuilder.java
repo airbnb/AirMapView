@@ -44,10 +44,12 @@ public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragmen
   @Override public WebViewMapFragment build() {
     if (options == null) {
       options = new MapboxWebMapType(mapboxAccessToken, mapboxMapId);
-//      options = new GoogleWebMapType();
     }
     if (options instanceof MapboxWebMapType) {
       return MapboxWebViewMapFragment.newInstance(options);
+    }
+    if (options instanceof GoogleWebMapType) {
+      return GoogleWebViewMapFragment.newInstance(options);
     }
     if (options instanceof GoogleChinaMapType) {
       return GoogleChinaWebViewMapFragment.newInstance(options);
