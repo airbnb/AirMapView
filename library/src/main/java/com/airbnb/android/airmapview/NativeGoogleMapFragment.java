@@ -219,6 +219,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setMyLocationEnabled(enabled);
   }
 
+  @Override
+  public boolean isMyLocationEnabled() {
+    return googleMap.isMyLocationEnabled();
+  }
+
   @Override public void setMapToolbarEnabled(boolean enabled){
     googleMap.getUiSettings().setMapToolbarEnabled(enabled);
   }
@@ -230,6 +235,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   @Override public void removePolyline(AirMapPolyline polyline) {
     polyline.removeFromGoogleMap();
   }
+
 
   /**
    * This method will return the google map if initialized. Will return null otherwise

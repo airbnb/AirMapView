@@ -1,3 +1,9 @@
+# 1.2.0
+
+* Updates project dependencies (compile sdk version, build tools, appcompat and play services) to latest
+* Adds snippet field to AirMapMarker (PR #39)
+* Add geolocation support for tracking user location (PR #45)
+
 # 1.1.5
 
 * Add the ability to enable/disable the map toolbar (#37)
