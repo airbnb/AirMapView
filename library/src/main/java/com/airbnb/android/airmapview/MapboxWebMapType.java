@@ -37,9 +37,7 @@ public class MapboxWebMapType extends AirMapType
     }
 
     public Bundle toBundle(Bundle bundle) {
-        bundle.putString(ARG_MAP_DOMAIN, getDomain());
-        bundle.putString(ARG_MAP_URL, getMapUrl());
-        bundle.putString(ARG_FILE_NAME, getFileName());
+        super.toBundle(bundle);
         bundle.putString(ARG_MAPBOX_ACCESS_TOKEN, accessToken);
         bundle.putString(ARG_MAPBOX_MAPID, mapId);
         return bundle;
