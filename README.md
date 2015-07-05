@@ -58,6 +58,9 @@ The project includes a sample app which uses AirMapView. The sample app allows t
             .setIconId(R.drawable.icon_location_pin));
     ```
 
+## Mapbox Web setup
+To use Mapbox Web maps in AirMapView, you'll need to [sign up for a free account with Mapbox](https://www.mapbox.com/signup/).  From there you'll use an [Access Token](https://www.mapbox.com/help/define-access-token/) and [Map ID](https://www.mapbox.com/help/define-map-id/) in your AirMapView app (`res/values/string.xml` is a good place to store them).
+
 ## Native Google Maps setup
 
 With AirMapView, to support native Google maps using the [Google Maps v2](https://developers.google.com/maps/documentation/android/) SDK you will still need to set up the Google Maps SDK as described [here](https://developers.google.com/maps/documentation/android/start#getting_the_google_maps_android_api_v2). Follow all the instructions except the one about adding a map since AirMapView takes care of that for you. See the sample app for more information about how to set up the maps SDK.
