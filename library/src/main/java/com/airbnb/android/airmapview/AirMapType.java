@@ -10,9 +10,9 @@ import java.util.Locale;
  */
 public class AirMapType {
 
-  private static final String ARG_MAP_DOMAIN = "map_domain";
-  private static final String ARG_FILE_NAME = "map_file_name";
-  private static final String ARG_MAP_URL = "map_url";
+  protected static final String ARG_MAP_DOMAIN = "map_domain";
+  protected static final String ARG_FILE_NAME = "map_file_name";
+  protected static final String ARG_MAP_URL = "map_url";
   private final String fileName;
   private final String mapUrl;
   private final String domain;

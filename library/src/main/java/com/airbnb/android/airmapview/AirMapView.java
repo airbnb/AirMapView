@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+
+import org.w3c.dom.Text;
 
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener,
@@ -79,7 +82,7 @@ public class AirMapView extends FrameLayout
    *
    * @param fragmentManager required for initialization
    */
-  public void initialize(FragmentManager fragmentManager) {
+  public void initialize(FragmentManager fragmentManager, String mapboxAccessToken, String mapboxMapId) {
     AirMapInterface
         mapInterface =
         (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
@@ -87,7 +90,13 @@ public class AirMapView extends FrameLayout
     if (mapInterface != null) {
       initialize(fragmentManager, mapInterface);
     } else {
-      initialize(fragmentManager, new DefaultAirMapViewBuilder(getContext()).builder().build());
+      AirMapViewBuilder builder = new DefaultAirMapViewBuilder(getContext()).builder();
+      if (builder instanceof WebAirMapViewBuilder && (!TextUtils.isEmpty(mapboxAccessToken) && !TextUtils.isEmpty(mapboxMapId))) {
+        WebAirMapViewBuilder webBuilder = (WebAirMapViewBuilder)builder;
+        webBuilder.setMapboxAccessToken(mapboxAccessToken);
+        webBuilder.setMapboxMapId(mapboxMapId);
+      }
+      initialize(fragmentManager, builder.build());
     }
   }
 

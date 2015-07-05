@@ -20,8 +20,8 @@
 var map;
 var markers = {};
 
-L.mapbox.accessToken = 'pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA';
-map = L.mapbox.map('map', 'mapbox.streets').setView([0, 0], 10);
+L.mapbox.accessToken = 'MAPBOX_ACCESS_TOKEN';
+map = L.mapbox.map('map', 'MAPBOX_MAPID').setView([0, 0], 10);
 AirMapView.onMapLoaded();
 
 function clearMarkers() {

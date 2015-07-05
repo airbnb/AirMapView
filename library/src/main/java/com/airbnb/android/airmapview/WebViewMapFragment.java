@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,10 +74,18 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webViewSettings.setBuiltInZoomControls(false);
     webViewSettings.setJavaScriptEnabled(true);
 
-    AirMapType mapType = AirMapType.fromBundle(getArguments());
+    // Check For MapboxWebMapType so that all Argument data can be loaded
+    Bundle arguments = getArguments();
+    if (!TextUtils.isEmpty(arguments.getString(MapboxWebMapType.ARG_MAPBOX_ACCESS_TOKEN)) && !TextUtils.isEmpty(arguments.getString(MapboxWebMapType.ARG_MAPBOX_MAPID))) {
+      MapboxWebMapType mapType = MapboxWebMapType.fromBundle(arguments);
+      webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
+              "text/html", "base64", null);
+    } else {
+      AirMapType mapType = AirMapType.fromBundle(arguments);
+      webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
+              "text/html", "base64", null);
+    }
 
-    webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
-                                 "text/html", "base64", null);
     webView.addJavascriptInterface(new MapsJavaScriptInterface(), "AirMapView");
 
     return view;
