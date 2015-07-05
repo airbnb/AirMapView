@@ -4,6 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <string name="mapboxAccessToken">pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA</string>
-    <string name="mapboxMapId">mapbox.streets</string>
+    <string name="mapboxAccessToken"></string>
+    <string name="mapboxMapId"></string>
 </resources>
