@@ -43,7 +43,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
 
-  private WebView webView;
+  protected WebView webView;
   private ViewGroup mLayout;
   private OnMapClickListener onMapClickListener;
   private OnCameraChangeListener onCameraChangeListener;
@@ -92,17 +92,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     webView.setWebChromeClient(new GeoWebChromeClient());
 
-    // Check For MapboxWebMapType so that all Argument data can be loaded
-    Bundle arguments = getArguments();
-    if (!TextUtils.isEmpty(arguments.getString(MapboxWebMapType.ARG_MAPBOX_ACCESS_TOKEN)) && !TextUtils.isEmpty(arguments.getString(MapboxWebMapType.ARG_MAPBOX_MAPID))) {
-      MapboxWebMapType mapType = MapboxWebMapType.fromBundle(arguments);
-      webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
+    AirMapType mapType = AirMapType.fromBundle(getArguments());
+    webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
               "text/html", "base64", null);
-    } else {
-      AirMapType mapType = AirMapType.fromBundle(arguments);
-      webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
-              "text/html", "base64", null);
-    }
 
     webView.addJavascriptInterface(new MapsJavaScriptInterface(), "AirMapView");
 
