@@ -4,8 +4,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 
 public class MapboxWebMapType extends AirMapType {
-  private String mapId;
-  private String accessToken;
+  private final String mapId;
+  private final String accessToken;
 
   protected static final String ARG_MAPBOX_ACCESS_TOKEN = "MAPBOX_ACCESS_TOKEN";
   protected static final String ARG_MAPBOX_MAPID = "MAPBOX_MAPID";
