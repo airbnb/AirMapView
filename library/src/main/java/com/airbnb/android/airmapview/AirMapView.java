@@ -82,6 +82,18 @@ public class AirMapView extends FrameLayout
    *
    * @param fragmentManager required for initialization
    */
+  public void initialize(FragmentManager fragmentManager) {
+    initialize(fragmentManager, null, null);
+  }
+
+  /**
+   * Used for initialization of the underlying map provider. Uses the default preferred map provider
+   * (currently Native Google Maps, then Mapbox Web maps, then Web Google Maps).
+   *
+   * @param fragmentManager required for initialization
+   * @param mapboxAccessToken Mapbox Access Token (required for Mapbox maps)
+   * @param mapboxMapId Mapbox Map Id (required for Mapbox maps)
+   */
   public void initialize(FragmentManager fragmentManager, String mapboxAccessToken, String mapboxMapId) {
     AirMapInterface
         mapInterface =
