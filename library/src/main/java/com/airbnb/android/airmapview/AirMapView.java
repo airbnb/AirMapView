@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -100,11 +99,6 @@ public class AirMapView extends FrameLayout
       initialize(fragmentManager, mapInterface);
     } else {
       AirMapViewBuilder builder = new DefaultAirMapViewBuilder(getContext()).builder();
-      if (builder instanceof WebAirMapViewBuilder && (!TextUtils.isEmpty(mapboxAccessToken) && !TextUtils.isEmpty(mapboxMapId))) {
-        WebAirMapViewBuilder webBuilder = (WebAirMapViewBuilder)builder;
-        webBuilder.setMapboxAccessToken(mapboxAccessToken);
-        webBuilder.setMapboxMapId(mapboxMapId);
-      }
       initialize(fragmentManager, builder.build());
     }
   }

@@ -9,14 +9,12 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapPolyline;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
-import com.airbnb.android.airmapview.WebAirMapViewBuilder;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
@@ -26,9 +24,7 @@ import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-
 import java.util.ArrayList;
-
 
 public class MainActivity extends ActionBarActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
@@ -55,7 +51,7 @@ public class MainActivity extends ActionBarActivity
     map.setOnMarkerClickListener(this);
     map.setOnMapInitializedListener(this);
     map.setOnInfoWindowClickListener(this);
-    map.initialize(getSupportFragmentManager(), getString(R.string.mapboxAccessToken), getString(R.string.mapboxMapId));
+    map.initialize(getSupportFragmentManager());
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,8 +74,7 @@ public class MainActivity extends ActionBarActivity
                        Toast.LENGTH_SHORT).show();
       }
     } else if (id == R.id.action_web_map) {
-
-      airMapInterface = ((WebAirMapViewBuilder)mapViewBuilder.builder(AirMapViewTypes.WEB)).setMapboxAccessToken(getString(R.string.mapboxAccessToken)).setMapboxMapId(getString(R.string.mapboxMapId)).build();
+      airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
     } else if (id == R.id.action_clear_logs) {
       textLogs.setText("");
     }

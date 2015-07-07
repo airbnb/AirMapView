@@ -4,12 +4,4 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <!--
-     Mapbox Access Token And Map Id for AirMapView Sample App
-
-     To get free Mapbox maps for your app, please visit https://www.mapbox.com/signup/
-    -->
-    <string name="mapboxAccessToken">pk.eyJ1IjoiYmxlZWdlIiwiYSI6ImZjMDczZjc5N2U0NzFkNWVkYWUzNjkzZTY5NjU4ZDFlIn0.vsxMenwHU5mLe65GULWGQg</string>
-    <string name="mapboxMapId">mapbox.streets</string>
-
 </resources>
