@@ -73,24 +73,11 @@ public class AirMapView extends FrameLayout
   }
 
   /**
-   * Used for initialization of the underlying map provider. Uses the default preferred map provider
-   * (currently Native Google Maps, then Web Google Maps).
+   * Used for initialization of the underlying map provider.
    *
    * @param fragmentManager required for initialization
    */
   public void initialize(FragmentManager fragmentManager) {
-    initialize(fragmentManager, null, null);
-  }
-
-  /**
-   * Used for initialization of the underlying map provider. Uses the default preferred map provider
-   * (currently Native Google Maps, then Mapbox Web maps, then Web Google Maps).
-   *
-   * @param fragmentManager required for initialization
-   * @param mapboxAccessToken Mapbox Access Token (required for Mapbox maps)
-   * @param mapboxMapId Mapbox Map Id (required for Mapbox maps)
-   */
-  public void initialize(FragmentManager fragmentManager, String mapboxAccessToken, String mapboxMapId) {
     AirMapInterface
         mapInterface =
         (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
@@ -98,8 +85,7 @@ public class AirMapView extends FrameLayout
     if (mapInterface != null) {
       initialize(fragmentManager, mapInterface);
     } else {
-      AirMapViewBuilder builder = new DefaultAirMapViewBuilder(getContext()).builder();
-      initialize(fragmentManager, builder.build());
+      initialize(fragmentManager, new DefaultAirMapViewBuilder(getContext()).builder().build());
     }
   }
 
