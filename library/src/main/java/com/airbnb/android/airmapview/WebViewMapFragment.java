@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
 
-  private WebView webView;
+  protected WebView webView;
   private ViewGroup mLayout;
   private OnMapClickListener onMapClickListener;
   private OnCameraChangeListener onCameraChangeListener;
@@ -92,9 +93,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webView.setWebChromeClient(new GeoWebChromeClient());
 
     AirMapType mapType = AirMapType.fromBundle(getArguments());
-
     webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
-                                 "text/html", "base64", null);
+              "text/html", "base64", null);
+
     webView.addJavascriptInterface(new MapsJavaScriptInterface(), "AirMapView");
 
     return view;

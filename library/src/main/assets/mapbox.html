@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+    <script src="MAPURL/mapbox.js"></script>
+    <link href='MAPURL/mapbox.css' rel='stylesheet' />
+</head>
+
+<body>
+
+
+
+<div id='map'></div>
+<script>
+var map;
+var markers = {};
+
+L.mapbox.accessToken = 'MAPBOX_ACCESS_TOKEN';
+map = L.mapbox.map('map', 'MAPBOX_MAPID').setView([0, 0], 10);
+AirMapView.onMapLoaded();
+
+function clearMarkers() {
+  for (lc = 0; lc < markers.length; lc++) {
+    map.removeLayer(markers[lc]);
+  }
+  markers = {};
+}
+
+function setBounds(neLat, neLng, swLat, swLng) {
+  var southWest = L.latLng(swLat, swLng);
+  var northEast = L.latLng(neLat, neLng);
+  var bounds = L.latLngBounds(southWest, northEast);
+  map.fitBounds(bounds);
+}
+
+function centerMap(lat, lng) {
+  var latLng = L.latLng(lat, lng);
+  map.panTo(latLng);
+}
+
+function setZoom(zoom) {
+  map.setZoom(zoom);
+}
+
+
+function highlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(L.mapbox.marker.icon({
+        'marker-color': '8a8acb'
+    }));
+  }
+}
+
+function unhighlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(L.mapbox.marker.icon({
+        'marker-color': 'e55e5e'
+    }));
+  }
+}
+
+function addMarker(lat, lng) {
+  var marker = L.marker(new L.LatLng(lat, lng), {
+      icon: L.mapbox.marker.icon({
+          'marker-color': 'e55e5e'
+      })
+  });
+  marker.addTo(map);
+  markers.push(marker);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet) {
+  var marker = L.marker(new L.LatLng(lat, lng), {
+      icon: L.mapbox.marker.icon({
+          'marker-color': 'e55e5e'
+      })
+  });
+  marker.addTo(map);
+
+  if(title != "null" || snippet != "null") {
+    var content = document.createElement("div");
+    if(title != "null")  {
+        content.innerHTML += '<div id="title"><b>' + title + '</b></div>';
+    }
+
+    if(snippet != "null") {
+        content.innerHTML += '<div id="snippet">' + snippet + '</div>';
+    }
+
+    marker.bindPopup(content);
+  }
+
+  markers[id] = marker;
+}
+
+function showDefaultInfoWindow(id){
+// Not needed
+}
+
+function removeMarker(id) {
+  var marker = markers[id];
+  if (marker != null) {
+    map.removeLayer(marker);
+  }
+}
+
+function addPolyline(points, id, width, color) {
+  var pointsArray = [];
+
+  for (var i = 0; i < points.length; i++) {
+    var point = points[i];
+    var position = L.latLng(point["lat"], point["lng"]);
+    pointsArray.push(point);
+  }
+
+  color = formatColor(color);
+  var polyLine = L.polyline(pointsArray, {color: color, weight: width / 2}).addTo(map);
+
+  polylines[id] = polyLine;
+}
+
+function removePolyline(id) {
+  var polyline = polylines[id];
+  if (polyline != null) {
+    map.removeLayer(polyLine);
+  }
+}
+
+function removeAllPolylines() {
+  for (var key in polylines) {
+    removePolyline(key);
+  }
+  polylines = {};
+}
+
+function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
+
+    L.circle([lat, lng], radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
+
+}
+
+function mapClick(event) {
+  AirMapView.mapClick(event.latLng.lat(), event.latLng.lng());
+}
+
+function mapMove() {
+  if (moveTimeout != null) {
+    clearTimeout(moveTimeout);
+  }
+  // javascript bridge not fast enough to handle events immediately.
+  moveTimeout = setTimeout(function() {
+    var latLng = map.getCenter();
+    if (latLng != null) {
+      AirMapView.mapMove(latLng.lat(), latLng.lng(), map.getZoom());
+    }
+  }, 200);
+}
+
+function getCenter() {
+  var latLng = map.getCenter();
+  if (latLng != null) {
+    AirMapView.mapCenterCallback(latLng.lat(), latLng.lng());
+  }
+}
+
+function getBounds() {
+  bounds = map.getBounds();
+  ne = bounds.getNorthEast();
+  sw = bounds.getSouthWest();
+  AirMapView.getBoundsCallback(ne.lat(), ne.lng(), sw.lat(), sw.lng());
+}
+
+function getScreenLocation(lat, lng) {
+    latLng = L.latLng(lat, lng)
+    screenLocation = latLngToLayerPoint(latLng);
+    AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y)
+}
+
+// converts an android int color to a web color :)
+function formatColor(color) {
+  return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
+}
+
+</script>
+
+</body>
+
+</html>

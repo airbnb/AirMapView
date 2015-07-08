@@ -2,8 +2,11 @@ package com.airbnb.android.airmapview;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.text.TextUtils;
 
 /**
  * Use this class to request an AirMapView builder.
@@ -11,6 +14,7 @@ import android.content.Context;
 public class DefaultAirMapViewBuilder {
 
   private boolean isGooglePlayServicesAvailable;
+  private Context context;
 
   /**
    * Default {@link DefaultAirMapViewBuilder} constructor.
@@ -19,6 +23,7 @@ public class DefaultAirMapViewBuilder {
    */
   public DefaultAirMapViewBuilder(Context context) {
     this(GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
+    this.context = context;
   }
 
   /**
@@ -38,7 +43,7 @@ public class DefaultAirMapViewBuilder {
     if (isGooglePlayServicesAvailable) {
       return new NativeAirMapViewBuilder();
     }
-    return new WebAirMapViewBuilder();
+    return getWebMapViewBuilder();
   }
 
   /**
@@ -57,9 +62,32 @@ public class DefaultAirMapViewBuilder {
         }
         break;
       case WEB:
-        return new WebAirMapViewBuilder();
+        return getWebMapViewBuilder();
     }
     throw new UnsupportedOperationException("Requested map type is not supported");
   }
 
+  /**
+   * Decides what the Map Web provider should be used and generates a builder for it.
+   *
+   * @return The AirMapViewBuilder for the selected Map Web provider.
+   */
+  public AirMapViewBuilder getWebMapViewBuilder() {
+    if (context != null) {
+      try {
+        ApplicationInfo ai = context.getPackageManager()
+                .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        Bundle bundle = ai.metaData;
+        String accessToken = bundle.getString("com.mapbox.ACCESS_TOKEN");
+        String mapId = bundle.getString("com.mapbox.MAP_ID");
+
+        if (!TextUtils.isEmpty(accessToken) && !TextUtils.isEmpty(mapId)) {
+          return new MapboxWebMapViewBuilder(accessToken, mapId);
+        }
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+    return new WebAirMapViewBuilder();
+  }
 }

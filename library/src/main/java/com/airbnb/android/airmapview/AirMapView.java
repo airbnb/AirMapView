@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
-
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
@@ -74,8 +73,7 @@ public class AirMapView extends FrameLayout
   }
 
   /**
-   * Used for initialization of the underlying map provider. Uses the default preferred map provider
-   * (currently Native Google Maps, then Web Google Maps).
+   * Used for initialization of the underlying map provider.
    *
    * @param fragmentManager required for initialization
    */

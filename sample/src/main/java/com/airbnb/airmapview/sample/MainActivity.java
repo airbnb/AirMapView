@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
+import com.airbnb.android.airmapview.AirMapPolyline;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
@@ -24,7 +24,7 @@ import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
@@ -97,7 +97,18 @@ public class MainActivity extends ActionBarActivity
     addMarker("Airbnb HQ", airbnbLatLng, 1);
     addMarker("Performance Bikes", new LatLng(37.773975, -122.40205), 2);
     addMarker("REI", new LatLng(37.772127, -122.404411), 3);
+    addMarker("Mapbox", new LatLng(37.77572, -122.41354), 4);
     map.animateCenterZoom(airbnbLatLng, 10);
+
+    // Add Poly Line
+    ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+    latLngs.add(new LatLng(37.77977, -122.38937));
+    latLngs.add(new LatLng(37.77811, -122.39160));
+    latLngs.add(new LatLng(37.77787, -122.38864));
+    map.addPolyline(new AirMapPolyline(latLngs, 5));
+
+    // Add Circle
+    map.drawCircle(new LatLng(37.78443, -122.40805), 1000);
   }
 
   private void addMarker(String title, LatLng latLng, int id) {

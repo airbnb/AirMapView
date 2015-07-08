@@ -2,7 +2,6 @@ package com.airbnb.android.airmapview;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-
 import java.util.Locale;
 
 /**
