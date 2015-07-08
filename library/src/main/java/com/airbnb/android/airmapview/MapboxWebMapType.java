@@ -31,7 +31,8 @@ public class MapboxWebMapType extends AirMapType {
    * @param accessToken Mapbox Access Token
    * @param mapId       Mapbox Map Id
    */
-  private MapboxWebMapType(String fileName, String mapUrl, String domain, String accessToken, String mapId) {
+  private MapboxWebMapType(String fileName, String mapUrl, String domain,
+                           String accessToken, String mapId) {
     super(fileName, mapUrl, domain);
     this.accessToken = accessToken;
     this.mapId = mapId;
@@ -48,8 +49,8 @@ public class MapboxWebMapType extends AirMapType {
     AirMapType airMapType = AirMapType.fromBundle(bundle);
     String mapboxAccessToken = bundle.getString(ARG_MAPBOX_ACCESS_TOKEN, "");
     String mapboxMapId = bundle.getString(ARG_MAPBOX_MAPID, "");
-    return new MapboxWebMapType(airMapType.getFileName(), airMapType.getMapUrl(), airMapType.getDomain(),
-              mapboxAccessToken, mapboxMapId);
+    return new MapboxWebMapType(airMapType.getFileName(), airMapType.getMapUrl(),
+            airMapType.getDomain(), mapboxAccessToken, mapboxMapId);
   }
 
   @Override
