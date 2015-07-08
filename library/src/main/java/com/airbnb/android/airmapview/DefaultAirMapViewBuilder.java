@@ -75,7 +75,8 @@ public class DefaultAirMapViewBuilder {
   public AirMapViewBuilder getWebMapViewBuilder() {
     if (context != null) {
       try {
-        ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        ApplicationInfo ai = context.getPackageManager()
+                .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
         Bundle bundle = ai.metaData;
         String accessToken = bundle.getString("com.mapbox.ACCESS_TOKEN");
         String mapId = bundle.getString("com.mapbox.MAP_ID");
