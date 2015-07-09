@@ -2,31 +2,37 @@ package com.airbnb.airmapview.sample;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapPolyline;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
+import com.airbnb.android.airmapview.MapType;
+import com.airbnb.android.airmapview.WebAirMapViewBuilder;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
-import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity
+import java.util.Arrays;
+
+public class MainActivity extends AppCompatActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
                OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
                OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
@@ -44,6 +50,27 @@ public class MainActivity extends ActionBarActivity
     map = (AirMapView) findViewById(R.id.map);
     textLogs = (TextView) findViewById(R.id.textLogs);
     logsScrollView = (ScrollView) findViewById(R.id.logsScrollView);
+    Button btnMapTypeNormal = (Button) findViewById(R.id.btnMapTypeNormal);
+    Button btnMapTypeSattelite = (Button) findViewById(R.id.btnMapTypeSattelite);
+    Button btnMapTypeTerrain = (Button) findViewById(R.id.btnMapTypeTerrain);
+
+    btnMapTypeNormal.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        map.setMapType(MapType.MAP_TYPE_NORMAL);
+      }
+    });
+
+    btnMapTypeSattelite.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        map.setMapType(MapType.MAP_TYPE_SATELLITE);
+      }
+    });
+
+    btnMapTypeTerrain.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        map.setMapType(MapType.MAP_TYPE_TERRAIN);
+      }
+    });
 
     map.setOnMapClickListener(this);
     map.setOnCameraChangeListener(this);
@@ -73,8 +100,11 @@ public class MainActivity extends ActionBarActivity
                              "Please make sure you have Google Play Services installed.",
                        Toast.LENGTH_SHORT).show();
       }
-    } else if (id == R.id.action_web_map) {
+    } else if (id == R.id.action_mapbox_map) {
       airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
+    } else if (id == R.id.action_google_web_map) {
+      // force Google Web maps since otherwise AirMapViewTypes.WEB returns MapBox by default.
+      airMapInterface = new WebAirMapViewBuilder().build();
     } else if (id == R.id.action_clear_logs) {
       textLogs.setText("");
     }
@@ -100,12 +130,13 @@ public class MainActivity extends ActionBarActivity
     addMarker("Mapbox", new LatLng(37.77572, -122.41354), 4);
     map.animateCenterZoom(airbnbLatLng, 10);
 
-    // Add Poly Line
-    ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
-    latLngs.add(new LatLng(37.77977, -122.38937));
-    latLngs.add(new LatLng(37.77811, -122.39160));
-    latLngs.add(new LatLng(37.77787, -122.38864));
-    map.addPolyline(new AirMapPolyline(latLngs, 5));
+    // Add Polylines
+    LatLng[] latLngs = {
+      new LatLng(37.77977, -122.38937),
+      new LatLng(37.77811, -122.39160),
+      new LatLng(37.77787, -122.38864) };
+
+    map.addPolyline(new AirMapPolyline(Arrays.asList(latLngs), 5));
 
     // Add Circle
     map.drawCircle(new LatLng(37.78443, -122.40805), 1000);

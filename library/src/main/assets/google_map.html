@@ -224,6 +224,10 @@ function getCenter() {
   }
 }
 
+function setMapTypeId(mapType) {
+  map.setMapTypeId(mapType);
+}
+
 function getBounds() {
   bounds = map.getBounds();
   ne = bounds.getNorthEast();

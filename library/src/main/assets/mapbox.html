@@ -47,7 +47,6 @@ function setZoom(zoom) {
   map.setZoom(zoom);
 }
 
-
 function highlightMarker(markerId) {
   var marker = markers[markerId];
   if (marker != null) {
@@ -64,6 +63,10 @@ function unhighlightMarker(markerId) {
         'marker-color': 'e55e5e'
     }));
   }
+}
+
+function setMapTypeId(mapType) {
+  L.mapbox.tileLayer(mapType).addTo(map);
 }
 
 function addMarker(lat, lng) {
@@ -141,9 +144,7 @@ function removeAllPolylines() {
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
-
     L.circle([lat, lng], radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
-
 }
 
 function mapClick(event) {

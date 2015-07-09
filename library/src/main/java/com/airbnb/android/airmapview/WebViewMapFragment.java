@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
@@ -67,9 +65,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   public class GeoWebChromeClient extends WebChromeClient {
-    @Override
-    public void onGeolocationPermissionsShowPrompt(String origin,
-                                                   GeolocationPermissions.Callback callback) {
+    @Override public void onGeolocationPermissionsShowPrompt(
+        String origin, GeolocationPermissions.Callback callback) {
       // Always grant permission since the app itself requires location
       // permission and the user has therefore already granted it
       callback.invoke(origin, true, false);
@@ -77,8 +74,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  @Override public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_webview, container, false);
 
     webView = (WebView) view.findViewById(R.id.webview);
@@ -160,7 +157,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override public void addMarker(AirMapMarker marker) {
     LatLng latLng = marker.getLatLng();
     webView.loadUrl(String.format("javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
-                                   latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(), marker.getSnippet()));
+        latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(), marker.getSnippet()));
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
@@ -208,8 +205,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
   }
 
-  @Override
-  public boolean isMyLocationEnabled() {
+  @Override public boolean isMyLocationEnabled() {
     return trackUserLocation;
   }
 
@@ -276,8 +272,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     @JavascriptInterface public void onMapLoaded() {
       handler.post(new Runnable() {
-        @Override
-        public void run() {
+        @Override public void run() {
           if (!loaded) {
             loaded = true;
             if (onMapLoadedListener != null) {
@@ -290,8 +285,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     @JavascriptInterface public void mapClick(final double lat, final double lng) {
       handler.post(new Runnable() {
-        @Override
-        public void run() {
+        @Override public void run() {
           if (onMapClickListener != null) {
             onMapClickListener.onMapClick(new LatLng(lat, lng));
           }
@@ -302,7 +296,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface public void getBoundsCallback(double neLat, double neLng, double swLat, double swLng) {
+    @JavascriptInterface public void getBoundsCallback(
+        double neLat, double neLng, double swLat, double swLng) {
       final LatLngBounds bounds = new LatLngBounds(new LatLng(swLat, swLng),
                                                    new LatLng(neLat, neLng));
       handler.post(new Runnable() {

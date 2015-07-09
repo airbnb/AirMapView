@@ -11,8 +11,8 @@ public class MapboxWebViewMapFragment extends WebViewMapFragment {
     return (MapboxWebViewMapFragment) new MapboxWebViewMapFragment().setArguments(mapType);
   }
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  @Override public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -21,5 +21,19 @@ public class MapboxWebViewMapFragment extends WebViewMapFragment {
             "text/html", "base64", null);
 
     return view;
+  }
+
+  @Override public void setMapType(MapType type) {
+    String mapBoxType;
+    if (type == MapType.MAP_TYPE_NORMAL) {
+      mapBoxType = "mapbox.streets";
+    } else if (type == MapType.MAP_TYPE_SATELLITE) {
+      mapBoxType = "mapbox.satellite";
+    } else if (type == MapType.MAP_TYPE_TERRAIN) {
+      mapBoxType = "mapbox.outdoors";
+    } else {
+      mapBoxType = "mapbox.streets";
+    }
+    webView.loadUrl(String.format("javascript:setMapTypeId(\"%1$s\");", mapBoxType));
   }
 }
