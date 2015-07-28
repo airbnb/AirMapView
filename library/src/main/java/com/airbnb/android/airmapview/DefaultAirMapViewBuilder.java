@@ -1,20 +1,21 @@
 package com.airbnb.android.airmapview;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 /**
  * Use this class to request an AirMapView builder.
  */
 public class DefaultAirMapViewBuilder {
 
-  private boolean isGooglePlayServicesAvailable;
-  private Context context;
+  private final boolean isGooglePlayServicesAvailable;
+  private final Context context;
 
   /**
    * Default {@link DefaultAirMapViewBuilder} constructor.
@@ -22,8 +23,8 @@ public class DefaultAirMapViewBuilder {
    * @param context The application context.
    */
   public DefaultAirMapViewBuilder(Context context) {
-    this(GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
-    this.context = context;
+    this(context,
+        GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
   }
 
   /**
@@ -31,8 +32,9 @@ public class DefaultAirMapViewBuilder {
    *                                      device. If you set this to true and it is not available,
    *                                      bad things can happen.
    */
-  public DefaultAirMapViewBuilder(boolean isGooglePlayServicesAvailable) {
+  public DefaultAirMapViewBuilder(Context context, boolean isGooglePlayServicesAvailable) {
     this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
+    this.context = context;
   }
 
   /**
@@ -76,7 +78,7 @@ public class DefaultAirMapViewBuilder {
     if (context != null) {
       try {
         ApplicationInfo ai = context.getPackageManager()
-                .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
         Bundle bundle = ai.metaData;
         String accessToken = bundle.getString("com.mapbox.ACCESS_TOKEN");
         String mapId = bundle.getString("com.mapbox.MAP_ID");

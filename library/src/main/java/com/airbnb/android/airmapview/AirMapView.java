@@ -268,6 +268,10 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
+  public void setMapType(MapType mapType) {
+    mapInterface.setMapType(mapType);
+  }
+
   public boolean removePolyline(AirMapPolyline polyline) {
     if (isInitialized()) {
       mapInterface.removePolyline(polyline);

@@ -4,9 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import java.util.Locale;
 
-/**
- * Defines maps to be used with {@link com.airbnb.android.airmapview.WebViewMapFragment}
- */
+/** Defines maps to be used with {@link com.airbnb.android.airmapview.WebViewMapFragment} */
 public class AirMapType {
 
   private static final String ARG_MAP_DOMAIN = "map_domain";
@@ -22,23 +20,17 @@ public class AirMapType {
     this.domain = domain;
   }
 
-  /**
-   * @return the name of the HTML file in /assets
-   */
+  /** @return the name of the HTML file in /assets */
   String getFileName() {
     return fileName;
   }
 
-  /**
-   * @return the base URL for a maps API
-   */
+  /** @return the base URL for a maps API */
   String getMapUrl() {
     return mapUrl;
   }
 
-  /**
-   * @return domain of the maps API to use
-   */
+  /** @return domain of the maps API to use */
   String getDomain() {
     return domain;
   }

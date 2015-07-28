@@ -8,8 +8,13 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/action_web_map"
-          android:title="Use Web Map"
+    <item android:id="@+id/action_google_web_map"
+          android:title="Use Google Web Map"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/action_mapbox_map"
+          android:title="Use MapBox Map"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
