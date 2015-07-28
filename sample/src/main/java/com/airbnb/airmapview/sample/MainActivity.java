@@ -34,8 +34,8 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
-               OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
-               OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
+    OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
+    OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
 
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity
         airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
       } catch (UnsupportedOperationException e) {
         Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                             "Please make sure you have Google Play Services installed.",
-                       Toast.LENGTH_SHORT).show();
+                "Please make sure you have Google Play Services installed.",
+            Toast.LENGTH_SHORT).show();
       }
     } else if (id == R.id.action_mapbox_map) {
       airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onCameraChanged(LatLng latLng, int zoom) {
     appendLog("Map onCameraChanged triggered with lat: " + latLng.latitude + ", lng: "
-              + latLng.longitude);
+        + latLng.longitude);
   }
 
   @Override public void onMapInitialized() {
@@ -132,9 +132,9 @@ public class MainActivity extends AppCompatActivity
 
     // Add Polylines
     LatLng[] latLngs = {
-      new LatLng(37.77977, -122.38937),
-      new LatLng(37.77811, -122.39160),
-      new LatLng(37.77787, -122.38864) };
+        new LatLng(37.77977, -122.38937),
+        new LatLng(37.77811, -122.39160),
+        new LatLng(37.77787, -122.38864) };
 
     map.addPolyline(new AirMapPolyline(Arrays.asList(latLngs), 5));
 
@@ -143,16 +143,19 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void addMarker(String title, LatLng latLng, int id) {
-    map.addMarker(new AirMapMarker(latLng, id)
-            .setTitle(title)
-            .setIconId(R.mipmap.icon_location_pin));
+    map.addMarker(new AirMapMarker.Builder()
+        .id(id)
+        .position(latLng)
+        .title(title)
+        .iconId(R.mipmap.icon_location_pin)
+        .build());
   }
 
   @Override public void onMapClick(LatLng latLng) {
     if (latLng != null) {
       appendLog(
           "Map onMapClick triggered with lat: " + latLng.latitude + ", lng: "
-          + latLng.longitude);
+              + latLng.longitude);
 
       map.getMapInterface().getScreenLocation(latLng, this);
     } else {

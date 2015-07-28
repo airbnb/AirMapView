@@ -2,5 +2,4 @@
 <resources>
     <dimen name="map_horizontal_padding">20dp</dimen>
     <dimen name="map_vertical_padding">40dp</dimen>
-    <dimen name="map_marker_height">110dp</dimen>
 </resources>

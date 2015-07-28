@@ -183,7 +183,7 @@ public interface AirMapInterface {
   /**
    * Construct a polyline with the given {@link LatLng} points
    */
-  void addPolyline(AirMapPolyline polyline);
+  <T> void addPolyline(AirMapPolyline<T> polyline);
 
   /**
    * Remove the given {@link Polyline}
