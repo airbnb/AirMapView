@@ -356,7 +356,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             infoWindowView.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(@NonNull View v) {
-                mLayout.removeView(infoWindowView);
                 if (onInfoWindowClickListener != null) {
                   onInfoWindowClickListener.onInfoWindowClick(markerId);
                 }
