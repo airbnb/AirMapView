@@ -93,74 +93,74 @@ public class AirMapMarker<T> {
     public Builder() {
     }
 
-    public Builder object(T object) {
+    public Builder<T> object(T object) {
       this.object = object;
       return this;
     }
 
-    public Builder id(long id) {
+    public Builder<T> id(long id) {
       this.id = id;
       return this;
     }
 
-    public Builder position(LatLng position) {
+    public Builder<T> position(LatLng position) {
       this.position = position;
       return this;
     }
 
-    public Builder anchor(float u, float v) {
+    public Builder<T> anchor(float u, float v) {
       this.anchorU = u;
       this.anchorV = v;
       return this;
     }
 
-    public Builder infoWindowAnchor(float u, float v) {
+    public Builder<T> infoWindowAnchor(float u, float v) {
       this.infoWindowAnchorU = u;
       this.infoWindowAnchorV = v;
       return this;
     }
 
-    public Builder title(String title) {
+    public Builder<T> title(String title) {
       this.title = title;
       return this;
     }
 
-    public Builder snippet(String snippet) {
+    public Builder<T> snippet(String snippet) {
       this.snippet = snippet;
       return this;
     }
 
-    public Builder iconId(int iconId) {
+    public Builder<T> iconId(int iconId) {
       this.iconId = iconId;
       return this;
     }
 
-    public Builder bitmap(Bitmap bitmap) {
+    public Builder<T> bitmap(Bitmap bitmap) {
       this.bitmap = bitmap;
       return this;
     }
 
-    public Builder draggable(boolean draggable) {
+    public Builder<T> draggable(boolean draggable) {
       this.draggable = draggable;
       return this;
     }
 
-    public Builder visible(boolean visible) {
+    public Builder<T> visible(boolean visible) {
       this.visible = visible;
       return this;
     }
 
-    public Builder flat(boolean flat) {
+    public Builder<T> flat(boolean flat) {
       this.flat = flat;
       return this;
     }
 
-    public Builder rotation(float rotation) {
+    public Builder<T> rotation(float rotation) {
       this.rotation = rotation;
       return this;
     }
 
-    public Builder alpha(float alpha) {
+    public Builder<T> alpha(float alpha) {
       this.alpha = alpha;
       return this;
     }
