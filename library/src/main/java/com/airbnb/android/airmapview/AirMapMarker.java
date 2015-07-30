@@ -64,11 +64,11 @@ public class AirMapMarker<T> {
   }
 
   /** Sets a marker associated to this object */
-  public void setMarker(Marker marker) {
+  void setGoogleMarker(Marker marker) {
     this.marker = marker;
   }
 
-  public Marker getMarker() {
+  Marker getMarker() {
     return marker;
   }
 

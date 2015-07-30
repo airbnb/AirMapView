@@ -352,15 +352,17 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
           // TODO convert to custom dialog fragment
           if (infoWindowCreator != null) {
             infoWindowView = infoWindowCreator.createInfoWindow(markerId);
-            mLayout.addView(infoWindowView);
-            infoWindowView.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(@NonNull View v) {
-                if (onInfoWindowClickListener != null) {
-                  onInfoWindowClickListener.onInfoWindowClick(markerId);
+            if (infoWindowView != null) {
+              mLayout.addView(infoWindowView);
+              infoWindowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(@NonNull View v) {
+                  if (onInfoWindowClickListener != null) {
+                    onInfoWindowClickListener.onInfoWindowClick(markerId);
+                  }
                 }
-              }
-            });
+              });
+            }
           } else {
             webView.loadUrl(String.format("javascript:showDefaultInfoWindow(%1$d);", markerId));
           }

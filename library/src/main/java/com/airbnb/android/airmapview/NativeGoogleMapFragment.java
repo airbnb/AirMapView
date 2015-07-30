@@ -78,7 +78,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void addMarker(AirMapMarker airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
-    airMarker.setMarker(marker);
+    airMarker.setGoogleMarker(marker);
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
