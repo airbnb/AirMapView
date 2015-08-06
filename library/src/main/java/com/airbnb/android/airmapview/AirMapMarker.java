@@ -2,7 +2,6 @@ package com.airbnb.android.airmapview;
 
 import android.graphics.Bitmap;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -19,24 +18,10 @@ public class AirMapMarker<T> {
   private final MarkerOptions markerOptions;
   private Marker marker;
 
-  private AirMapMarker(T object, long id, LatLng position, String title, String snippet,
-      float anchorU, float anchorV, boolean draggable, boolean visible, boolean flat,
-      float rotation, float infoWindowAnchorU, float infoWindowAnchorV, float alpha,
-      BitmapDescriptor icon) {
+  private AirMapMarker(T object, long id, MarkerOptions markerOptions) {
     this.object = object;
     this.id = id;
-    this.markerOptions = new MarkerOptions()
-        .title(title)
-        .position(position)
-        .icon(icon)
-        .snippet(snippet)
-        .anchor(anchorU, anchorV)
-        .draggable(draggable)
-        .visible(visible)
-        .flat(flat)
-        .rotation(rotation)
-        .infoWindowAnchor(infoWindowAnchorU, infoWindowAnchorV)
-        .alpha(alpha);
+    this.markerOptions = markerOptions;
   }
 
   public T object() {
@@ -75,20 +60,7 @@ public class AirMapMarker<T> {
   public static class Builder<T> {
     private T object;
     private long id;
-    private String title;
-    private String snippet;
-    private int iconId;
-    private Bitmap bitmap;
-    private float anchorU;
-    private float anchorV;
-    private float infoWindowAnchorU;
-    private float infoWindowAnchorV;
-    private boolean draggable;
-    private boolean visible;
-    private boolean flat;
-    private float rotation;
-    private float alpha;
-    private LatLng position;
+    private final MarkerOptions markerOptions = new MarkerOptions();
 
     public Builder() {
     }
@@ -104,83 +76,75 @@ public class AirMapMarker<T> {
     }
 
     public Builder<T> position(LatLng position) {
-      this.position = position;
+      markerOptions.position(position);
       return this;
     }
 
     public Builder<T> anchor(float u, float v) {
-      this.anchorU = u;
-      this.anchorV = v;
+      markerOptions.anchor(u, v);
       return this;
     }
 
     public Builder<T> infoWindowAnchor(float u, float v) {
-      this.infoWindowAnchorU = u;
-      this.infoWindowAnchorV = v;
+      markerOptions.infoWindowAnchor(u, v);
       return this;
     }
 
     public Builder<T> title(String title) {
-      this.title = title;
+      markerOptions.title(title);
       return this;
     }
 
     public Builder<T> snippet(String snippet) {
-      this.snippet = snippet;
+      markerOptions.snippet(snippet);
       return this;
     }
 
     public Builder<T> iconId(int iconId) {
-      this.iconId = iconId;
+      try {
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(iconId));
+      } catch (NullPointerException ignored) {
+        // google play services is not available
+      }
       return this;
     }
 
     public Builder<T> bitmap(Bitmap bitmap) {
-      this.bitmap = bitmap;
+      try {
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+      } catch (NullPointerException ignored) {
+        // google play services is not available
+      }
       return this;
     }
 
     public Builder<T> draggable(boolean draggable) {
-      this.draggable = draggable;
+      markerOptions.draggable(draggable);
       return this;
     }
 
     public Builder<T> visible(boolean visible) {
-      this.visible = visible;
+      markerOptions.visible(visible);
       return this;
     }
 
     public Builder<T> flat(boolean flat) {
-      this.flat = flat;
+      markerOptions.flat(flat);
       return this;
     }
 
     public Builder<T> rotation(float rotation) {
-      this.rotation = rotation;
+      markerOptions.rotation(rotation);
       return this;
     }
 
     public Builder<T> alpha(float alpha) {
-      this.alpha = alpha;
+      markerOptions.alpha(alpha);
       return this;
     }
 
     public AirMapMarker<T> build() {
-      BitmapDescriptor icon;
-      try {
-        if (bitmap != null) {
-          icon = BitmapDescriptorFactory.fromBitmap(bitmap);
-        } else if (iconId > 0) {
-          icon = BitmapDescriptorFactory.fromResource(iconId);
-        } else {
-          icon = null;
-        }
-      } catch (NullPointerException e) {
-        // google play services is not available
-        icon = null;
-      }
-      return new AirMapMarker<>(object, id, position, title, snippet, anchorU, anchorV, draggable,
-          visible, flat, rotation, infoWindowAnchorU, infoWindowAnchorV, alpha, icon);
+      return new AirMapMarker<>(object, id, markerOptions);
     }
   }
 }
