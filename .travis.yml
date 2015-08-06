@@ -11,6 +11,13 @@ android:
     - extra-android-support
     - extra-google-m2repository
 
+after_success:
+  - .buildscript/deploy_snapshot.sh
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
 branches:
   except:
     - gh-pages
@@ -18,10 +25,15 @@ branches:
 notifications:
   email: false
 
-script: ./gradlew assemble testDebug
+script: ./gradlew check assemble
 
 sudo: false
 
 cache:
   directories:
     - $HOME/.m2
+
+env:
+  global:
+    - secure: "LSIXSMfF5nHuveXZP5UiJNRkJaUr47xENIvulsLdjdNSofIzgsQ14Ks9O0lzy/h34PrpAGVMm7O26zgNsLoi9vVtpkofk/UKPeN4pB0MeU6Qn2USX8dTWvNLgJs4Ki4lDodjGYZWD0IB6kSUR60D+66Aif76qYncTM9a8UY82vE="
+    - secure: "T0LOEhSBLMaaTnQVQnZ7m0Ne+O4+s/trsOR8fDML5vfILDBf9RvxleMCG2faDNzBC6BoCkFDdcLPDmrTfmBuFNwKMbuVTyR9rDYjxPUf1cn2tLgJTrncUr8xEHLen8kcu4ndgCZBImv2m/XTuvFcWsAhZI84FkXSTwXa+VHee6M="

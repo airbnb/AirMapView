@@ -32,6 +32,8 @@ Grab via Gradle:
 compile 'com.airbnb.android:airmapview:1.2.0'
 ```
 
+Snapshots of the development version are available in [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
+
 ## Sample App
 The project includes a sample app which uses AirMapView. The sample app allows toggling between map providers, exemplifies adding map markers, and displays various callback information. The sample project can be built manually or you can [download the APK](https://www.dropbox.com/s/8gcxn2ouc44t53x/AirMapView-Sample.apk?dl=0).
 
