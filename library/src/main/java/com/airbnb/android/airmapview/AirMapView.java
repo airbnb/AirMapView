@@ -78,9 +78,8 @@ public class AirMapView extends FrameLayout
    * @param fragmentManager required for initialization
    */
   public void initialize(FragmentManager fragmentManager) {
-    AirMapInterface
-        mapInterface =
-        (AirMapInterface) fragmentManager.findFragmentById(R.id.map_frame);
+    AirMapInterface mapInterface = (AirMapInterface)
+        fragmentManager.findFragmentById(R.id.map_frame);
 
     if (mapInterface != null) {
       initialize(fragmentManager, mapInterface);
