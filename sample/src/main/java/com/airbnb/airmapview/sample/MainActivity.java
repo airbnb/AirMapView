@@ -97,7 +97,8 @@ public class MainActivity extends AppCompatActivity
         airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
       } catch (UnsupportedOperationException e) {
         Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                "Please make sure you have Google Play Services installed.",
+                "Please make sure you have Google Play Services installed and the permission to " +
+                "write to external storage has been granted.",
             Toast.LENGTH_SHORT).show();
       }
     } else if (id == R.id.action_mapbox_map) {

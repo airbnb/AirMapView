@@ -1,10 +1,13 @@
 package com.airbnb.android.airmapview;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -14,7 +17,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  */
 public class DefaultAirMapViewBuilder {
 
-  private final boolean isGooglePlayServicesAvailable;
+  private static final String TAG = DefaultAirMapViewBuilder.class.getSimpleName();
+  private final boolean isNativeMapSupported;
   private final Context context;
 
   /**
@@ -23,17 +27,16 @@ public class DefaultAirMapViewBuilder {
    * @param context The application context.
    */
   public DefaultAirMapViewBuilder(Context context) {
-    this(context,
-        GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
+    this(context, checkNativeMapSupported(context));
   }
 
   /**
-   * @param isGooglePlayServicesAvailable Whether or not Google Play services is available on the
+   * @param isNativeMapSupported Whether or not Google Play services is available on the
    *                                      device. If you set this to true and it is not available,
    *                                      bad things can happen.
    */
-  public DefaultAirMapViewBuilder(Context context, boolean isGooglePlayServicesAvailable) {
-    this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
+  public DefaultAirMapViewBuilder(Context context, boolean isNativeMapSupported) {
+    this.isNativeMapSupported = isNativeMapSupported;
     this.context = context;
   }
 
@@ -42,7 +45,7 @@ public class DefaultAirMapViewBuilder {
    * defined by {@link AirMapViewTypes}.
    */
   public AirMapViewBuilder builder() {
-    if (isGooglePlayServicesAvailable) {
+    if (isNativeMapSupported) {
       return new NativeAirMapViewBuilder();
     }
     return getWebMapViewBuilder();
@@ -59,7 +62,7 @@ public class DefaultAirMapViewBuilder {
   public AirMapViewBuilder builder(AirMapViewTypes mapType) {
     switch (mapType) {
       case NATIVE:
-        if (isGooglePlayServicesAvailable) {
+        if (isNativeMapSupported) {
           return new NativeAirMapViewBuilder();
         }
         break;
@@ -74,7 +77,7 @@ public class DefaultAirMapViewBuilder {
    *
    * @return The AirMapViewBuilder for the selected Map Web provider.
    */
-  public AirMapViewBuilder getWebMapViewBuilder() {
+  private AirMapViewBuilder getWebMapViewBuilder() {
     if (context != null) {
       try {
         ApplicationInfo ai = context.getPackageManager()
@@ -87,9 +90,23 @@ public class DefaultAirMapViewBuilder {
           return new MapboxWebMapViewBuilder(accessToken, mapId);
         }
       } catch (PackageManager.NameNotFoundException e) {
-        e.printStackTrace();
+        Log.e(TAG, "Failed to load Mapbox access token and map id", e);
       }
     }
     return new WebAirMapViewBuilder();
+  }
+
+  private static boolean checkNativeMapSupported(Context context) {
+    return isGooglePlayServicesAvailable(context) && hasWriteExternalStoragePermission(context);
+  }
+
+  private static boolean hasWriteExternalStoragePermission(Context context) {
+    return ContextCompat.checkSelfPermission(context,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+  }
+
+  private static boolean isGooglePlayServicesAvailable(Context context) {
+    return GooglePlayServicesUtil.
+        isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
   }
 }
