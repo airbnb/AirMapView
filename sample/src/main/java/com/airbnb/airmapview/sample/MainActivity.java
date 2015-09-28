@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity
         airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
       } catch (UnsupportedOperationException e) {
         Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                "Please make sure you have Google Play Services installed and the permission to " +
-                "write to external storage has been granted.",
+                "Please make sure you have Google Play Services installed.",
             Toast.LENGTH_SHORT).show();
       }
     } else if (id == R.id.action_mapbox_map) {
@@ -141,6 +140,9 @@ public class MainActivity extends AppCompatActivity
 
     // Add Circle
     map.drawCircle(new LatLng(37.78443, -122.40805), 1000);
+
+    // enable my location
+    map.setMyLocationEnabled(true);
   }
 
   private void addMarker(String title, LatLng latLng, int id) {
