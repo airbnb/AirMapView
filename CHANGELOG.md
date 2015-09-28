@@ -1,3 +1,8 @@
+# 1.3.0 September 28, 2015
+
+* Android M support
+* Mapbox support (PR #49)
+
 # 1.2.0
 
 * Updates project dependencies (compile sdk version, build tools, appcompat and play services) to latest
