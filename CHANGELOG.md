@@ -2,6 +2,7 @@
 
 * Android M support
 * Mapbox support (PR #49)
+* Fix google map info window size (PR #53)
 
 # 1.2.0
 
