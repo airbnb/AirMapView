@@ -1,11 +1,9 @@
 package com.airbnb.android.airmapview;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -97,12 +95,7 @@ public class DefaultAirMapViewBuilder {
   }
 
   private static boolean checkNativeMapSupported(Context context) {
-    return isGooglePlayServicesAvailable(context) && hasWriteExternalStoragePermission(context);
-  }
-
-  private static boolean hasWriteExternalStoragePermission(Context context) {
-    return ContextCompat.checkSelfPermission(context,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    return isGooglePlayServicesAvailable(context);
   }
 
   private static boolean isGooglePlayServicesAvailable(Context context) {
