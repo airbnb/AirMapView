@@ -1,5 +1,7 @@
 package com.airbnb.android.airmapview;
 
+import java.util.Locale;
+
 public class GoogleWebViewMapFragment extends WebViewMapFragment {
   public static GoogleWebViewMapFragment newInstance(AirMapType mapType) {
     return (GoogleWebViewMapFragment) new GoogleWebViewMapFragment().setArguments(mapType);
@@ -16,6 +18,6 @@ public class GoogleWebViewMapFragment extends WebViewMapFragment {
     } else {
       webType = "google.maps.MapTypeId.ROADMAP";
     }
-    webView.loadUrl(String.format("javascript:setMapTypeId(%1$s);", webType));
+    webView.loadUrl(String.format(Locale.US, "javascript:setMapTypeId(%1$s);", webType));
   }
 }
