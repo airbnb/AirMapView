@@ -33,6 +33,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
 
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
@@ -103,7 +105,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   public void setCenter(LatLng latLng) {
-    webView.loadUrl(String.format("javascript:centerMap(%1$f, %2$f);", latLng.latitude,
+    webView.loadUrl(String.format(Locale.US, "javascript:centerMap(%1$f, %2$f);", latLng.latitude,
         latLng.longitude));
   }
 
@@ -112,7 +114,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   public void setZoom(int zoom) {
-    webView.loadUrl(String.format("javascript:setZoom(%1$d);", zoom));
+    webView.loadUrl(String.format(Locale.US, "javascript:setZoom(%1$d);", zoom));
   }
 
   public void drawCircle(LatLng latLng, int radius) {
@@ -129,20 +131,21 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth,
       int fillColor) {
-    webView.loadUrl(String.format("javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);",
-        latLng.latitude, latLng.longitude, radius, borderColor,
-        borderWidth, fillColor));
+    webView.loadUrl(
+        String.format(Locale.US, "javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);",
+            latLng.latitude, latLng.longitude, radius, borderColor,
+            borderWidth, fillColor));
   }
 
   public void highlightMarker(long markerId) {
     if (markerId != -1) {
-      webView.loadUrl(String.format("javascript:highlightMarker(%1$d);", markerId));
+      webView.loadUrl(String.format(Locale.US, "javascript:highlightMarker(%1$d);", markerId));
     }
   }
 
   public void unhighlightMarker(long markerId) {
     if (markerId != -1) {
-      webView.loadUrl(String.format("javascript:unhighlightMarker(%1$d);", markerId));
+      webView.loadUrl(String.format(Locale.US, "javascript:unhighlightMarker(%1$d);", markerId));
     }
   }
 
@@ -152,12 +155,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   @Override public void addMarker(AirMapMarker marker) {
     LatLng latLng = marker.getLatLng();
-    webView.loadUrl(String.format("javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
-        latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(), marker.getSnippet()));
+    webView.loadUrl(
+        String.format(Locale.US, "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
+            latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(),
+            marker.getSnippet()));
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
-    webView.loadUrl(String.format("javascript:removeMarker(%1$d);", marker.getId()));
+    webView.loadUrl(String.format(Locale.US, "javascript:removeMarker(%1$d);", marker.getId()));
   }
 
   public void clearMarkers() {
@@ -228,7 +233,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void removePolyline(AirMapPolyline polyline) {
-    webView.loadUrl(String.format("javascript:removePolyline(%1$d);", polyline.getId()));
+    webView.loadUrl(String.format(Locale.US, "javascript:removePolyline(%1$d);", polyline.getId()));
   }
 
   @Override public void setOnMapClickListener(final OnMapClickListener listener) {
@@ -251,12 +256,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
     onLatLngScreenLocationCallback = callback;
-    webView.loadUrl(String.format("javascript:getScreenLocation(%1$f, %2$f);",
+    webView.loadUrl(String.format(Locale.US, "javascript:getScreenLocation(%1$f, %2$f);",
         latLng.latitude, latLng.longitude));
   }
 
   @Override public void setCenter(LatLngBounds bounds, int boundsPadding) {
-    webView.loadUrl(String.format("javascript:setBounds(%1$f, %2$f, %3$f, %4$f);",
+    webView.loadUrl(String.format(Locale.US, "javascript:setBounds(%1$f, %2$f, %3$f, %4$f);",
         bounds.northeast.latitude, bounds.northeast.longitude,
         bounds.southwest.latitude,
         bounds.southwest.longitude));
@@ -364,7 +369,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
               });
             }
           } else {
-            webView.loadUrl(String.format("javascript:showDefaultInfoWindow(%1$d);", markerId));
+            webView.loadUrl(
+                String.format(Locale.US, "javascript:showDefaultInfoWindow(%1$d);", markerId));
           }
 
           ignoreNextMapMove = true;

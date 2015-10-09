@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Locale;
+
 public class MapboxWebViewMapFragment extends WebViewMapFragment {
 
   public static MapboxWebViewMapFragment newInstance(AirMapType mapType) {
@@ -34,6 +36,6 @@ public class MapboxWebViewMapFragment extends WebViewMapFragment {
     } else {
       mapBoxType = "mapbox.streets";
     }
-    webView.loadUrl(String.format("javascript:setMapTypeId(\"%1$s\");", mapBoxType));
+    webView.loadUrl(String.format(Locale.US, "javascript:setMapTypeId(\"%1$s\");", mapBoxType));
   }
 }
