@@ -4,6 +4,7 @@ import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
@@ -33,14 +34,14 @@ public interface AirMapInterface {
   /**
    * Add the given marker to the map
    *
-   * @param marker {@Link AirMapMarker} instance to add
+   * @param marker {@link AirMapMarker} instance to add
    */
   void addMarker(AirMapMarker marker);
 
   /**
    * Remove the given marker from the map
    *
-   * @param marker {@Link AirMapMarker} instance to remove
+   * @param marker {@link AirMapMarker} instance to remove
    */
   void removeMarker(AirMapMarker marker);
 
@@ -181,14 +182,16 @@ public interface AirMapInterface {
   void setMapToolbarEnabled(boolean enabled);
 
   /**
-   * Construct a polyline with the given {@link LatLng} points
+   * Add the given polyline to the map
+   *
+   * @param polyline {@link AirMapPolyline} instance to add
    */
   <T> void addPolyline(AirMapPolyline<T> polyline);
 
   /**
-   * Remove the given {@link Polyline}
+   * Remove the given {@link AirMapPolyline}
    *
-   * @param polyline the {@link Polyline} to remove
+   * @param polyline the {@link AirMapPolyline} to remove
    */
   void removePolyline(AirMapPolyline polyline);
 
@@ -200,4 +203,18 @@ public interface AirMapInterface {
    * permissions should be executed here.
    */
   void onLocationPermissionsGranted();
+
+  /**
+   * Add the given polygon to the map
+   *
+   * @param polygon {@link AirMapPolygon} instance to add
+   */
+  <T> void addPolygon(AirMapPolygon<T> polygon);
+
+  /**
+   * Remove the given {@link AirMapPolygon}
+   *
+   * @param polygon the {@link AirMapPolygon} to remove
+   */
+  void removePolygon(AirMapPolygon polygon);
 }

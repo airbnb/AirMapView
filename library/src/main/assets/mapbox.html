@@ -115,16 +115,8 @@ function removeMarker(id) {
 }
 
 function addPolyline(points, id, width, color) {
-  var pointsArray = [];
-
-  for (var i = 0; i < points.length; i++) {
-    var point = points[i];
-    var position = L.latLng(point["lat"], point["lng"]);
-    pointsArray.push(point);
-  }
-
   color = formatColor(color);
-  var polyLine = L.polyline(pointsArray, {color: color, weight: width / 2}).addTo(map);
+  var polyLine = L.polyline(points, {color: color, weight: width / 2}).addTo(map);
 
   polylines[id] = polyLine;
 }
@@ -141,6 +133,21 @@ function removeAllPolylines() {
     removePolyline(key);
   }
   polylines = {};
+}
+
+function addPolygon(points, id, width, strokeColor, fillColor) {
+  strokeColor = formatColor(strokeColor);
+  fillColor = formatColor(fillColor);
+  var polygon = L.polygon(points, {color: strokeColor, fillColor: fillColor, weight: width / 2}).addTo(map);
+
+  polygons[id] = polygon;
+}
+
+function removePolygon(id) {
+  var polygon = polygon[id];
+  if (polygon != null) {
+    map.removeLayer(polygon);
+  }
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {

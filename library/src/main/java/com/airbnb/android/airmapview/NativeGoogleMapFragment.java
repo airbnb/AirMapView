@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
@@ -250,6 +251,18 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void removePolyline(AirMapPolyline polyline) {
     polyline.removeFromGoogleMap();
+  }
+
+  @Override public <T> void addPolygon(AirMapPolygon<T> polygon) {
+    Polygon googlePolygon = googleMap.addPolygon(polygon.getPolygonOptions());
+    polygon.setGooglePolygon(googlePolygon);
+  }
+
+  @Override public void removePolygon(AirMapPolygon polygon) {
+    Polygon nativePolygon = polygon.getGooglePolygon();
+    if (nativePolygon != null) {
+      nativePolygon.remove();
+    }
   }
 
   @Override public void setMapType(MapType type) {

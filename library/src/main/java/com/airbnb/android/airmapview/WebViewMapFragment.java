@@ -246,6 +246,31 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webView.loadUrl(String.format(Locale.US, "javascript:removePolyline(%1$d);", polyline.getId()));
   }
 
+  @Override public <T> void addPolygon(AirMapPolygon<T> polygon) {
+    try {
+      JSONArray array = new JSONArray();
+      for (LatLng point : polygon.getPolygonOptions().getPoints()) {
+        JSONObject json = new JSONObject();
+        json.put("lat", point.latitude);
+        json.put("lng", point.longitude);
+        array.put(json);
+      }
+
+      webView.loadUrl(String.format(Locale.US,
+          "javascript:addPolygon(" + array.toString() + ", %1$d, %2$d, %3$d, %4$d);",
+          polygon.getId(),
+          (int) polygon.getPolygonOptions().getStrokeWidth(),
+          polygon.getPolygonOptions().getStrokeColor(),
+          polygon.getPolygonOptions().getFillColor()));
+    } catch (JSONException e) {
+      Log.e(TAG, "error constructing polyline JSON", e);
+    }
+  }
+
+  @Override public void removePolygon(AirMapPolygon polygon) {
+    webView.loadUrl(String.format(Locale.US, "javascript:removePolygon(%1$d);", polygon.getId()));
+  }
+
   @Override public void setOnMapClickListener(final OnMapClickListener listener) {
     onMapClickListener = listener;
   }
