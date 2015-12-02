@@ -1,5 +1,6 @@
 package com.airbnb.android.airmapview;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -35,6 +36,10 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+import permissions.dispatcher.NeedsPermissions;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
 
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
@@ -200,10 +205,21 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
     this.trackUserLocation = trackUserLocationEnabled;
     if (trackUserLocationEnabled) {
-      webView.loadUrl("javascript:startTrackingUserLocation();");
+      WebViewMapFragmentPermissionsDispatcher.startTrackingUserLocationWithCheck(this);
     } else {
       webView.loadUrl("javascript:stopTrackingUserLocation();");
     }
+  }
+
+  @NeedsPermissions({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+  void startTrackingUserLocation() {
+    webView.loadUrl("javascript:startTrackingUserLocation();");
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    WebViewMapFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
   }
 
   @Override public boolean isMyLocationEnabled() {
