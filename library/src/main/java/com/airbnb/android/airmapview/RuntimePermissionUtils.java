@@ -68,6 +68,10 @@ public final class RuntimePermissionUtils {
     return false;
   }
 
+  /**
+   * Call this method to execute code that needs locations permission, and put the executed code in
+   * onLocationPermissionsGranted().
+   */
   public static void checkLocationPermissions(Fragment target, AirMapInterface airMapInterface) {
     if (hasSelfPermissions(target.getActivity(), LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
@@ -76,6 +80,11 @@ public final class RuntimePermissionUtils {
     }
   }
 
+  /**
+   * Execute code in onLocationPermissionsGranted() if the right permissions are granted. <br />
+   * Further actions like 1> showing a snack bar to explain why the permissions are needed and
+   * 2> adding airMapInterface.onLocationPermissionsDenied() should be added here if needed.
+   */
   public static void onRequestPermissionsResult(AirMapInterface airMapInterface, int requestCode, int[] grantResults) {
     switch (requestCode) {
       case LOCATION_PERMISSION_REQUEST_CODE:
