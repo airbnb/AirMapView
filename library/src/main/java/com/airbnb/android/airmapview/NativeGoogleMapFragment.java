@@ -1,8 +1,8 @@
 package com.airbnb.android.airmapview;
 
-import android.Manifest;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-import permissions.dispatcher.NeedsPermissions;
-import permissions.dispatcher.RuntimePermissions;
-
-@RuntimePermissions
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
-  private boolean isRequestingPermission;
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -224,23 +219,22 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setPadding(left, top, right, bottom);
   }
 
-  @Override
-  public void setMyLocationEnabled(boolean enabled) {
+  @Override public void setMyLocationEnabled(boolean enabled) {
     if (myLocationEnabled != enabled) {
       myLocationEnabled = enabled;
-      NativeGoogleMapFragmentPermissionsDispatcher.setMyLocationEnabledPermissionHelperWithCheck(this);
+      RuntimePermissionUtils.checkLocationPermissions(this, this);
     }
   }
 
-  @NeedsPermissions({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-  void setMyLocationEnabledPermissionHelper() {
+  @Override
+  public void onLocationPermissionsGranted() {
     googleMap.setMyLocationEnabled(myLocationEnabled);
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    NativeGoogleMapFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
   }
 
   @Override

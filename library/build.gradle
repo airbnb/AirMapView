@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply from: 'gradle-maven-push.gradle'
-apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 23
@@ -33,10 +32,6 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-integration:1.3'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
-
-    //for Android M Runtime Permission
-    compile 'com.github.hotchemi:permissionsdispatcher:1.2.1'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:1.2.1'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
