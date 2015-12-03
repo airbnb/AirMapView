@@ -222,23 +222,21 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   @Override public void setMyLocationEnabled(boolean enabled) {
     if (myLocationEnabled != enabled) {
       myLocationEnabled = enabled;
-      RuntimePermissionUtils.checkLocationPermissions(this, this);
+      RuntimePermissionUtils.checkLocationPermissions(getActivity(), this);
     }
   }
 
-  @Override
-  public void onLocationPermissionsGranted() {
+  @Override public void onLocationPermissionsGranted() {
     googleMap.setMyLocationEnabled(myLocationEnabled);
   }
 
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+          @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
   }
 
-  @Override
-  public boolean isMyLocationEnabled() {
+  @Override public boolean isMyLocationEnabled() {
     return googleMap.isMyLocationEnabled();
   }
 

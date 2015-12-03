@@ -4,30 +4,30 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 /**
- * Utility class that handles Runtime location permissions for Android M
+ * Utility class that handles runtime permissions
  */
-public final class RuntimePermissionUtils {
+final class RuntimePermissionUtils {
 
   private RuntimePermissionUtils() {
   }
 
   private static final byte LOCATION_PERMISSION_REQUEST_CODE = 1;
   private static final String[] LOCATION_PERMISSIONS =
-          new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
+          new String[]{"android.permission.ACCESS_FINE_LOCATION",
+                  "android.permission.ACCESS_COARSE_LOCATION"};
 
   /**
-   * Checks all given permissions have been granted.
+   * Verifies that any of the given permissions have been granted.
    *
-   * @param grantResults results
    * @return returns true if all permissions have been granted.
    */
-  public static boolean verifyPermissions(int... grantResults) {
+  private static boolean verifyPermissions(int... grantResults) {
     for (int result : grantResults) {
       if (result != PackageManager.PERMISSION_GRANTED) {
         return false;
@@ -37,29 +37,23 @@ public final class RuntimePermissionUtils {
   }
 
   /**
-   * Returns true if the Activity or Fragment has access to all given permissions.
-   *
-   * @param context     context
-   * @param permissions permission list
-   * @return returns true if the Activity or Fragment has access to all given permissions.
+   * Returns true if the context has access to any given permissions.
    */
-  public static boolean hasSelfPermissions(Context context, String... permissions) {
+  private static boolean hasSelfPermissions(Context context, String... permissions) {
     for (String permission : permissions) {
-      if (checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-        return false;
+      if (checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
    * Checks given permissions are needed to show rationale.
    *
-   * @param activity    activity
-   * @param permissions permission list
    * @return returns true if one of the permission is needed to show rationale.
    */
-  public static boolean shouldShowRequestPermissionRationale(Activity activity, String... permissions) {
+  static boolean shouldShowRequestPermissionRationale(Activity activity, String... permissions) {
     for (String permission : permissions) {
       if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
         return true;
@@ -69,23 +63,31 @@ public final class RuntimePermissionUtils {
   }
 
   /**
-   * Call this method to execute code that needs locations permission, and put the executed code in
-   * onLocationPermissionsGranted().
+   * Check if any location permissions are granted, and invoke onLocationPermissionsGranted() in the
+   * callback if granted. It will ask users for location permissions and invoke the same callback if
+   * no permission was granted and got granted at runtime.
+   *
+   * @param airMapInterface the callback interface if permission is granted.
    */
-  public static void checkLocationPermissions(Fragment target, AirMapInterface airMapInterface) {
-    if (hasSelfPermissions(target.getActivity(), LOCATION_PERMISSIONS)) {
+  @TargetApi(Build.VERSION_CODES.M)
+  static void checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
+    if (hasSelfPermissions(targetActivity, LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
     } else {
-      target.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
+      targetActivity.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
     }
   }
 
   /**
-   * Execute code in onLocationPermissionsGranted() if the right permissions are granted. <br />
-   * Further actions like 1> showing a snack bar to explain why the permissions are needed and
-   * 2> adding airMapInterface.onLocationPermissionsDenied() should be added here if needed.
+   * Dispatch actions based off requested permission results.<br />
+   * Further actions like
+   * 1> Rationale: showing a snack bar to explain why the permissions are needed and
+   * 2> Denied: adding airMapInterface.onLocationPermissionsDenied()
+   * should be added here if needed.
+   *
    */
-  public static void onRequestPermissionsResult(AirMapInterface airMapInterface, int requestCode, int[] grantResults) {
+  static void onRequestPermissionsResult(AirMapInterface airMapInterface, int requestCode,
+          int[] grantResults) {
     switch (requestCode) {
       case LOCATION_PERMISSION_REQUEST_CODE:
         if (verifyPermissions(grantResults)) {

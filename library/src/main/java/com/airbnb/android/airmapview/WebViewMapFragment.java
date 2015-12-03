@@ -200,19 +200,18 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
     trackUserLocation = trackUserLocationEnabled;
     if (trackUserLocationEnabled) {
-      RuntimePermissionUtils.checkLocationPermissions(this, this);
+      RuntimePermissionUtils.checkLocationPermissions(getActivity(), this);
     } else {
       webView.loadUrl("javascript:stopTrackingUserLocation();");
     }
   }
 
-  @Override
-  public void onLocationPermissionsGranted() {
+  @Override public void onLocationPermissionsGranted() {
     webView.loadUrl("javascript:startTrackingUserLocation();");
   }
 
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+          @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
   }

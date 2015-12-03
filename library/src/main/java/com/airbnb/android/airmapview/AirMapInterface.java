@@ -196,8 +196,8 @@ public interface AirMapInterface {
   void setMapType(MapType type);
 
   /**
-   * Getting called when runtime location permissions got granted. Should only execute code that needs location permissions in this
-   * callback.
+   * Getting called when runtime location permissions got granted. Any action needing location
+   * permissions should be executed here.
    */
   void onLocationPermissionsGranted();
 }
