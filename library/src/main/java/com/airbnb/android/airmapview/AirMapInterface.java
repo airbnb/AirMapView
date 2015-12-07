@@ -194,4 +194,10 @@ public interface AirMapInterface {
 
   /** Sets the type of map tiles that should be displayed */
   void setMapType(MapType type);
+
+  /**
+   * Getting called when runtime location permissions got granted. Any action needing location
+   * permissions should be executed here.
+   */
+  void onLocationPermissionsGranted();
 }

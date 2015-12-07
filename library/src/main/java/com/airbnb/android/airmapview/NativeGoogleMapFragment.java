@@ -2,6 +2,7 @@ package com.airbnb.android.airmapview;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
+  private boolean myLocationEnabled;
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -218,11 +220,23 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void setMyLocationEnabled(boolean enabled) {
-    googleMap.setMyLocationEnabled(enabled);
+    if (myLocationEnabled != enabled) {
+      myLocationEnabled = enabled;
+      RuntimePermissionUtils.checkLocationPermissions(getActivity(), this);
+    }
   }
 
-  @Override
-  public boolean isMyLocationEnabled() {
+  @Override public void onLocationPermissionsGranted() {
+    googleMap.setMyLocationEnabled(myLocationEnabled);
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+          @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
+  }
+
+  @Override public boolean isMyLocationEnabled() {
     return googleMap.isMyLocationEnabled();
   }
 
