@@ -53,7 +53,7 @@ The project includes a sample app which uses AirMapView. The sample app allows t
     mapView.initialize(getSupportFragmentManager());
     ```
 
-1. Add markers/polylines
+1. Add markers/polylines/polygons
     ```java
     map.addMarker(new AirMapMarker(latLng, markerId)
             .setTitle("Airbnb HQ")

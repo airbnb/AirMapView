@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
+import com.airbnb.android.airmapview.AirMapPolygon;
 import com.airbnb.android.airmapview.AirMapPolyline;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
@@ -137,6 +138,15 @@ public class MainActivity extends AppCompatActivity
         new LatLng(37.77787, -122.38864) };
 
     map.addPolyline(new AirMapPolyline(Arrays.asList(latLngs), 5));
+
+    // Add Polygons
+    LatLng[] polygonLatLngs = {
+            new LatLng(37.784, -122.405),
+            new LatLng(37.784, -122.406),
+            new LatLng(37.785, -122.406),
+            new LatLng(37.785, -122.405)
+    };
+    map.addPolygon(new AirMapPolygon.Builder().add(polygonLatLngs).strokeWidth(3.f).build());
 
     // Add Circle
     map.drawCircle(new LatLng(37.78443, -122.40805), 1000);

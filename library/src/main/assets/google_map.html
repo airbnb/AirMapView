@@ -149,18 +149,10 @@ function removeMarker(id) {
 }
 
 function addPolyline(points, id, width, color) {
-  var pointsArray = [];
-
-  for (var i = 0; i < points.length; i++) {
-    var point = points[i];
-    var position = new google.maps.LatLng(point["lat"], point["lng"]);
-    pointsArray.push(point);
-  }
-
   color = formatColor(color);
   var polyLine = new google.maps.Polyline({
     map: map,
-    path: pointsArray,
+    path: points,
     strokeColor: color,
     strokeWeight: width / 2
   });
@@ -180,6 +172,27 @@ function removeAllPolylines() {
     removePolyline(key);
   }
   polylines = {};
+}
+
+function addPolygon(points, id, strokeWidth, strokeColor, fillColor) {
+  strokeColor = formatColor(strokeColor);
+  fillColor = formatColor(fillColor);
+  var polygon = new google.maps.Polygon({
+    map: map,
+    paths: points,
+    strokeColor: strokeColor,
+    strokeWeight: strokeWidth / 2,
+    fillColor: fillColor
+  });
+
+  polygons[id] = polygon;
+}
+
+function removePolygon(id) {
+  var polygon = polygons[id];
+  if (polygon != null) {
+    polygons[id].setMap(null);
+  }
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
