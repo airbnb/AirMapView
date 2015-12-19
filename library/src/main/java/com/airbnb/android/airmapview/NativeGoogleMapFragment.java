@@ -28,11 +28,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 
+import java.util.HashMap;
+
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
+  private HashMap<Marker, AirMapMarker> markers;
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -58,6 +61,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null && getActivity() != null) {
           NativeGoogleMapFragment.this.googleMap = googleMap;
+          NativeGoogleMapFragment.this.markers = new HashMap<>();
           UiSettings settings = NativeGoogleMapFragment.this.googleMap.getUiSettings();
           settings.setZoomControlsEnabled(false);
           settings.setMyLocationButtonEnabled(false);
@@ -76,18 +80,21 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void clearMarkers() {
+    markers.clear();
     googleMap.clear();
   }
 
   @Override public void addMarker(AirMapMarker airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
+    markers.put(marker, airMarker);
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
     Marker nativeMarker = marker.getMarker();
     if (nativeMarker != null) {
       nativeMarker.remove();
+      markers.remove(nativeMarker);
     }
   }
 
@@ -95,7 +102,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
       @Override
       public void onInfoWindowClick(Marker marker) {
-        listener.onInfoWindowClick(marker);
+        AirMapMarker airMarker = markers.get(marker);
+        if (airMarker != null) {
+          listener.onInfoWindowClick(airMarker);
+        }
       }
     });
   }
@@ -201,7 +211,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
       @Override
       public boolean onMarkerClick(Marker marker) {
-        listener.onMapMarkerClick(marker);
+        AirMapMarker airMarker = markers.get(marker);
+        if (airMarker != null) {
+          listener.onMapMarkerClick(airMarker);
+        }
         return false;
       }
     });

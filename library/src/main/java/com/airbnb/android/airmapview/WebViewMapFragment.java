@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
@@ -41,6 +42,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   protected WebView webView;
   private ViewGroup mLayout;
+  private HashMap<Long, AirMapMarker> markers;
   private OnMapClickListener onMapClickListener;
   private OnCameraChangeListener onCameraChangeListener;
   private OnMapLoadedListener onMapLoadedListener;
@@ -78,6 +80,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     webView = (WebView) view.findViewById(R.id.webview);
     mLayout = (ViewGroup) view;
+
+    markers = new HashMap<>();
 
     WebSettings webViewSettings = webView.getSettings();
     webViewSettings.setSupportZoom(true);
@@ -155,6 +159,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   @Override public void addMarker(AirMapMarker marker) {
     LatLng latLng = marker.getLatLng();
+    markers.put(marker.getId(), marker);
     webView.loadUrl(
         String.format(Locale.US, "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
             latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(),
@@ -162,10 +167,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
+    markers.remove(marker.getId());
     webView.loadUrl(String.format(Locale.US, "javascript:removeMarker(%1$d);", marker.getId()));
   }
 
   public void clearMarkers() {
+    markers.clear();
     webView.loadUrl("javascript:clearMarkers();");
   }
 
@@ -377,12 +384,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface public void markerClick(final long markerId) {
+    @JavascriptInterface public void markerClick(long markerId) {
+      final AirMapMarker airMapMarker = markers.get(markerId);
       handler.post(new Runnable() {
         @Override
         public void run() {
           if (onMapMarkerClickListener != null) {
-            onMapMarkerClickListener.onMapMarkerClick(markerId);
+            onMapMarkerClickListener.onMapMarkerClick(airMapMarker);
           }
 
           if (infoWindowView != null) {
@@ -391,21 +399,22 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
           // TODO convert to custom dialog fragment
           if (infoWindowCreator != null) {
-            infoWindowView = infoWindowCreator.createInfoWindow(markerId);
+            infoWindowView = infoWindowCreator.createInfoWindow(airMapMarker);
             if (infoWindowView != null) {
               mLayout.addView(infoWindowView);
               infoWindowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(@NonNull View v) {
                   if (onInfoWindowClickListener != null) {
-                    onInfoWindowClickListener.onInfoWindowClick(markerId);
+                    onInfoWindowClickListener.onInfoWindowClick(airMapMarker);
                   }
                 }
               });
             }
           } else {
             webView.loadUrl(
-                String.format(Locale.US, "javascript:showDefaultInfoWindow(%1$d);", markerId));
+                String.format(Locale.US, "javascript:showDefaultInfoWindow(%1$d);",
+                        airMapMarker.getId()));
           }
 
           ignoreNextMapMove = true;
@@ -413,12 +422,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface public void defaultInfoWindowClick(final long markerId) {
+    @JavascriptInterface public void defaultInfoWindowClick(long markerId) {
+      final AirMapMarker airMapMarker = markers.get(markerId);
       handler.post(new Runnable() {
         @Override
         public void run() {
           if (onInfoWindowClickListener != null) {
-            onInfoWindowClickListener.onInfoWindowClick(markerId);
+            onInfoWindowClickListener.onInfoWindowClick(airMapMarker);
           }
         }
       });
