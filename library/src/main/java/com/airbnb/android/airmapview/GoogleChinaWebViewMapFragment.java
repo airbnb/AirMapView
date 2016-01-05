@@ -5,4 +5,10 @@ public class GoogleChinaWebViewMapFragment extends GoogleWebViewMapFragment {
     return (GoogleChinaWebViewMapFragment) new GoogleChinaWebViewMapFragment()
         .setArguments(mapType);
   }
+
+  @Override
+  protected void onJavaScriptInit() {
+    super.onJavaScriptInit();
+    webView.loadUrl("javascript:setChinaMode()");
+  }
 }

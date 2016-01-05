@@ -302,9 +302,22 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         bounds.southwest.longitude));
   }
 
+  protected void onJavaScriptInit() {
+    // do nothing
+  }
+
   private class MapsJavaScriptInterface {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+
+    @JavascriptInterface public void onJavaScriptInit() {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          WebViewMapFragment.this.onJavaScriptInit();
+        }
+      });
+    }
 
     @JavascriptInterface public void onMapLoaded() {
       handler.post(new Runnable() {

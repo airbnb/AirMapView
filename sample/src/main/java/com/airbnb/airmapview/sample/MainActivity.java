@@ -19,6 +19,7 @@ import com.airbnb.android.airmapview.AirMapPolyline;
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
+import com.airbnb.android.airmapview.GoogleChinaMapType;
 import com.airbnb.android.airmapview.MapType;
 import com.airbnb.android.airmapview.WebAirMapViewBuilder;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
@@ -93,21 +94,31 @@ public class MainActivity extends AppCompatActivity
 
     AirMapInterface airMapInterface = null;
 
-    if (id == R.id.action_native_map) {
-      try {
-        airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
-      } catch (UnsupportedOperationException e) {
-        Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                "Please make sure you have Google Play Services installed.",
-            Toast.LENGTH_SHORT).show();
-      }
-    } else if (id == R.id.action_mapbox_map) {
-      airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
-    } else if (id == R.id.action_google_web_map) {
-      // force Google Web maps since otherwise AirMapViewTypes.WEB returns MapBox by default.
-      airMapInterface = new WebAirMapViewBuilder().build();
-    } else if (id == R.id.action_clear_logs) {
-      textLogs.setText("");
+    switch (id) {
+      case R.id.action_native_map:
+        try {
+          airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
+        } catch (UnsupportedOperationException e) {
+          Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
+                          "Please make sure you have Google Play Services installed.",
+                  Toast.LENGTH_SHORT).show();
+        }
+        break;
+      case R.id.action_mapbox_map:
+        airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
+        break;
+      case R.id.action_google_web_map:
+        // force Google Web maps since otherwise AirMapViewTypes.WEB returns MapBox by default.
+        airMapInterface = new WebAirMapViewBuilder().build();
+        break;
+      case R.id.action_google_china_web_map:
+        airMapInterface = new WebAirMapViewBuilder().withOptions(new GoogleChinaMapType()).build();
+        break;
+      case R.id.action_clear_logs:
+        textLogs.setText("");
+        break;
+      default:
+        break;
     }
 
     if (airMapInterface != null) {
