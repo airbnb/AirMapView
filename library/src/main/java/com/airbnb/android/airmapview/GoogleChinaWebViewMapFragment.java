@@ -5,4 +5,9 @@ public class GoogleChinaWebViewMapFragment extends GoogleWebViewMapFragment {
     return (GoogleChinaWebViewMapFragment) new GoogleChinaWebViewMapFragment()
         .setArguments(mapType);
   }
+
+  @Override
+  protected boolean isChinaMode() {
+    return true;
+  }
 }

@@ -302,9 +302,17 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         bounds.southwest.longitude));
   }
 
+  protected boolean isChinaMode() {
+    return false;
+  }
+
   private class MapsJavaScriptInterface {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+
+    @JavascriptInterface public boolean isChinaMode() {
+      return WebViewMapFragment.this.isChinaMode();
+    }
 
     @JavascriptInterface public void onMapLoaded() {
       handler.post(new Runnable() {

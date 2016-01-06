@@ -20,6 +20,8 @@ var infoWindowContent = {};
 var polylines = {};
 var moveTimeout;
 var GeoMarker = null;
+var markerIconPrefix;
+
 function initialize() {
   var mapOptions = {
     zoom: 10,
@@ -41,6 +43,13 @@ function initialize() {
   google.maps.event.addListener(map, 'center_changed', mapMove)
 
   AirMapView.onMapLoaded();
+}
+
+function getMarkerIcon(iconFile) {
+  if (markerIconPrefix === undefined) {
+    markerIconPrefix = AirMapView.isChinaMode() ? 'http://ditu.google.cn/mapfiles/ms/icons/' : 'http://maps.google.com/mapfiles/ms/icons/';
+  }
+  return markerIconPrefix + iconFile;
 }
 
 function startTrackingUserLocation() {
@@ -77,14 +86,14 @@ function setZoom(zoom) {
 function highlightMarker(markerId) {
   var marker = markers[markerId];
   if (marker != null) {
-    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/purple-dot.png');
+    marker.setIcon(getMarkerIcon('purple-dot.png'));
   }
 }
 
 function unhighlightMarker(markerId) {
   var marker = markers[markerId];
   if (marker != null) {
-    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+    marker.setIcon(getMarkerIcon('red-dot.png'));
   }
 }
 
@@ -93,7 +102,7 @@ function addMarker(lat, lng) {
   var marker = new google.maps.Marker({
       position: position,
       map: map,
-      icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+      icon: getMarkerIcon('green-dot.png')
   });
 }
 
@@ -102,7 +111,7 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
   var marker = new google.maps.Marker({
       position: position,
       map: map,
-      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      icon: getMarkerIcon('red-dot.png')
   });
 
   if(title != "null" || snippet != "null") {
