@@ -1,3 +1,9 @@
+# 1.3.1 Jan 6, 2016
+
+* Added support for drawing polygons (PR #64)
+* Fixed runtime permission for Android M (PR #65)
+* Fixed drawing markers for China map type (PR #68)
+
 # 1.3.0 September 28, 2015
 
 * Android M support
