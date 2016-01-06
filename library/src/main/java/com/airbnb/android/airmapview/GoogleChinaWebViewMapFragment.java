@@ -7,8 +7,7 @@ public class GoogleChinaWebViewMapFragment extends GoogleWebViewMapFragment {
   }
 
   @Override
-  protected void onJavaScriptInit() {
-    super.onJavaScriptInit();
-    webView.loadUrl("javascript:setChinaMode()");
+  protected boolean isChinaMode() {
+    return true;
   }
 }

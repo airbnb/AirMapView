@@ -20,11 +20,9 @@ var infoWindowContent = {};
 var polylines = {};
 var moveTimeout;
 var GeoMarker = null;
-var isChinaMode = false;
+var markerIconPrefix;
 
 function initialize() {
-  AirMapView.onJavaScriptInit();
-
   var mapOptions = {
     zoom: 10,
     disableDefaultUI: true,
@@ -47,12 +45,11 @@ function initialize() {
   AirMapView.onMapLoaded();
 }
 
-function setChinaMode() {
-  isChinaMode = true;
-}
-
 function getMarkerIcon(iconFile) {
-    return iconUrl = (isChinaMode ? 'http://ditu.google.cn/mapfiles/ms/icons/' : 'http://maps.google.com/mapfiles/ms/icons/') + iconFile;
+  if (markerIconPrefix === undefined) {
+    markerIconPrefix = AirMapView.isChinaMode() ? 'http://ditu.google.cn/mapfiles/ms/icons/' : 'http://maps.google.com/mapfiles/ms/icons/';
+  }
+  return markerIconPrefix + iconFile;
 }
 
 function startTrackingUserLocation() {
