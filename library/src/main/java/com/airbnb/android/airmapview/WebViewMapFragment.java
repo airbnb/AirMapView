@@ -83,8 +83,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webViewSettings.setBuiltInZoomControls(false);
     webViewSettings.setJavaScriptEnabled(true);
     webViewSettings.setGeolocationEnabled(true);
-
-    webView.getSettings().setAllowFileAccess(false);
+    webViewSettings.setAllowFileAccess(false);
+    webViewSettings.setAllowContentAccess(false);
     webView.setWebChromeClient(new GeoWebChromeClient());
 
     AirMapType mapType = AirMapType.fromBundle(getArguments());
