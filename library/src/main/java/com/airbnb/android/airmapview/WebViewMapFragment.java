@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
 
@@ -42,7 +43,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   protected WebView webView;
   private ViewGroup mLayout;
-  private HashMap<Long, AirMapMarker> markers;
   private OnMapClickListener onMapClickListener;
   private OnCameraChangeListener onCameraChangeListener;
   private OnMapLoadedListener onMapLoadedListener;
@@ -56,6 +56,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean loaded;
   private boolean ignoreNextMapMove;
   private View infoWindowView;
+  private final Map<Long, AirMapMarker<?>> markers = new HashMap<>();
 
   private boolean trackUserLocation = false;
 
@@ -80,8 +81,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     webView = (WebView) view.findViewById(R.id.webview);
     mLayout = (ViewGroup) view;
-
-    markers = new HashMap<>();
 
     WebSettings webViewSettings = webView.getSettings();
     webViewSettings.setSupportZoom(true);

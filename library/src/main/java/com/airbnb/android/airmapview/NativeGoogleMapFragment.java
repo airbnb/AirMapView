@@ -29,13 +29,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
-  private HashMap<Marker, AirMapMarker> markers;
+  private final Map<Marker, AirMapMarker<?>> markers = new HashMap<>();
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -61,7 +62,6 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null && getActivity() != null) {
           NativeGoogleMapFragment.this.googleMap = googleMap;
-          NativeGoogleMapFragment.this.markers = new HashMap<>();
           UiSettings settings = NativeGoogleMapFragment.this.googleMap.getUiSettings();
           settings.setZoomControlsEnabled(false);
           settings.setMyLocationButtonEnabled(false);
