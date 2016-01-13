@@ -36,7 +36,6 @@ import org.json.JSONObject;
 import java.util.Locale;
 
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
-
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
 
   protected WebView webView;
@@ -85,6 +84,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webViewSettings.setJavaScriptEnabled(true);
     webViewSettings.setGeolocationEnabled(true);
 
+    webView.getSettings().setAllowFileAccess(false);
     webView.setWebChromeClient(new GeoWebChromeClient());
 
     AirMapType mapType = AirMapType.fromBundle(getArguments());
