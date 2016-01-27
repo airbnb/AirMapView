@@ -26,6 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -310,6 +312,16 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     if (nativePolygon != null) {
       nativePolygon.remove();
     }
+  }
+
+  @Override public void addGroundOverlay(AirMapGroundOverlay overlay) {
+    GroundOverlayOptions overlayOptions = overlay.getOverlayOptions();
+    GroundOverlay groundOverlay = googleMap.addGroundOverlay(overlayOptions);
+    overlay.setGoogleOverlay(groundOverlay);
+  }
+
+  @Override public void removeGroundOverlay(AirMapGroundOverlay overlay) {
+    overlay.getGoogleOverlay().remove();
   }
 
   @Override public void setMapType(MapType type) {

@@ -21,6 +21,7 @@ var map;
 var markers = {};
 var polylines = {};
 var polygons = {};
+var groundOverlays = {};
 
 L.mapbox.accessToken = 'MAPBOX_ACCESS_TOKEN';
 map = L.mapbox.map('map', 'MAPBOX_MAPID').setView([0, 0], 10);
@@ -174,6 +175,22 @@ function removePolygon(id) {
   var polygon = polygon[id];
   if (polygon != null) {
     map.removeLayer(polygon);
+  }
+}
+
+function addGroundOverlay(id, north, south, east, west, image) {
+  var imageBounds = [[south, west], [north, east]];
+
+  var overlay = L.imageOverlay(image, imageBounds);
+  overlay.addTo(map);
+
+  groundOverlays[id] = overlay;
+}
+
+function removeGroundOverlay(id) {
+  var overlay = groundOverlays[id];
+  if (overlay != null) {
+    map.removeLayer(overlay);
   }
 }
 

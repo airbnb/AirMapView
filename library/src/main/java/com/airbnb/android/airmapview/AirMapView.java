@@ -316,6 +316,22 @@ public class AirMapView extends FrameLayout
     mapInterface.clearGeoJsonLayer();
   }
 
+  public boolean addGroundOverlay(AirMapGroundOverlay overlay) {
+    if (isInitialized()) {
+      mapInterface.addGroundOverlay(overlay);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean removeGroundOverlay(AirMapGroundOverlay overlay) {
+    if (isInitialized()) {
+      mapInterface.removeGroundOverlay(overlay);
+      return true;
+    }
+    return false;
+  }
+
   public boolean isInitialized() {
     return mapInterface != null && mapInterface.isInitialized();
   }

@@ -217,4 +217,18 @@ public interface AirMapInterface {
 
   /** Get a Bitmap snapshot of the current */
   void getSnapshot(OnSnapshotReadyListener listener);
+
+  /**
+   * Add the given ground overlay to the map
+   *
+   * @param overlay {@link AirMapGroundOverlay} instance to add
+   */
+  void addGroundOverlay(AirMapGroundOverlay overlay);
+
+  /**
+   * Remove the given {@link AirMapGroundOverlay}
+   *
+   * @param overlay the {@link AirMapGroundOverlay} to remove
+   */
+  void removeGroundOverlay(AirMapGroundOverlay overlay);
 }
