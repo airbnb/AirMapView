@@ -59,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return new DefaultDemoFragment();
       }
     });
+    addDemo("Ground Overlay", new DemoFragmentFactory() {
+      @Override
+      public BaseDemoFragment make() {
+        return new GroundOverlayDemoFragment();
+      }
+    });
 
     startDemo(demos.get(0));
   }
