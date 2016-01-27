@@ -135,6 +135,13 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
   markers[id] = marker;
 }
 
+function moveMarker(lat, long, id) {
+  var marker = markers[id];
+  if (marker != null) {
+    marker.setPosition( new google.maps.LatLng(lat, long) );
+  }
+}
+
 function showDefaultInfoWindow(id){
     if(infoWindow){
         infoWindow.close();

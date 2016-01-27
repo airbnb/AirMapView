@@ -161,6 +161,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             marker.getSnippet()));
   }
 
+  @Override public void moveMarker(AirMapMarker marker, LatLng to) {
+    marker.setLatLng(to);
+    webView.loadUrl(
+        String.format(Locale.US, "javascript:moveMarker(%1$f, %2$f, '%3$s');",
+            to.latitude, to.longitude, marker.getId()));
+  }
+
   @Override public void removeMarker(AirMapMarker marker) {
     webView.loadUrl(String.format(Locale.US, "javascript:removeMarker(%1$d);", marker.getId()));
   }

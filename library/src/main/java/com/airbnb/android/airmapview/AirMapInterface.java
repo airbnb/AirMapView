@@ -39,6 +39,14 @@ public interface AirMapInterface {
   void addMarker(AirMapMarker marker);
 
   /**
+   * Move the marker to the given coordinates
+   *
+   * @param marker {@link AirMapMarker} instance to move
+   * @param to {@link LatLng} new destination of the marker
+   */
+  void moveMarker(AirMapMarker marker, LatLng to);
+
+  /**
    * Remove the given marker from the map
    *
    * @param marker {@link AirMapMarker} instance to remove
