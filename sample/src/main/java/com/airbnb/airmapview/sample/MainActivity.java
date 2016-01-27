@@ -1,255 +1,135 @@
 package com.airbnb.airmapview.sample;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.android.airmapview.AirMapGeoJsonLayer;
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
-import com.airbnb.android.airmapview.AirMapPolygon;
-import com.airbnb.android.airmapview.AirMapPolyline;
-import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.AirMapViewTypes;
-import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
 import com.airbnb.android.airmapview.GoogleChinaMapType;
-import com.airbnb.android.airmapview.MapType;
 import com.airbnb.android.airmapview.WebAirMapViewBuilder;
-import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
-import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
-import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
-import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
-import com.airbnb.android.airmapview.listeners.OnMapClickListener;
-import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
-import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-    implements OnCameraChangeListener, OnMapInitializedListener,
-    OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
-    OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+  private DemoAdapter demoAdapter = new DemoAdapter();
+  private List<Demo> demos = new ArrayList<>();
+  private ListView listView;
 
-  private final LogsAdapter adapter = new LogsAdapter();
-
-  private static final String TAG = MainActivity.class.getSimpleName();
-  private AirMapView map;
-  private DefaultAirMapViewBuilder mapViewBuilder;
-  private RecyclerView logsRecyclerView;
-
-  @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mapViewBuilder = new DefaultAirMapViewBuilder(this);
-    map = (AirMapView) findViewById(R.id.map);
-    logsRecyclerView = (RecyclerView) findViewById(R.id.logs);
-    ((LinearLayoutManager) logsRecyclerView.getLayoutManager()).setReverseLayout(true);
-    logsRecyclerView.setAdapter(adapter);
-    Button btnMapTypeNormal = (Button) findViewById(R.id.btnMapTypeNormal);
-    Button btnMapTypeSattelite = (Button) findViewById(R.id.btnMapTypeSattelite);
-    Button btnMapTypeTerrain = (Button) findViewById(R.id.btnMapTypeTerrain);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        R.string.drawer_open, R.string.drawer_close);
+    drawerLayout.addDrawerListener(drawerToggle);
+    drawerToggle.syncState();
 
-    btnMapTypeNormal.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(@NonNull View v) {
-        map.setMapType(MapType.MAP_TYPE_NORMAL);
+    listView = (ListView) findViewById(android.R.id.list);
+    listView.setAdapter(demoAdapter);
+    listView.setOnItemClickListener(this);
+
+    addDemo("Default", new DemoFragmentFactory() {
+      @Override
+      public BaseDemoFragment make() {
+        return new DefaultDemoFragment();
       }
     });
 
-    btnMapTypeSattelite.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(@NonNull View v) {
-        map.setMapType(MapType.MAP_TYPE_SATELLITE);
-      }
-    });
-
-    btnMapTypeTerrain.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(@NonNull View v) {
-        map.setMapType(MapType.MAP_TYPE_TERRAIN);
-      }
-    });
-
-    map.setOnMapClickListener(this);
-    map.setOnCameraChangeListener(this);
-    map.setOnCameraMoveListener(this);
-    map.setOnMarkerClickListener(this);
-    map.setOnMapInitializedListener(this);
-    map.setOnInfoWindowClickListener(this);
-    map.initialize(getSupportFragmentManager());
+    startDemo(demos.get(0));
   }
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_main, menu);
-    return true;
+  private interface DemoFragmentFactory {
+    BaseDemoFragment make();
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-
-    AirMapInterface airMapInterface = null;
-
-    switch (id) {
-      case R.id.action_native_map:
-        try {
-          airMapInterface = mapViewBuilder.builder(AirMapViewTypes.NATIVE).build();
-        } catch (UnsupportedOperationException e) {
-          Toast.makeText(this, "Sorry, native Google Maps are not supported by this device. " +
-                          "Please make sure you have Google Play Services installed.",
-                  Toast.LENGTH_SHORT).show();
-        }
-        break;
-      case R.id.action_mapbox_map:
-        airMapInterface = mapViewBuilder.builder(AirMapViewTypes.WEB).build();
-        break;
-      case R.id.action_google_web_map:
-        // force Google Web maps since otherwise AirMapViewTypes.WEB returns MapBox by default.
-        airMapInterface = new WebAirMapViewBuilder().build();
-        break;
-      case R.id.action_google_china_web_map:
-        airMapInterface = new WebAirMapViewBuilder().withOptions(new GoogleChinaMapType()).build();
-        break;
-      case R.id.action_clear_logs:
-        adapter.clearLogs();
-        break;
-      case R.id.add_geojson_layer:
-        // Draws a layer on top of Australia
-        String geoJsonString = Util.readFromRawResource(this, R.raw.google);
-        AirMapGeoJsonLayer layer = new AirMapGeoJsonLayer.Builder(geoJsonString)
-                .strokeColor(getResources().getColor(android.R.color.holo_green_dark))
-                .strokeWidth(10)
-                .fillColor(getResources().getColor(android.R.color.holo_green_light))
-                .build();
-        try {
-          map.getMapInterface().setGeoJsonLayer(layer);
-        } catch (JSONException e) {
-          Log.e(TAG, "Failed to add GeoJson layer", e);
-        }
-
-        break;
-        case R.id.remove_geojson_layer:
-          map.getMapInterface().clearGeoJsonLayer();
-          break;
-      case R.id.take_snapshot:
-        map.getMapInterface().getSnapshot(new OnSnapshotReadyListener() {
-          @Override
-          public void onSnapshotReady(@Nullable Bitmap bitmap) {
-            if (bitmap != null) {
-              appendBitmap(bitmap);
-            } else {
-              appendLog("Null bitmap");
-            }
-          }
-        });
-        break;
-
-      default:
-        break;
-    }
-
-    if (airMapInterface != null) {
-      map.initialize(getSupportFragmentManager(), airMapInterface);
-    }
-
-    return super.onOptionsItemSelected(item);
+    private void startDemo (Demo demo){
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.content, demo.fragmentFactory.make())
+          .commit();
+      ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
   }
 
-  @Override public void onCameraChanged(LatLng latLng, int zoom) {
-    appendLog("Map onCameraChanged triggered with lat: " + latLng.latitude + ", lng: "
-        + latLng.longitude);
-  }
-
-  @Override public void onMapInitialized() {
-    appendLog("Map onMapInitialized triggered");
-    final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
-    addMarker("Airbnb HQ", airbnbLatLng, 1);
-    addMarker("Performance Bikes", new LatLng(37.773975, -122.40205), 2);
-    addMarker("REI", new LatLng(37.772127, -122.404411), 3);
-    addMarker("Mapbox", new LatLng(37.77572, -122.41354), 4);
-    map.animateCenterZoom(airbnbLatLng, 10);
-
-    // Add Polylines
-    LatLng[] latLngs = {
-        new LatLng(37.77977, -122.38937),
-        new LatLng(37.77811, -122.39160),
-        new LatLng(37.77787, -122.38864) };
-
-    map.addPolyline(new AirMapPolyline(Arrays.asList(latLngs), 5));
-
-    // Add Polygons
-    LatLng[] polygonLatLngs = {
-            new LatLng(37.784, -122.405),
-            new LatLng(37.784, -122.406),
-            new LatLng(37.785, -122.406),
-            new LatLng(37.785, -122.405)
-    };
-    map.addPolygon(new AirMapPolygon.Builder().add(polygonLatLngs).strokeWidth(3.f).build());
-
-    // Add Circle
-    map.drawCircle(new LatLng(37.78443, -122.40805), 1000);
-
-    // enable my location
-    map.setMyLocationEnabled(true);
-  }
-
-  private void addMarker(String title, LatLng latLng, int id) {
-    map.addMarker(new AirMapMarker.Builder()
-        .id(id)
-        .position(latLng)
-        .title(title)
-        .iconId(R.mipmap.icon_location_pin)
-        .build());
-  }
-
-  @Override public void onMapClick(LatLng latLng) {
-    if (latLng != null) {
-      appendLog(
-          "Map onMapClick triggered with lat: " + latLng.latitude + ", lng: "
-              + latLng.longitude);
-
-      map.getMapInterface().getScreenLocation(latLng, this);
+    @Override
+    public void onBackPressed () {
+      DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      if (drawer.isDrawerOpen(GravityCompat.START)) {
+        drawer.closeDrawer(GravityCompat.START);
     } else {
-      appendLog("Map onMapClick triggered with null latLng");
+        super.onBackPressed();
     }
   }
 
-  @Override public void onCameraMove() {
-    appendLog("Map onCameraMove triggered");
+  private void addDemo(String demoName, DemoFragmentFactory fragmentFactory) {
+    demos.add(new Demo(demoName, fragmentFactory));
   }
 
-  private void appendLog(String msg) {
-    adapter.addString(msg);
-    logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+    @Override
+    public void onItemClick (AdapterView < ? > parent, View view,int position, long id){
+      Demo demo = demoAdapter.getItem(position);
+      startDemo(demo);
+      listView.setSelection(position);
   }
 
-  private void appendBitmap(Bitmap bitmap) {
-    adapter.addBitmap(bitmap);
-    logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-  }
+    private class DemoAdapter extends BaseAdapter {
+      @Override
+      public int getCount() {
+        return demos.size();
+      }
 
-  @Override public void onMapMarkerClick(AirMapMarker airMarker) {
-    appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
-  }
+      @Override
+      public Demo getItem(int position) {
+        return demos.get(position);
+      }
 
-  @Override public void onInfoWindowClick(AirMapMarker airMarker) {
-    appendLog("Map onInfoWindowClick triggered with id " + airMarker.getId());
-  }
+      @Override
+      public long getItemId(int position) {
+        return position;
+      }
 
-  @Override public void onLatLngScreenLocationReady(Point point) {
-    appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+          convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+        }
+        Demo demo = getItem(position);
+        ((TextView) convertView.findViewById(android.R.id.text1)).setText(demo.demoName);
+        return convertView;
+      }
+    }
+
+    private static class Demo {
+      private final String demoName;
+      private final DemoFragmentFactory fragmentFactory;
+
+      public Demo(String demoName, DemoFragmentFactory fragmentFactory) {
+        this.demoName = demoName;
+        this.fragmentFactory = fragmentFactory;
+      }
   }
 }

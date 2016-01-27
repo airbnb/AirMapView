@@ -126,6 +126,9 @@ public class AirMapGroundOverlay {
     }
 
     public AirMapGroundOverlay build() {
+      if (imageId == 0 && imageUrl == null) {
+        throw new IllegalStateException("You should provide an imageId or an imageUrl to your ground overlay.");
+      }
       return new AirMapGroundOverlay(id, bounds, imageUrl, imageId, bitmap, bearing, zIndex, visible);
     }
   }
