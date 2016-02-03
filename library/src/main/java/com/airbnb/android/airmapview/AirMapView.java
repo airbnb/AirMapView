@@ -307,6 +307,14 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
+  public boolean removeMarker(AirMapMarker marker) {
+    if (isInitialized()) {
+      mapInterface.removeMarker(marker);
+      return true;
+    }
+    return false;
+  }
+
   public void setMyLocationEnabled(boolean trackUserLocation) {
     mapInterface.setMyLocationEnabled(trackUserLocation);
   }

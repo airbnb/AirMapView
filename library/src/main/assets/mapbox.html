@@ -19,6 +19,8 @@
 <script>
 var map;
 var markers = {};
+var polylines = {};
+var polygons = {};
 
 L.mapbox.accessToken = 'MAPBOX_ACCESS_TOKEN';
 map = L.mapbox.map('map', 'MAPBOX_MAPID').setView([0, 0], 10);
@@ -101,6 +103,10 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
   }
 
   markers[id] = marker;
+
+  marker.on("click", function(ev) {
+    AirMapView.markerClick(id);
+  });
 }
 
 function showDefaultInfoWindow(id){
@@ -124,7 +130,7 @@ function addPolyline(points, id, width, color) {
 function removePolyline(id) {
   var polyline = polylines[id];
   if (polyline != null) {
-    map.removeLayer(polyLine);
+    map.removeLayer(polyline);
   }
 }
 
@@ -151,7 +157,9 @@ function removePolygon(id) {
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
-    L.circle([lat, lng], radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
+  strokeColor = formatColor(strokeColor);
+  fillColor = formatColor(fillColor);
+  L.circle([lat, lng], radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
 }
 
 function mapClick(event) {
