@@ -196,20 +196,12 @@ public class MainActivity extends AppCompatActivity
     logsScrollView.fullScroll(View.FOCUS_DOWN);
   }
 
-  @Override public void onMapMarkerClick(long id) {
-    appendLog("Map onMapMarkerClick triggered with id " + id);
+  @Override public void onMapMarkerClick(AirMapMarker airMarker) {
+    appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
   }
 
-  @Override public void onMapMarkerClick(Marker marker) {
-    appendLog("Map onMapMarkerClick triggered with marker " + marker.getId());
-  }
-
-  @Override public void onInfoWindowClick(long id) {
-    appendLog("Map onInfoWindowClick triggered with id " + id);
-  }
-
-  @Override public void onInfoWindowClick(Marker marker) {
-    appendLog("Map onInfoWindowClick triggered with marker " + marker.getId());
+  @Override public void onInfoWindowClick(AirMapMarker airMarker) {
+    appendLog("Map onInfoWindowClick triggered with id " + airMarker.getId());
   }
 
   @Override public void onLatLngScreenLocationReady(Point point) {
