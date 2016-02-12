@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void addMarker(String title, String description, LatLng latLng, int id) {
-    map.addMarker(new AirMapMarker.Builder<String>()
+    map.addMarker(new AirMapMarker.Builder()
         .id(id)
         .position(latLng)
         .title(title)
