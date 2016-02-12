@@ -55,7 +55,15 @@ public interface AirMapInterface {
 
   /**
    * Specific to Google Play Services maps. Sets the {@link GoogleMap.InfoWindowAdapter} and {@link
-   * com.airbnb.android.airmapview.listeners.InfoWindowCreator}
+   * com.airbnb.android.airmapview.listeners.InfoWindowCreator}.
+   * @deprecated use {@link #setInfoWindowCreator(AirInfoWindowAdapter, InfoWindowCreator)} instead.
+   */
+  @Deprecated
+  void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator);
+
+  /**
+   * Sets the {@link AirInfoWindowAdapter} and {@link
+   * com.airbnb.android.airmapview.listeners.InfoWindowCreator} for the map.
    */
   void setInfoWindowCreator(AirInfoWindowAdapter adapter, InfoWindowCreator creator);
 

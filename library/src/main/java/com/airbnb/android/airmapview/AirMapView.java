@@ -243,8 +243,25 @@ public class AirMapView extends FrameLayout
   }
 
   /**
-   * Sets the info window adapter for this map. This must be called <em>after</em> the map is
-   * initialized.
+   * Sets the info window adapter for this map. If using a native map, this method is only supported
+   * by Google Maps.
+   * <br /><br />
+   * This must be called <em>after</em> the map is initialized.
+   * @param adapter the info window adapter for native Google Maps.
+   * @param creator the info window creator for web-based maps.
+   * @deprecated use {@link #setInfoWindowAdapter(AirInfoWindowAdapter, InfoWindowCreator)} instead.
+   */
+  @Deprecated
+  public void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+    if (isInitialized()) {
+      mapInterface.setInfoWindowCreator(adapter, creator);
+    }
+  }
+
+  /**
+   * Sets the info window adapter for this map.
+   * <br /><br />
+   * This must be called <em>after</em> the map is initialized.
    *
    * @param adapter the info window adapter for native maps.
    * @param creator the info window creator for web-based maps.

@@ -110,6 +110,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     });
   }
 
+  @Override
+  public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+    googleMap.setInfoWindowAdapter(adapter);
+  }
+
   @Override public void setInfoWindowCreator(AirInfoWindowAdapter adapter,
       InfoWindowCreator creator) {
     googleMap.setInfoWindowAdapter(new GoogleInfoWindowAdapter(adapter, this));
