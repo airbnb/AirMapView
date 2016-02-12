@@ -25,6 +25,7 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -285,7 +286,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     onInfoWindowClickListener = listener;
   }
 
-  @Override public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,
+  @Override
+  public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+    infoWindowCreator = creator;
+  }
+
+  @Override public void setInfoWindowCreator(AirInfoWindowAdapter adapter,
       InfoWindowCreator creator) {
     infoWindowCreator = creator;
   }

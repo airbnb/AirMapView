@@ -21,7 +21,6 @@ import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener,
@@ -243,7 +242,31 @@ public class AirMapView extends FrameLayout
     onMapClickListener = listener;
   }
 
+  /**
+   * Sets the info window adapter for this map. If using a native map, this method is only supported
+   * by Google Maps.
+   * <br /><br />
+   * This must be called <em>after</em> the map is initialized.
+   * @param adapter the info window adapter for native Google Maps.
+   * @param creator the info window creator for web-based maps.
+   * @deprecated use {@link #setInfoWindowAdapter(AirInfoWindowAdapter, InfoWindowCreator)} instead.
+   */
+  @Deprecated
   public void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+    if (isInitialized()) {
+      mapInterface.setInfoWindowCreator(adapter, creator);
+    }
+  }
+
+  /**
+   * Sets the info window adapter for this map.
+   * <br /><br />
+   * This must be called <em>after</em> the map is initialized.
+   *
+   * @param adapter the info window adapter for native maps.
+   * @param creator the info window creator for web-based maps.
+   */
+  public void setInfoWindowAdapter(AirInfoWindowAdapter adapter, InfoWindowCreator creator) {
     if (isInitialized()) {
       mapInterface.setInfoWindowCreator(adapter, creator);
     }

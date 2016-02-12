@@ -1,5 +1,6 @@
 package com.airbnb.airmapview.sample;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.android.airmapview.AirInfoWindowAdapter;
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapPolygon;
@@ -22,6 +25,7 @@ import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
 import com.airbnb.android.airmapview.GoogleChinaMapType;
 import com.airbnb.android.airmapview.MapType;
 import com.airbnb.android.airmapview.WebAirMapViewBuilder;
+import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -29,8 +33,9 @@ import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import java.util.Arrays;
 
@@ -69,7 +74,8 @@ public class MainActivity extends AppCompatActivity
     });
 
     btnMapTypeTerrain.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(@NonNull View v) {
+      @Override
+      public void onClick(@NonNull View v) {
         map.setMapType(MapType.MAP_TYPE_TERRAIN);
       }
     });
@@ -135,11 +141,14 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
+    SampleInfoWindowAdapter adapter = new SampleInfoWindowAdapter(this);
+    map.setInfoWindowAdapter(adapter, adapter);
     final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
-    addMarker("Airbnb HQ", airbnbLatLng, 1);
-    addMarker("Performance Bikes", new LatLng(37.773975, -122.40205), 2);
-    addMarker("REI", new LatLng(37.772127, -122.404411), 3);
-    addMarker("Mapbox", new LatLng(37.77572, -122.41354), 4);
+    addMarker("Airbnb HQ", "Where we get things done!", airbnbLatLng, 1);
+    addMarker("Performance Bikes", "Where we get our bikes fixed.",
+        new LatLng(37.773975, -122.40205), 2);
+    addMarker("REI", "Where we buy cool stuff.", new LatLng(37.772127, -122.404411), 3);
+    addMarker("Mapbox", "Our map-making friends.", new LatLng(37.77572, -122.41354), 4);
     map.animateCenterZoom(airbnbLatLng, 10);
 
     // Add Polylines
@@ -166,11 +175,12 @@ public class MainActivity extends AppCompatActivity
     map.setMyLocationEnabled(true);
   }
 
-  private void addMarker(String title, LatLng latLng, int id) {
+  private void addMarker(String title, String description, LatLng latLng, int id) {
     map.addMarker(new AirMapMarker.Builder()
         .id(id)
         .position(latLng)
         .title(title)
+        .snippet(description)
         .iconId(R.mipmap.icon_location_pin)
         .build());
   }
@@ -206,5 +216,39 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
+  }
+
+  private static class SampleInfoWindowAdapter implements AirInfoWindowAdapter, InfoWindowCreator {
+
+    private final Context context;
+
+    public SampleInfoWindowAdapter(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    public View getInfoWindow(AirMapMarker<?> marker) {
+      return null;
+    }
+
+    @Override
+    public View getInfoContents(AirMapMarker<?> marker) {
+      if (marker != null) {
+        return new InfoWindow(context, marker.getTitle(), marker.getSnippet());
+      }
+      return null;
+    }
+
+    @Override
+    public View createInfoWindow(AirMapMarker<?> airMarker) {
+      if (airMarker != null) {
+        View window = new InfoWindow(context, airMarker.getTitle(), airMarker.getSnippet());
+        window.setBackgroundColor(context.getResources().getColor(R.color.info_window_background));
+        window.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT));
+        return window;
+      }
+      return null;
+    }
   }
 }
