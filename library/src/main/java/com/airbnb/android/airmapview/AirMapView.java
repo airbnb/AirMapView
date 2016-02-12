@@ -242,6 +242,13 @@ public class AirMapView extends FrameLayout
     onMapClickListener = listener;
   }
 
+  /**
+   * Sets the info window adapter for this map. This must be called <em>after</em> the map is
+   * initialized.
+   *
+   * @param adapter the info window adapter for native maps.
+   * @param creator the info window creator for web-based maps.
+   */
   public void setInfoWindowAdapter(AirInfoWindowAdapter adapter, InfoWindowCreator creator) {
     if (isInitialized()) {
       mapInterface.setInfoWindowCreator(adapter, creator);

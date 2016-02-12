@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.airbnb.android.airmapview.AirMapMarker;
-
 /**
  * Simple Info Window contents with a title and description
  */

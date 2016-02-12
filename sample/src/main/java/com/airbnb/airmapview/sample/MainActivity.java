@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity
     });
 
     btnMapTypeTerrain.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(@NonNull View v) {
+      @Override
+      public void onClick(@NonNull View v) {
         map.setMapType(MapType.MAP_TYPE_TERRAIN);
       }
     });
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity
     map.setOnMarkerClickListener(this);
     map.setOnMapInitializedListener(this);
     map.setOnInfoWindowClickListener(this);
-    map.setInfoWindowAdapter(new SampleInfoWindowAdapter(this), null);
     map.initialize(getSupportFragmentManager());
   }
 
@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
+    map.setInfoWindowAdapter(new SampleInfoWindowAdapter(this), null);
     final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
     addMarker("Airbnb HQ", "Where we get things done!", airbnbLatLng, 1);
     addMarker("Performance Bikes", "Where we get our bikes fixed.",
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity
         .id(id)
         .position(latLng)
         .title(title)
-        .object(description)
+        .snippet(description)
         .iconId(R.mipmap.icon_location_pin)
         .build());
   }
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity
     public View getInfoContents(AirMapMarker<?> marker) {
       if (marker != null) {
         String title = marker.getTitle();
-        String description = (String) marker.object();
+        String description = marker.getSnippet();
         return new InfoWindow(context, title, description);
       }
       return null;
