@@ -21,7 +21,6 @@ import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener,
@@ -243,7 +242,7 @@ public class AirMapView extends FrameLayout
     onMapClickListener = listener;
   }
 
-  public void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+  public void setInfoWindowAdapter(AirInfoWindowAdapter adapter, InfoWindowCreator creator) {
     if (isInitialized()) {
       mapInterface.setInfoWindowCreator(adapter, creator);
     }

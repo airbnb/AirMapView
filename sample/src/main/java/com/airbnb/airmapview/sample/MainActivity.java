@@ -1,5 +1,6 @@
 package com.airbnb.airmapview.sample;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.android.airmapview.AirInfoWindowAdapter;
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapPolygon;
@@ -29,8 +31,9 @@ import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import java.util.Arrays;
 
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity
     map.setOnMarkerClickListener(this);
     map.setOnMapInitializedListener(this);
     map.setOnInfoWindowClickListener(this);
+    map.setInfoWindowAdapter(new SampleInfoWindowAdapter(this), null);
     map.initialize(getSupportFragmentManager());
   }
 
@@ -136,10 +140,11 @@ public class MainActivity extends AppCompatActivity
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
     final LatLng airbnbLatLng = new LatLng(37.771883, -122.405224);
-    addMarker("Airbnb HQ", airbnbLatLng, 1);
-    addMarker("Performance Bikes", new LatLng(37.773975, -122.40205), 2);
-    addMarker("REI", new LatLng(37.772127, -122.404411), 3);
-    addMarker("Mapbox", new LatLng(37.77572, -122.41354), 4);
+    addMarker("Airbnb HQ", "Where we get things done!", airbnbLatLng, 1);
+    addMarker("Performance Bikes", "Where we get our bikes fixed.",
+        new LatLng(37.773975, -122.40205), 2);
+    addMarker("REI", "Where we buy cool stuff.", new LatLng(37.772127, -122.404411), 3);
+    addMarker("Mapbox", "Our map-making friends.", new LatLng(37.77572, -122.41354), 4);
     map.animateCenterZoom(airbnbLatLng, 10);
 
     // Add Polylines
@@ -166,11 +171,12 @@ public class MainActivity extends AppCompatActivity
     map.setMyLocationEnabled(true);
   }
 
-  private void addMarker(String title, LatLng latLng, int id) {
-    map.addMarker(new AirMapMarker.Builder()
+  private void addMarker(String title, String description, LatLng latLng, int id) {
+    map.addMarker(new AirMapMarker.Builder<String>()
         .id(id)
         .position(latLng)
         .title(title)
+        .object(description)
         .iconId(R.mipmap.icon_location_pin)
         .build());
   }
@@ -206,5 +212,29 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
+  }
+
+  private static class SampleInfoWindowAdapter implements AirInfoWindowAdapter {
+
+    private final Context context;
+
+    public SampleInfoWindowAdapter(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    public View getInfoWindow(AirMapMarker<?> marker) {
+      return null;
+    }
+
+    @Override
+    public View getInfoContents(AirMapMarker<?> marker) {
+      if (marker != null) {
+        String title = marker.getTitle();
+        String description = (String) marker.object();
+        return new InfoWindow(context, title, description);
+      }
+      return null;
+    }
   }
 }

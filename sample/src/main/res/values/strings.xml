@@ -3,5 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="default_info_window_title">Title</string>
+    <string name="default_info_window_desc">Description</string>
 
 </resources>

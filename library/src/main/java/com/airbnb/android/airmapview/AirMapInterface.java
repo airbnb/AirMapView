@@ -57,7 +57,7 @@ public interface AirMapInterface {
    * Specific to Google Play Services maps. Sets the {@link GoogleMap.InfoWindowAdapter} and {@link
    * com.airbnb.android.airmapview.listeners.InfoWindowCreator}
    */
-  void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator);
+  void setInfoWindowCreator(AirInfoWindowAdapter adapter, InfoWindowCreator creator);
 
   /**
    * Draw a circle at the given LatLng, with the given radius
