@@ -5,11 +5,14 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -249,6 +252,16 @@ public class MainActivity extends AppCompatActivity
         return window;
       }
       return null;
+    }
+
+    @Override
+    public void updateInfoWindowLayout(FrameLayout.LayoutParams layoutParams) {
+      layoutParams.gravity = Gravity.CENTER;
+      int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, context
+          .getResources().getDisplayMetrics());
+      int bottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 72, context
+          .getResources().getDisplayMetrics());
+      layoutParams.setMargins(px, px, px, bottom);
     }
   }
 }

@@ -16,6 +16,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
@@ -415,6 +416,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             infoWindowView = infoWindowCreator.createInfoWindow(airMapMarker);
             if (infoWindowView != null) {
               mLayout.addView(infoWindowView);
+              FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) infoWindowView.getLayoutParams();
+              infoWindowCreator.updateInfoWindowLayout(layoutParams);
               infoWindowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(@NonNull View v) {
