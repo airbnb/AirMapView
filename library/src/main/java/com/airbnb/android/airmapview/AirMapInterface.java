@@ -4,8 +4,6 @@ import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
@@ -14,6 +12,9 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.maps.android.geojson.GeoJsonLayer;
+
+import org.json.JSONException;
 
 public interface AirMapInterface {
 
@@ -217,4 +218,17 @@ public interface AirMapInterface {
    * @param polygon the {@link AirMapPolygon} to remove
    */
   void removePolygon(AirMapPolygon polygon);
+
+  /**
+   * Adds a GeoJson layer to the map. Currently only supports adding one layer.
+   * Note: this layer is automatically removed when the map view is destroyed.
+   *
+   * @param layer An {@link AirMapGeoJsonLayer} layer with GeoJson and optional styling attributes
+   */
+  void setGeoJsonLayer(AirMapGeoJsonLayer layer) throws JSONException;
+
+  /**
+   * Remove GeoJson layer from map, if any.
+   */
+  void clearGeoJsonLayer();
 }

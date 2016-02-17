@@ -27,4 +27,16 @@
           android:title="Clear logs"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/add_geojson_layer"
+        android:title="Add GeoJson layer"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/remove_geojson_layer"
+        android:title="Remove GeoJson layer"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
 </menu>
+

@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
+import org.json.JSONException;
+
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener,
                OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
@@ -293,6 +295,20 @@ public class AirMapView extends FrameLayout
       return true;
     }
     return false;
+  }
+
+  public void setGeoJsonLayer(AirMapGeoJsonLayer layer) throws JSONException {
+    if (!isInitialized()) {
+      return;
+    }
+    mapInterface.setGeoJsonLayer(layer);
+  }
+
+  public void clearGeoJsonLayer() {
+    if (!isInitialized()) {
+      return;
+    }
+    mapInterface.clearGeoJsonLayer();
   }
 
   public boolean isInitialized() {

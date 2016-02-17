@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.android.airmapview.AirMapGeoJsonLayer;
 import com.airbnb.android.airmapview.AirMapInterface;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.AirMapPolygon;
@@ -32,6 +34,8 @@ import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import org.json.JSONException;
+
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
     OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
   private TextView textLogs;
@@ -117,6 +122,25 @@ public class MainActivity extends AppCompatActivity
       case R.id.action_clear_logs:
         textLogs.setText("");
         break;
+      case R.id.add_geojson_layer:
+        // Draws a layer on top of Australia
+        String geoJsonString = Util.readFromRawResource(this, R.raw.google);
+        AirMapGeoJsonLayer layer = new AirMapGeoJsonLayer.Builder(geoJsonString)
+                .strokeColor(getResources().getColor(android.R.color.holo_green_dark))
+                .strokeWidth(10)
+                .fillColor(getResources().getColor(android.R.color.holo_green_light))
+                .build();
+        try {
+          map.getMapInterface().setGeoJsonLayer(layer);
+        } catch (JSONException e) {
+          Log.e(TAG, "Failed to add GeoJson layer", e);
+        }
+
+        break;
+        case R.id.remove_geojson_layer:
+            map.getMapInterface().clearGeoJsonLayer();
+        break;
+
       default:
         break;
     }

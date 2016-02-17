@@ -268,6 +268,30 @@ function formatColor(color) {
   return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
 }
 
+/**
+ * Add GeoJson info to this web map's data layer
+ * @param {string} geojson - valid json with geo info
+ * @param {float} strokeWidth - width of stroke
+ * @param {int} strokeColor - color of border
+ * @param {int} fillWidth - color filled inside border
+ */
+function addGeoJsonLayer(jsonString, strokeWidth, strokeColor, fillColor) {
+  var strokeWebColor = formatColor(strokeColor);
+  var fillWebColor = formatColor(fillColor);
+  map.data.setStyle({
+      fillColor: strokeWebColor,
+      strokeColor: fillWebColor,
+      strokeWeight: strokeWidth
+    });
+  map.data.addGeoJson(jsonString);
+}
+
+function removeGeoJsonLayer() {
+  map.data.forEach(function(feature) {
+    map.data.remove(feature);
+  });
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
