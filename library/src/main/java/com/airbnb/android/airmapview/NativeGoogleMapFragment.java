@@ -3,6 +3,7 @@ package com.airbnb.android.airmapview;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonPolygonStyle;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
+
+  private static final String TAG = NativeGoogleMapFragment.class.getSimpleName();
 
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
+  private GeoJsonLayer layerOnMap;
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -286,5 +295,33 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
    */
   public GoogleMap getGoogleMap() {
     return googleMap;
+  }
+
+  @Override
+  public void setGeoJsonLayer(AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
+    // clear any existing layers
+    clearGeoJsonLayer();
+
+    layerOnMap = new GeoJsonLayer(getMap(), new JSONObject(airMapGeoJsonLayer.geoJson));
+    GeoJsonPolygonStyle style = layerOnMap.getDefaultPolygonStyle();
+    style.setStrokeColor(airMapGeoJsonLayer.strokeColor);
+    style.setStrokeWidth(airMapGeoJsonLayer.strokeWidth);
+    style.setFillColor(airMapGeoJsonLayer.fillColor);
+    layerOnMap.addLayerToMap();
+  }
+
+  @Override
+  public void clearGeoJsonLayer() {
+    if (layerOnMap == null) {
+      return;
+    }
+    layerOnMap.removeLayerFromMap();
+    layerOnMap = null;
+  }
+
+  @Override
+  public void onDestroyView() {
+    clearGeoJsonLayer();
+    super.onDestroyView();
   }
 }

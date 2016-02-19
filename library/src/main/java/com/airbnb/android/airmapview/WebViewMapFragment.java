@@ -432,4 +432,17 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
   }
+
+  @Override
+  public void setGeoJsonLayer(AirMapGeoJsonLayer layer) {
+    // clear any existing layer
+    clearGeoJsonLayer();
+    webView.loadUrl(String.format("javascript:addGeoJsonLayer(%1$s, %2$f, %3$d, %4$d);",
+            layer.geoJson, layer.strokeWidth, layer.strokeColor, layer.fillColor));
+  }
+
+  @Override
+  public void clearGeoJsonLayer() {
+    webView.loadUrl(String.format("javascript:removeGeoJsonLayer();"));
+  }
 }
