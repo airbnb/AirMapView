@@ -362,15 +362,9 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override public void onMapMarkerClick(long id) {
+  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
     if (onMapMarkerClickListener != null) {
-      onMapMarkerClickListener.onMapMarkerClick(id);
-    }
-  }
-
-  @Override public void onMapMarkerClick(Marker marker) {
-    if (onMapMarkerClickListener != null) {
-      onMapMarkerClickListener.onMapMarkerClick(marker);
+      onMapMarkerClickListener.onMapMarkerClick(airMarker);
     }
   }
 
@@ -432,15 +426,9 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override public void onInfoWindowClick(long id) {
+  @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {
     if (onInfoWindowClickListener != null) {
-      onInfoWindowClickListener.onInfoWindowClick(id);
-    }
-  }
-
-  @Override public void onInfoWindowClick(Marker marker) {
-    if (onInfoWindowClickListener != null) {
-      onInfoWindowClickListener.onInfoWindowClick(marker);
+      onInfoWindowClickListener.onInfoWindowClick(airMarker);
     }
   }
 }
