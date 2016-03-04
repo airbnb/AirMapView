@@ -3,6 +3,7 @@ package com.airbnb.android.airmapview;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,15 +29,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonPolygonStyle;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
+  private static final String TAG = NativeGoogleMapFragment.class.getSimpleName();
+
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
+  private GeoJsonLayer layerOnMap;
   private final Map<Marker, AirMapMarker<?>> markers = new HashMap<>();
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
@@ -88,6 +98,12 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
     markers.put(marker, airMarker);
+  }
+
+  @Override
+  public void moveMarker(AirMapMarker marker, LatLng to) {
+    marker.setLatLng(to);
+    marker.getMarker().setPosition(to);
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
@@ -225,6 +241,29 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     });
   }
 
+  @Override public void setOnMarkerDragListener(final OnMapMarkerDragListener listener) {
+    if (listener == null) {
+      googleMap.setOnMarkerDragListener(null);
+      return;
+    }
+    googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+      @Override
+      public void onMarkerDragStart(Marker marker) {
+        listener.onMapMarkerDragStart(marker);
+      }
+
+      @Override
+      public void onMarkerDrag(Marker marker) {
+        listener.onMapMarkerDrag(marker);
+      }
+
+      @Override
+      public void onMarkerDragEnd(Marker marker) {
+        listener.onMapMarkerDragEnd(marker);
+      }
+    });
+  }
+
   @Override public void setOnMapClickListener(final OnMapClickListener listener) {
     googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
       @Override
@@ -304,6 +343,34 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
    */
   public GoogleMap getGoogleMap() {
     return googleMap;
+  }
+
+  @Override
+  public void setGeoJsonLayer(AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
+    // clear any existing layers
+    clearGeoJsonLayer();
+
+    layerOnMap = new GeoJsonLayer(getMap(), new JSONObject(airMapGeoJsonLayer.geoJson));
+    GeoJsonPolygonStyle style = layerOnMap.getDefaultPolygonStyle();
+    style.setStrokeColor(airMapGeoJsonLayer.strokeColor);
+    style.setStrokeWidth(airMapGeoJsonLayer.strokeWidth);
+    style.setFillColor(airMapGeoJsonLayer.fillColor);
+    layerOnMap.addLayerToMap();
+  }
+
+  @Override
+  public void clearGeoJsonLayer() {
+    if (layerOnMap == null) {
+      return;
+    }
+    layerOnMap.removeLayerFromMap();
+    layerOnMap = null;
+  }
+
+  @Override
+  public void onDestroyView() {
+    clearGeoJsonLayer();
+    super.onDestroyView();
   }
 
   private static class GoogleInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
