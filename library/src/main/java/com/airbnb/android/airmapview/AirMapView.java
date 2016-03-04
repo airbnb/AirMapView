@@ -18,6 +18,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -26,7 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import org.json.JSONException;
 
 public class AirMapView extends FrameLayout
-    implements OnCameraChangeListener, OnMapClickListener,
+    implements OnCameraChangeListener, OnMapClickListener, OnMapMarkerDragListener,
                OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
 
   private static final int INVALID_ZOOM = -1;
@@ -36,8 +37,9 @@ public class AirMapView extends FrameLayout
   private OnCameraChangeListener onCameraChangeListener;
   private boolean mOnCameraMoveTriggered;
   private OnMapInitializedListener onMapInitializedListener;
-  private OnMapClickListener onMapClickListener;
   private OnMapMarkerClickListener onMapMarkerClickListener;
+  private OnMapMarkerDragListener onMapMarkerDragListener;
+  private OnMapClickListener onMapClickListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
 
   public AirMapView(Context context) {
@@ -241,6 +243,10 @@ public class AirMapView extends FrameLayout
     onMapMarkerClickListener = listener;
   }
 
+  public void setOnMarkerDragListener(OnMapMarkerDragListener listener) {
+    onMapMarkerDragListener = listener;
+  }
+
   public void setOnMapClickListener(OnMapClickListener listener) {
     onMapClickListener = listener;
   }
@@ -331,6 +337,14 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
+  public boolean moveMarker(AirMapMarker marker, LatLng to) {
+    if (isInitialized()) {
+      mapInterface.moveMarker(marker, to);
+      return true;
+    }
+    return false;
+  }
+
   public void setMyLocationEnabled(boolean trackUserLocation) {
     mapInterface.setMyLocationEnabled(trackUserLocation);
   }
@@ -360,11 +374,54 @@ public class AirMapView extends FrameLayout
     }
   }
 
+  @Override
+  public void onMapMarkerDragStart(Marker marker) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDragStart(marker);
+    }
+  }
+
+  @Override
+  public void onMapMarkerDrag(Marker marker) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDrag(marker);
+    }
+  }
+
+  @Override
+  public void onMapMarkerDragEnd(Marker marker) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDragEnd(marker);
+    }
+  }
+
+  @Override
+  public void onMapMarkerDragStart(long id, LatLng latLng) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDragStart(id, latLng);
+    }
+  }
+
+  @Override
+  public void onMapMarkerDrag(long id, LatLng latLng) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDrag(id, latLng);
+    }
+  }
+
+  @Override
+  public void onMapMarkerDragEnd(long id, LatLng latLng) {
+    if (onMapMarkerDragListener != null) {
+      onMapMarkerDragListener.onMapMarkerDragEnd(id, latLng);
+    }
+  }
+
   @Override public void onMapLoaded() {
     if (isInitialized()) {
       mapInterface.setOnCameraChangeListener(this);
       mapInterface.setOnMapClickListener(this);
       mapInterface.setOnMarkerClickListener(this);
+      mapInterface.setOnMarkerDragListener(this);
       mapInterface.setOnInfoWindowClickListener(this);
 
       if (onMapInitializedListener != null) {

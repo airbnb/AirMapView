@@ -16,6 +16,7 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -91,6 +92,12 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   @Override public void addMarker(AirMapMarker airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
+  }
+
+  @Override
+  public void moveMarker(AirMapMarker marker, LatLng to) {
+    marker.setLatLng(to);
+    marker.getMarker().setPosition(to);
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
@@ -212,6 +219,29 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       public boolean onMarkerClick(Marker marker) {
         listener.onMapMarkerClick(marker);
         return false;
+      }
+    });
+  }
+
+  @Override public void setOnMarkerDragListener(final OnMapMarkerDragListener listener) {
+    if (listener == null) {
+      googleMap.setOnMarkerDragListener(null);
+      return;
+    }
+    googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+      @Override
+      public void onMarkerDragStart(Marker marker) {
+        listener.onMapMarkerDragStart(marker);
+      }
+
+      @Override
+      public void onMarkerDrag(Marker marker) {
+        listener.onMapMarkerDrag(marker);
+      }
+
+      @Override
+      public void onMarkerDragEnd(Marker marker) {
+        listener.onMapMarkerDragEnd(marker);
       }
     });
   }
