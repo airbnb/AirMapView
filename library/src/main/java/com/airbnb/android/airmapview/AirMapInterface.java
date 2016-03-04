@@ -18,8 +18,8 @@ import org.json.JSONException;
 
 public interface AirMapInterface {
 
-  int CIRCLE_FILL_COLOR = 0x00D1C1;
-  int CIRCLE_BORDER_COLOR = 0x000000;
+  int CIRCLE_FILL_COLOR = 0xFF00D1C1;
+  int CIRCLE_BORDER_COLOR = 0xFF000000;
   int CIRCLE_BORDER_WIDTH = 0;
 
   /**

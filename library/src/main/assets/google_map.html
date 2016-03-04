@@ -18,6 +18,7 @@ var infoWindow = null;
 var markers = {};
 var infoWindowContent = {};
 var polylines = {};
+var polygons = {};
 var moveTimeout;
 var GeoMarker = null;
 var markerIconPrefix;
@@ -153,7 +154,7 @@ function showDefaultInfoWindow(id){
 function removeMarker(id) {
   var marker = markers[id];
   if (marker != null) {
-    markers[id].setMap(null);
+    marker.setMap(null);
   }
 }
 
@@ -172,7 +173,7 @@ function addPolyline(points, id, width, color) {
 function removePolyline(id) {
   var polyline = polylines[id];
   if (polyline != null) {
-    polylines[id].setMap(null);
+    polyline.setMap(null);
   }
 }
 
@@ -200,17 +201,17 @@ function addPolygon(points, id, strokeWidth, strokeColor, fillColor) {
 function removePolygon(id) {
   var polygon = polygons[id];
   if (polygon != null) {
-    polygons[id].setMap(null);
+    polygon.setMap(null);
   }
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
   var position = new google.maps.LatLng(lat, lng);
   var populationOptions = {
-      strokeColor: strokeColor,
+      strokeColor: formatColor(strokeColor),
       strokeOpacity: 0.50,
       strokeWeight: strokeWeight,
-      fillColor: fillColor,
+      fillColor: formatColor(fillColor),
       fillOpacity: 0.35,
       map: map,
       center: position,
