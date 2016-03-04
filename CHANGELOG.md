@@ -1,3 +1,8 @@
+# 1.3.2 Feb 19, 2016
+
+* Added support for drawing GeoJson layers (PR #80)
+* Disable file access on Webview and prevent content success (PR #72)
+
 # 1.3.1 Jan 6, 2016
 
 * Added support for drawing polygons (PR #64)

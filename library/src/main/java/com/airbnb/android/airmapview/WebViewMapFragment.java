@@ -26,6 +26,7 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,6 +49,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private OnCameraChangeListener onCameraChangeListener;
   private OnMapLoadedListener onMapLoadedListener;
   private OnMapMarkerClickListener onMapMarkerClickListener;
+  private OnMapMarkerDragListener onMapMarkerDragListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
   private InfoWindowCreator infoWindowCreator;
   private OnMapBoundsCallback onMapBoundsCallback;
@@ -162,9 +164,16 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     LatLng latLng = marker.getLatLng();
     markers.put(marker.getId(), marker);
     webView.loadUrl(
-        String.format(Locale.US, "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s');",
+        String.format(Locale.US, "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s', %6$b);",
             latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(),
-            marker.getSnippet()));
+            marker.getSnippet(), marker.getMarkerOptions().isDraggable()));
+  }
+
+  @Override public void moveMarker(AirMapMarker marker, LatLng to) {
+    marker.setLatLng(to);
+    webView.loadUrl(
+        String.format(Locale.US, "javascript:moveMarker(%1$f, %2$f, '%3$s');",
+            to.latitude, to.longitude, marker.getId()));
   }
 
   @Override public void removeMarker(AirMapMarker marker) {
@@ -199,6 +208,10 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
   public void setOnMarkerClickListener(OnMapMarkerClickListener listener) {
     onMapMarkerClickListener = listener;
+  }
+
+  @Override public void setOnMarkerDragListener(OnMapMarkerDragListener listener) {
+    onMapMarkerDragListener = listener;
   }
 
   @Override public void setPadding(int left, int top, int right, int bottom) {
@@ -438,6 +451,39 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
+    @JavascriptInterface public void markerDragStart(final long markerId, final double lat, final double lng) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          if (onMapMarkerDragListener != null) {
+            onMapMarkerDragListener.onMapMarkerDragStart(markerId, new LatLng(lat, lng));
+          }
+        }
+      });
+    }
+
+    @JavascriptInterface public void markerDrag(final long markerId, final double lat, final double lng) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          if (onMapMarkerDragListener != null) {
+            onMapMarkerDragListener.onMapMarkerDrag(markerId, new LatLng(lat, lng));
+          }
+        }
+      });
+    }
+
+    @JavascriptInterface public void markerDragEnd(final long markerId, final double lat, final double lng) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          if (onMapMarkerDragListener != null) {
+            onMapMarkerDragListener.onMapMarkerDragEnd(markerId, new LatLng(lat, lng));
+          }
+        }
+      });
+    }
+
     @JavascriptInterface public void defaultInfoWindowClick(long markerId) {
       final AirMapMarker airMapMarker = markers.get(markerId);
       handler.post(new Runnable() {
@@ -449,5 +495,18 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         }
       });
     }
+  }
+
+  @Override
+  public void setGeoJsonLayer(AirMapGeoJsonLayer layer) {
+    // clear any existing layer
+    clearGeoJsonLayer();
+    webView.loadUrl(String.format("javascript:addGeoJsonLayer(%1$s, %2$f, %3$d, %4$d);",
+            layer.geoJson, layer.strokeWidth, layer.strokeColor, layer.fillColor));
+  }
+
+  @Override
+  public void clearGeoJsonLayer() {
+    webView.loadUrl(String.format("javascript:removeGeoJsonLayer();"));
   }
 }

@@ -1,11 +1,10 @@
 package com.airbnb.android.airmapview;
 
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
@@ -14,11 +13,14 @@ import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.google.maps.android.geojson.GeoJsonLayer;
+
+import org.json.JSONException;
 
 public interface AirMapInterface {
 
-  int CIRCLE_FILL_COLOR = 0x00D1C1;
-  int CIRCLE_BORDER_COLOR = 0x000000;
+  int CIRCLE_FILL_COLOR = 0xFF00D1C1;
+  int CIRCLE_BORDER_COLOR = 0xFF000000;
   int CIRCLE_BORDER_WIDTH = 0;
 
   /**
@@ -37,6 +39,14 @@ public interface AirMapInterface {
    * @param marker {@link AirMapMarker} instance to add
    */
   void addMarker(AirMapMarker marker);
+
+  /**
+   * Move the marker to the given coordinates
+   *
+   * @param marker {@link AirMapMarker} instance to move
+   * @param to {@link LatLng} new destination of the marker
+   */
+  void moveMarker(AirMapMarker marker, LatLng to);
 
   /**
    * Remove the given marker from the map
@@ -163,6 +173,14 @@ public interface AirMapInterface {
   void setOnMarkerClickListener(OnMapMarkerClickListener listener);
 
   /**
+  * Register a callback to be invoked when a map marker is dragged
+  *
+  * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener}
+  *                 callback
+  */
+  void setOnMarkerDragListener(OnMapMarkerDragListener listener);
+
+   /**
    * Register a callback to be invoked when the map is clicked
    *
    * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapClickListener} callback
@@ -225,4 +243,17 @@ public interface AirMapInterface {
    * @param polygon the {@link AirMapPolygon} to remove
    */
   void removePolygon(AirMapPolygon polygon);
+
+  /**
+   * Adds a GeoJson layer to the map. Currently only supports adding one layer.
+   * Note: this layer is automatically removed when the map view is destroyed.
+   *
+   * @param layer An {@link AirMapGeoJsonLayer} layer with GeoJson and optional styling attributes
+   */
+  void setGeoJsonLayer(AirMapGeoJsonLayer layer) throws JSONException;
+
+  /**
+   * Remove GeoJson layer from map, if any.
+   */
+  void clearGeoJsonLayer();
 }

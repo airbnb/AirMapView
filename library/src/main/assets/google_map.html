@@ -18,6 +18,7 @@ var infoWindow = null;
 var markers = {};
 var infoWindowContent = {};
 var polylines = {};
+var polygons = {};
 var moveTimeout;
 var GeoMarker = null;
 var markerIconPrefix;
@@ -107,11 +108,16 @@ function addMarker(lat, lng) {
 }
 
 function addMarkerWithId(lat, lng, id, title, snippet) {
+  addMarkerWithId(lat, lng, id, title, snippet, false);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet, draggable) {
   var position = new google.maps.LatLng(lat, lng);
   var marker = new google.maps.Marker({
       position: position,
       map: map,
-      icon: getMarkerIcon('red-dot.png')
+      icon: getMarkerIcon('red-dot.png'),
+      draggable: draggable
   });
 
   if(title != "null" || snippet != "null") {
@@ -131,8 +137,24 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
     map.panTo(marker.position);
     AirMapView.markerClick(id);
   });
+    google.maps.event.addListener(marker, 'dragstart', function() {
+    AirMapView.markerDragStart(id, marker.position.lat(), marker.position.lng());
+  });
+  google.maps.event.addListener(marker, 'drag', function() {
+    AirMapView.markerDrag(id, marker.position.lat(), marker.position.lng());
+  });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    AirMapView.markerDragEnd(id, marker.position.lat(), marker.position.lng());
+  });
 
   markers[id] = marker;
+}
+
+function moveMarker(lat, long, id) {
+  var marker = markers[id];
+  if (marker != null) {
+    marker.setPosition( new google.maps.LatLng(lat, long) );
+  }
 }
 
 function showDefaultInfoWindow(id){
@@ -153,7 +175,7 @@ function showDefaultInfoWindow(id){
 function removeMarker(id) {
   var marker = markers[id];
   if (marker != null) {
-    markers[id].setMap(null);
+    marker.setMap(null);
   }
 }
 
@@ -172,7 +194,7 @@ function addPolyline(points, id, width, color) {
 function removePolyline(id) {
   var polyline = polylines[id];
   if (polyline != null) {
-    polylines[id].setMap(null);
+    polyline.setMap(null);
   }
 }
 
@@ -200,17 +222,17 @@ function addPolygon(points, id, strokeWidth, strokeColor, fillColor) {
 function removePolygon(id) {
   var polygon = polygons[id];
   if (polygon != null) {
-    polygons[id].setMap(null);
+    polygon.setMap(null);
   }
 }
 
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
   var position = new google.maps.LatLng(lat, lng);
   var populationOptions = {
-      strokeColor: strokeColor,
+      strokeColor: formatColor(strokeColor),
       strokeOpacity: 0.50,
       strokeWeight: strokeWeight,
-      fillColor: fillColor,
+      fillColor: formatColor(fillColor),
       fillOpacity: 0.35,
       map: map,
       center: position,
@@ -266,6 +288,30 @@ function getScreenLocation(lat, lng) {
 // converts an android int color to a web color :)
 function formatColor(color) {
   return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
+}
+
+/**
+ * Add GeoJson info to this web map's data layer
+ * @param {string} geojson - valid json with geo info
+ * @param {float} strokeWidth - width of stroke
+ * @param {int} strokeColor - color of border
+ * @param {int} fillWidth - color filled inside border
+ */
+function addGeoJsonLayer(jsonString, strokeWidth, strokeColor, fillColor) {
+  var strokeWebColor = formatColor(strokeColor);
+  var fillWebColor = formatColor(fillColor);
+  map.data.setStyle({
+      fillColor: strokeWebColor,
+      strokeColor: fillWebColor,
+      strokeWeight: strokeWidth
+    });
+  map.data.addGeoJson(jsonString);
+}
+
+function removeGeoJsonLayer() {
+  map.data.forEach(function(feature) {
+    map.data.remove(feature);
+  });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
