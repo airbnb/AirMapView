@@ -35,6 +35,9 @@ import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
 
   private static final String TAG = NativeGoogleMapFragment.class.getSimpleName();
@@ -43,6 +46,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
   private GeoJsonLayer layerOnMap;
+  private final Map<Marker, AirMapMarker<?>> markers = new HashMap<>();
 
   public static NativeGoogleMapFragment newInstance(AirGoogleMapOptions options) {
     return new NativeGoogleMapFragment().setArguments(options);
@@ -86,12 +90,14 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void clearMarkers() {
+    markers.clear();
     googleMap.clear();
   }
 
   @Override public void addMarker(AirMapMarker airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
+    markers.put(marker, airMarker);
   }
 
   @Override
@@ -104,6 +110,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     Marker nativeMarker = marker.getMarker();
     if (nativeMarker != null) {
       nativeMarker.remove();
+      markers.remove(nativeMarker);
     }
   }
 
@@ -111,7 +118,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
       @Override
       public void onInfoWindowClick(Marker marker) {
-        listener.onInfoWindowClick(marker);
+        AirMapMarker airMarker = markers.get(marker);
+        if (airMarker != null) {
+          listener.onInfoWindowClick(airMarker);
+        }
       }
     });
   }
@@ -217,7 +227,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
       @Override
       public boolean onMarkerClick(Marker marker) {
-        listener.onMapMarkerClick(marker);
+        AirMapMarker airMarker = markers.get(marker);
+        if (airMarker != null) {
+          listener.onMapMarkerClick(airMarker);
+        }
         return false;
       }
     });

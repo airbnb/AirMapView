@@ -1,10 +1,8 @@
 package com.airbnb.android.airmapview.listeners;
 
-import com.google.android.gms.maps.model.Marker;
+import com.airbnb.android.airmapview.AirMapMarker;
 
 public interface OnInfoWindowClickListener {
 
-  void onInfoWindowClick(long id);
-
-  void onInfoWindowClick(Marker marker);
+  void onInfoWindowClick(AirMapMarker<?> airMarker);
 }
