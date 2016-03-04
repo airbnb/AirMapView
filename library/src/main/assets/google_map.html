@@ -108,11 +108,16 @@ function addMarker(lat, lng) {
 }
 
 function addMarkerWithId(lat, lng, id, title, snippet) {
+  addMarkerWithId(lat, lng, id, title, snippet, false);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet, draggable) {
   var position = new google.maps.LatLng(lat, lng);
   var marker = new google.maps.Marker({
       position: position,
       map: map,
-      icon: getMarkerIcon('red-dot.png')
+      icon: getMarkerIcon('red-dot.png'),
+      draggable: draggable
   });
 
   if(title != "null" || snippet != "null") {
@@ -132,8 +137,24 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
     map.panTo(marker.position);
     AirMapView.markerClick(id);
   });
+    google.maps.event.addListener(marker, 'dragstart', function() {
+    AirMapView.markerDragStart(id, marker.position.lat(), marker.position.lng());
+  });
+  google.maps.event.addListener(marker, 'drag', function() {
+    AirMapView.markerDrag(id, marker.position.lat(), marker.position.lng());
+  });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    AirMapView.markerDragEnd(id, marker.position.lat(), marker.position.lng());
+  });
 
   markers[id] = marker;
+}
+
+function moveMarker(lat, long, id) {
+  var marker = markers[id];
+  if (marker != null) {
+    marker.setPosition( new google.maps.LatLng(lat, long) );
+  }
 }
 
 function showDefaultInfoWindow(id){

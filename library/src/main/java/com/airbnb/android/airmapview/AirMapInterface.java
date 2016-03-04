@@ -1,6 +1,7 @@
 package com.airbnb.android.airmapview;
 
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -38,6 +39,14 @@ public interface AirMapInterface {
    * @param marker {@link AirMapMarker} instance to add
    */
   void addMarker(AirMapMarker marker);
+
+  /**
+   * Move the marker to the given coordinates
+   *
+   * @param marker {@link AirMapMarker} instance to move
+   * @param to {@link LatLng} new destination of the marker
+   */
+  void moveMarker(AirMapMarker marker, LatLng to);
 
   /**
    * Remove the given marker from the map
@@ -156,6 +165,14 @@ public interface AirMapInterface {
   void setOnMarkerClickListener(OnMapMarkerClickListener listener);
 
   /**
+  * Register a callback to be invoked when a map marker is dragged
+  *
+  * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener}
+  *                 callback
+  */
+  void setOnMarkerDragListener(OnMapMarkerDragListener listener);
+
+   /**
    * Register a callback to be invoked when the map is clicked
    *
    * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapClickListener} callback

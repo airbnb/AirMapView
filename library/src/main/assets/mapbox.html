@@ -82,10 +82,15 @@ function addMarker(lat, lng) {
 }
 
 function addMarkerWithId(lat, lng, id, title, snippet) {
+  addMarkerWithId(lat, lng, id, title, snippet, false);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet, draggable) {
   var marker = L.marker(new L.LatLng(lat, lng), {
       icon: L.mapbox.marker.icon({
           'marker-color': 'e55e5e'
-      })
+      }),
+      draggable: draggable
   });
   marker.addTo(map);
 
@@ -107,6 +112,22 @@ function addMarkerWithId(lat, lng, id, title, snippet) {
   marker.on("click", function(ev) {
     AirMapView.markerClick(id);
   });
+  marker.on("dragstart", function(ev) {
+    AirMapView.markerDragStart(id, ev.target.getLatLng().lat, ev.target.getLatLng().lng);
+  });
+  marker.on("drag", function(ev) {
+    AirMapView.markerDrag(id, ev.target.getLatLng().lat, ev.target.getLatLng().lng);
+  });
+  marker.on("dragend", function(ev) {
+    AirMapView.markerDragEnd(id, ev.target.getLatLng().lat, ev.target.getLatLng().lng);
+  });
+}
+
+function moveMarker(lat, long, id) {
+  var marker = markers[id];
+  if (marker != null) {
+    marker.setLatLng( new L.LatLng(lat, long) );
+  }
 }
 
 function showDefaultInfoWindow(id){
