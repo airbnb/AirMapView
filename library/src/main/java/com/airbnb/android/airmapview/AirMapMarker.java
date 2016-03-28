@@ -2,6 +2,7 @@ package com.airbnb.android.airmapview;
 
 import android.graphics.Bitmap;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -57,7 +58,25 @@ public class AirMapMarker<T> {
     this.marker = marker;
   }
 
-  Marker getMarker() {
+  public Builder<T> toBuilder() {
+    return new Builder<T>()
+        .id(id)
+        .object(object)
+        .position(markerOptions.getPosition())
+        .alpha(markerOptions.getAlpha())
+        .anchor(markerOptions.getAnchorU(), markerOptions.getAnchorV())
+        .bitmapDescriptor(markerOptions.getIcon())
+        .infoWindowAnchor(markerOptions.getInfoWindowAnchorU(), markerOptions.getInfoWindowAnchorV())
+        .snippet(markerOptions.getSnippet())
+        .title(markerOptions.getTitle())
+        .draggable(markerOptions.isDraggable())
+        .visible(markerOptions.isVisible())
+        .alpha(markerOptions.getAlpha())
+        .rotation(markerOptions.getRotation())
+        .flat(markerOptions.isFlat());
+  }
+  
+  public Marker getMarker() {
     return marker;
   }
 
@@ -115,10 +134,15 @@ public class AirMapMarker<T> {
 
     public Builder<T> bitmap(Bitmap bitmap) {
       try {
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        bitmapDescriptor(BitmapDescriptorFactory.fromBitmap(bitmap));
       } catch (NullPointerException ignored) {
         // google play services is not available
       }
+      return this;
+    }
+
+    public Builder<T> bitmapDescriptor(BitmapDescriptor bitmap) {
+      markerOptions.icon(bitmap);
       return this;
     }
 
