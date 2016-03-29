@@ -80,6 +80,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
           if (onMapLoadedListener != null) {
             onMapLoadedListener.onMapLoaded();
           }
+
         }
       }
     });
@@ -124,6 +125,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
         }
       }
     });
+  }
+
+  @Override public void setTouchEnabled(boolean enabled) {
+    googleMap.getUiSettings().setAllGesturesEnabled(enabled);
   }
 
   @Override public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,

@@ -349,6 +349,10 @@ public class AirMapView extends FrameLayout
     mapInterface.setMyLocationEnabled(trackUserLocation);
   }
 
+  public void setTouchEnabled(boolean enabled) {
+    mapInterface.setTouchEnabled(enabled);
+  }
+
   @Override public void onCameraChanged(LatLng latLng, int zoom) {
     if (onCameraChangeListener != null) {
       onCameraChangeListener.onCameraChanged(latLng, zoom);
