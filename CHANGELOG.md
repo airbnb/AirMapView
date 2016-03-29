@@ -1,3 +1,8 @@
+# 1.3.3 Mar 28, 2016
+
+* Web map bug fixes
+* Added some API method to AirMapMarker
+
 # 1.3.2 Feb 19, 2016
 
 * Added support for drawing GeoJson layers (PR #80)
