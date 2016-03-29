@@ -1,7 +1,8 @@
 # 1.3.3 Mar 28, 2016
 
-* Web map bug fixes
-* Added some API method to AirMapMarker
+* Web map bug fixes (PR #76)
+* Use `AirMapMarker` in marker click listeners and info window creator. (PR #67)
+* Added some `toBuilder()` to `AirMapMarker` and `bitmapDescriptor(BitmapDescriptor)` to `AirMapMarker.Builder` (PR #84)
 
 # 1.3.2 Feb 19, 2016
 
