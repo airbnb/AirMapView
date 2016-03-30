@@ -126,9 +126,14 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     });
   }
 
-  @Override public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,
-      InfoWindowCreator creator) {
+  @Override
+  public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
     googleMap.setInfoWindowAdapter(adapter);
+  }
+
+  @Override public void setInfoWindowCreator(AirInfoWindowAdapter adapter,
+      InfoWindowCreator creator) {
+    googleMap.setInfoWindowAdapter(new GoogleInfoWindowAdapter(adapter, this));
   }
 
   @Override public void drawCircle(LatLng latLng, int radius) {
@@ -366,5 +371,35 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   public void onDestroyView() {
     clearGeoJsonLayer();
     super.onDestroyView();
+  }
+
+  private static class GoogleInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+    private final AirInfoWindowAdapter airInfoWindowAdapter;
+    private final NativeGoogleMapFragment mapFragment;
+
+    public GoogleInfoWindowAdapter(AirInfoWindowAdapter airInfoWindowAdapter,
+        @NonNull NativeGoogleMapFragment googleMapFragment) {
+      this.airInfoWindowAdapter = airInfoWindowAdapter;
+      this.mapFragment = googleMapFragment;
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+      if (this.airInfoWindowAdapter != null) {
+        AirMapMarker<?> airMapMarker = this.mapFragment.markers.get(marker);
+        return this.airInfoWindowAdapter.getInfoWindow(airMapMarker);
+      }
+      return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+      if (this.airInfoWindowAdapter != null) {
+        AirMapMarker<?> airMapMarker = this.mapFragment.markers.get(marker);
+        return this.airInfoWindowAdapter.getInfoContents(airMapMarker);
+      }
+      return null;
+    }
   }
 }

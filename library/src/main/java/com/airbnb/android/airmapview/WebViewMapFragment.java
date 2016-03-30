@@ -16,6 +16,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
@@ -26,6 +27,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -298,7 +300,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     onInfoWindowClickListener = listener;
   }
 
-  @Override public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,
+  @Override
+  public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator) {
+    infoWindowCreator = creator;
+  }
+
+  @Override public void setInfoWindowCreator(AirInfoWindowAdapter adapter,
       InfoWindowCreator creator) {
     infoWindowCreator = creator;
   }
@@ -422,6 +429,8 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             infoWindowView = infoWindowCreator.createInfoWindow(airMapMarker);
             if (infoWindowView != null) {
               mLayout.addView(infoWindowView);
+              FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) infoWindowView.getLayoutParams();
+              infoWindowCreator.updateInfoWindowLayout(layoutParams);
               infoWindowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(@NonNull View v) {
