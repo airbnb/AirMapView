@@ -5,7 +5,6 @@ import android.support.annotation.ColorInt;
 import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
 public class AirMapGeoJsonLayer {
-
   protected final String geoJson;
   protected final float strokeWidth;
   protected final int strokeColor;
@@ -49,5 +48,4 @@ public class AirMapGeoJsonLayer {
           json, style.getStrokeWidth(), style.getStrokeColor(), style.getFillColor());
     }
   }
-
 }

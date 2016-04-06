@@ -96,8 +96,7 @@ public class AirMapView extends FrameLayout
     onMapInitializedListener = mapInitializedListener;
   }
 
-  @Override
-  public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+  @Override public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
     if (ev.getAction() == MotionEvent.ACTION_MOVE) {
       if (onCameraMoveListener != null && !mOnCameraMoveTriggered) {
         onCameraMoveListener.onCameraMove();
@@ -267,7 +266,7 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  public boolean addPolyline(AirMapPolyline polyline) {
+  public <T> boolean addPolyline(AirMapPolyline<T> polyline) {
     if (isInitialized()) {
       mapInterface.addPolyline(polyline);
       return true;
@@ -279,7 +278,7 @@ public class AirMapView extends FrameLayout
     mapInterface.setMapType(mapType);
   }
 
-  public boolean removePolyline(AirMapPolyline polyline) {
+  public <T> boolean removePolyline(AirMapPolyline<T> polyline) {
     if (isInitialized()) {
       mapInterface.removePolyline(polyline);
       return true;
@@ -321,7 +320,7 @@ public class AirMapView extends FrameLayout
     return mapInterface != null && mapInterface.isInitialized();
   }
 
-  public boolean addMarker(AirMapMarker marker) {
+  public boolean addMarker(AirMapMarker<?> marker) {
     if (isInitialized()) {
       mapInterface.addMarker(marker);
       return true;
@@ -329,7 +328,7 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
-  public boolean removeMarker(AirMapMarker marker) {
+  public boolean removeMarker(AirMapMarker<?> marker) {
     if (isInitialized()) {
       mapInterface.removeMarker(marker);
       return true;
@@ -337,7 +336,7 @@ public class AirMapView extends FrameLayout
     return false;
   }
 
-  public boolean moveMarker(AirMapMarker marker, LatLng to) {
+  public boolean moveMarker(AirMapMarker<?> marker, LatLng to) {
     if (isInitialized()) {
       mapInterface.moveMarker(marker, to);
       return true;
@@ -355,8 +354,7 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override
-  public void onMapClick(LatLng latLng) {
+  @Override public void onMapClick(LatLng latLng) {
     if (onMapClickListener != null) {
       onMapClickListener.onMapClick(latLng);
     }
@@ -368,43 +366,37 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override
-  public void onMapMarkerDragStart(Marker marker) {
+  @Override public void onMapMarkerDragStart(Marker marker) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDragStart(marker);
     }
   }
 
-  @Override
-  public void onMapMarkerDrag(Marker marker) {
+  @Override public void onMapMarkerDrag(Marker marker) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDrag(marker);
     }
   }
 
-  @Override
-  public void onMapMarkerDragEnd(Marker marker) {
+  @Override public void onMapMarkerDragEnd(Marker marker) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDragEnd(marker);
     }
   }
 
-  @Override
-  public void onMapMarkerDragStart(long id, LatLng latLng) {
+  @Override public void onMapMarkerDragStart(long id, LatLng latLng) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDragStart(id, latLng);
     }
   }
 
-  @Override
-  public void onMapMarkerDrag(long id, LatLng latLng) {
+  @Override public void onMapMarkerDrag(long id, LatLng latLng) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDrag(id, latLng);
     }
   }
 
-  @Override
-  public void onMapMarkerDragEnd(long id, LatLng latLng) {
+  @Override public void onMapMarkerDragEnd(long id, LatLng latLng) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDragEnd(id, latLng);
     }

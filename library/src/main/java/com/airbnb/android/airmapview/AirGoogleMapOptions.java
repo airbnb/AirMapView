@@ -1,16 +1,16 @@
 package com.airbnb.android.airmapview;
 
+import android.os.Bundle;
+
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.CameraPosition;
-
-import android.os.Bundle;
 
 /**
  * Wrapper for the {@link GoogleMapOptions} class, which is final.
  */
 public class AirGoogleMapOptions {
 
-  private GoogleMapOptions options;
+  private final GoogleMapOptions options;
 
   public AirGoogleMapOptions(GoogleMapOptions options) {
     this.options = options;
