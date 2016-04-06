@@ -22,14 +22,10 @@ public interface AirMapInterface {
   int CIRCLE_BORDER_COLOR = 0xFF000000;
   int CIRCLE_BORDER_WIDTH = 0;
 
-  /**
-   * @return true if the map is fully loaded/initialized.
-   */
+  /** @return true if the map is fully loaded/initialized. */
   boolean isInitialized();
 
-  /**
-   * Clear all markers from the map
-   */
+  /** Clear all markers from the map */
   void clearMarkers();
 
   /**
@@ -37,7 +33,7 @@ public interface AirMapInterface {
    *
    * @param marker {@link AirMapMarker} instance to add
    */
-  void addMarker(AirMapMarker marker);
+  void addMarker(AirMapMarker<?> marker);
 
   /**
    * Move the marker to the given coordinates
@@ -45,14 +41,14 @@ public interface AirMapInterface {
    * @param marker {@link AirMapMarker} instance to move
    * @param to {@link LatLng} new destination of the marker
    */
-  void moveMarker(AirMapMarker marker, LatLng to);
+  void moveMarker(AirMapMarker<?> marker, LatLng to);
 
   /**
    * Remove the given marker from the map
    *
    * @param marker {@link AirMapMarker} instance to remove
    */
-  void removeMarker(AirMapMarker marker);
+  void removeMarker(AirMapMarker<?> marker);
 
   /**
    * Set the callback for info window click events
@@ -68,19 +64,13 @@ public interface AirMapInterface {
    */
   void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator);
 
-  /**
-   * Draw a circle at the given LatLng, with the given radius
-   */
+  /** Draw a circle at the given LatLng, with the given radius */
   void drawCircle(LatLng latLng, int radius);
 
-  /**
-   * Draw a circle at the given LatLng, with the given radius and stroke width
-   */
+  /** Draw a circle at the given LatLng, with the given radius and stroke width */
   void drawCircle(LatLng latLng, int radius, int borderColor);
 
-  /**
-   * Draw a circle at the given LatLng, with the given radius, stroke width, and stroke color
-   */
+  /** Draw a circle at the given LatLng, with the given radius, stroke width, and stroke color */
   void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth);
 
   /**
@@ -98,17 +88,12 @@ public interface AirMapInterface {
    * Returns the point coordinates of the LatLng in the container to the supplied
    * {@link OnLatLngScreenLocationCallback}
    */
-
   void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
 
-  /**
-   * Sets the given {@link LatLngBounds} on the map with the specified padding
-   */
+  /** Sets the given {@link LatLngBounds} on the map with the specified padding */
   void setCenter(LatLngBounds latLngBounds, int boundsPadding);
 
-  /**
-   * Set the map zoom level
-   */
+  /** Set the map zoom level */
   void setZoom(int zoom);
 
   /**
@@ -117,24 +102,16 @@ public interface AirMapInterface {
    */
   void animateCenter(LatLng latLng);
 
-  /**
-   * Center the map to the given {@link LatLng}
-   */
+  /** Center the map to the given {@link LatLng} */
   void setCenter(LatLng latLng);
 
-  /**
-   * @return {@link LatLng} of the center of the map
-   */
+  /** @return {@link LatLng} of the center of the map */
   LatLng getCenter();
 
-  /**
-   * @return the zoom level of the map
-   */
+  /** @return the zoom level of the map */
   int getZoom();
 
-  /**
-   * Register a callback to be invoked when the camera of the map has changed
-   */
+  /** Register a callback to be invoked when the camera of the map has changed */
   void setOnCameraChangeListener(OnCameraChangeListener onCameraChangeListener);
 
   void setOnMapLoadedListener(OnMapLoadedListener onMapLoadedListener);
@@ -178,24 +155,16 @@ public interface AirMapInterface {
    */
   void setOnMapClickListener(OnMapClickListener listener);
 
-  /**
-   * Set the map's padding. Currently only works with Google Play Services maps.
-   */
+  /** Set the map's padding. Currently only works with Google Play Services maps. */
   void setPadding(int left, int top, int right, int bottom);
 
-  /**
-   * Enable an indicator for the user's location on the map.
-   */
+  /** Enable an indicator for the user's location on the map. */
   void setMyLocationEnabled(boolean enabled);
 
-  /**
-   * Check if the user location is being tracked and shown on te map.
-   */
+  /** Check if the user location is being tracked and shown on te map. */
   boolean isMyLocationEnabled();
 
-  /**
-   * Enable a toolbar that displays various context-dependent actions.
-   */
+  /** Enable a toolbar that displays various context-dependent actions. */
   void setMapToolbarEnabled(boolean enabled);
 
   /**
@@ -210,7 +179,7 @@ public interface AirMapInterface {
    *
    * @param polyline the {@link AirMapPolyline} to remove
    */
-  void removePolyline(AirMapPolyline polyline);
+  <T> void removePolyline(AirMapPolyline<T> polyline);
 
   /** Sets the type of map tiles that should be displayed */
   void setMapType(MapType type);
@@ -233,7 +202,7 @@ public interface AirMapInterface {
    *
    * @param polygon the {@link AirMapPolygon} to remove
    */
-  void removePolygon(AirMapPolygon polygon);
+  <T> void removePolygon(AirMapPolygon<T> polygon);
 
   /**
    * Adds a GeoJson layer to the map. Currently only supports adding one layer.
@@ -243,13 +212,9 @@ public interface AirMapInterface {
    */
   void setGeoJsonLayer(AirMapGeoJsonLayer layer) throws JSONException;
 
-  /**
-   * Remove GeoJson layer from map, if any.
-   */
+  /** Remove GeoJson layer from map, if any. */
   void clearGeoJsonLayer();
 
-  /**
-   * Get a Bitmap snapshot of the current
-   */
+  /** Get a Bitmap snapshot of the current */
   void getSnapshot(OnSnapshotReadyListener listener);
 }

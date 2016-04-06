@@ -40,9 +40,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
-
-  private static final String TAG = NativeGoogleMapFragment.class.getSimpleName();
-
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
   private boolean myLocationEnabled;
@@ -69,8 +66,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   public void init() {
     getMapAsync(new OnMapReadyCallback() {
-      @Override
-      public void onMapReady(GoogleMap googleMap) {
+      @Override public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null && getActivity() != null) {
           NativeGoogleMapFragment.this.googleMap = googleMap;
           UiSettings settings = NativeGoogleMapFragment.this.googleMap.getUiSettings();
@@ -95,19 +91,18 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.clear();
   }
 
-  @Override public void addMarker(AirMapMarker airMarker) {
+  @Override public void addMarker(AirMapMarker<?> airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
     markers.put(marker, airMarker);
   }
 
-  @Override
-  public void moveMarker(AirMapMarker marker, LatLng to) {
+  @Override public void moveMarker(AirMapMarker<?> marker, LatLng to) {
     marker.setLatLng(to);
     marker.getMarker().setPosition(to);
   }
 
-  @Override public void removeMarker(AirMapMarker marker) {
+  @Override public void removeMarker(AirMapMarker<?> marker) {
     Marker nativeMarker = marker.getMarker();
     if (nativeMarker != null) {
       nativeMarker.remove();
@@ -117,9 +112,8 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void setOnInfoWindowClickListener(final OnInfoWindowClickListener listener) {
     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-      @Override
-      public void onInfoWindowClick(Marker marker) {
-        AirMapMarker airMarker = markers.get(marker);
+      @Override public void onInfoWindowClick(Marker marker) {
+        AirMapMarker<?> airMarker = markers.get(marker);
         if (airMarker != null) {
           listener.onInfoWindowClick(airMarker);
         }
@@ -226,9 +220,8 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void setOnMarkerClickListener(final OnMapMarkerClickListener listener) {
     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-      @Override
-      public boolean onMarkerClick(Marker marker) {
-        AirMapMarker airMarker = markers.get(marker);
+      @Override public boolean onMarkerClick(Marker marker) {
+        AirMapMarker<?> airMarker = markers.get(marker);
         if (airMarker != null) {
           listener.onMapMarkerClick(airMarker);
         }
@@ -281,11 +274,12 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void onLocationPermissionsGranted() {
+    //noinspection MissingPermission
     googleMap.setMyLocationEnabled(myLocationEnabled);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-          @NonNull int[] grantResults) {
+      @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
   }
@@ -298,11 +292,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.getUiSettings().setMapToolbarEnabled(enabled);
   }
 
-  @Override public void addPolyline(AirMapPolyline polyline) {
+  @Override public <T> void addPolyline(AirMapPolyline<T> polyline) {
     polyline.addToGoogleMap(googleMap);
   }
 
-  @Override public void removePolyline(AirMapPolyline polyline) {
+  @Override public <T> void removePolyline(AirMapPolyline<T> polyline) {
     polyline.removeFromGoogleMap();
   }
 
@@ -311,7 +305,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     polygon.setGooglePolygon(googlePolygon);
   }
 
-  @Override public void removePolygon(AirMapPolygon polygon) {
+  @Override public <T> void removePolygon(AirMapPolygon<T> polygon) {
     Polygon nativePolygon = polygon.getGooglePolygon();
     if (nativePolygon != null) {
       nativePolygon.remove();
@@ -342,11 +336,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override
-  public void setGeoJsonLayer(AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
+  public void setGeoJsonLayer(final AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
     // clear any existing layers
     clearGeoJsonLayer();
 
-    layerOnMap = new GeoJsonLayer(getMap(), new JSONObject(airMapGeoJsonLayer.geoJson));
+    layerOnMap = new GeoJsonLayer(googleMap, new JSONObject(airMapGeoJsonLayer.geoJson));
     GeoJsonPolygonStyle style = layerOnMap.getDefaultPolygonStyle();
     style.setStrokeColor(airMapGeoJsonLayer.strokeColor);
     style.setStrokeWidth(airMapGeoJsonLayer.strokeWidth);
@@ -354,8 +348,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     layerOnMap.addLayerToMap();
   }
 
-  @Override
-  public void clearGeoJsonLayer() {
+  @Override public void clearGeoJsonLayer() {
     if (layerOnMap == null) {
       return;
     }
@@ -363,18 +356,15 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     layerOnMap = null;
   }
 
-  @Override
-  public void getSnapshot(final OnSnapshotReadyListener listener) {
+  @Override public void getSnapshot(final OnSnapshotReadyListener listener) {
     getGoogleMap().snapshot(new GoogleMap.SnapshotReadyCallback() {
-      @Override
-      public void onSnapshotReady(Bitmap bitmap) {
+      @Override public void onSnapshotReady(Bitmap bitmap) {
         listener.onSnapshotReady(bitmap);
       }
     });
   }
 
-  @Override
-  public void onDestroyView() {
+  @Override public void onDestroyView() {
     clearGeoJsonLayer();
     super.onDestroyView();
   }

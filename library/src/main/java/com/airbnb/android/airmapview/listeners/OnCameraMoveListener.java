@@ -6,6 +6,5 @@ package com.airbnb.android.airmapview.listeners;
  * instead of the actual GoogleMap implementation since this is not supported by them.
  */
 public interface OnCameraMoveListener {
-
   void onCameraMove();
 }
