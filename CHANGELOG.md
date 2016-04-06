@@ -1,8 +1,3 @@
-# 1.3.4 April 6, 2016
-
-* Add GeoJSON support
-* Add bitmap snapshotting support
-
 # 1.3.3 March 28, 2016
 
 * Web map bug fixes (PR #76)
