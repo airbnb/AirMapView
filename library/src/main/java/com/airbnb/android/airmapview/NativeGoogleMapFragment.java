@@ -1,9 +1,9 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -360,6 +361,16 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     }
     layerOnMap.removeLayerFromMap();
     layerOnMap = null;
+  }
+
+  @Override
+  public void getSnapshot(final OnSnapshotReadyListener listener) {
+    getGoogleMap().snapshot(new GoogleMap.SnapshotReadyCallback() {
+      @Override
+      public void onSnapshotReady(Bitmap bitmap) {
+        listener.onSnapshotReady(bitmap);
+      }
+    });
   }
 
   @Override

@@ -1,15 +1,20 @@
-# 1.3.3 Mar 28, 2016
+# 1.3.4 April 6, 2016
+
+* Add GeoJSON support
+* Add bitmap snapshotting support
+
+# 1.3.3 March 28, 2016
 
 * Web map bug fixes (PR #76)
 * Use `AirMapMarker` in marker click listeners and info window creator. (PR #67)
 * Added some `toBuilder()` to `AirMapMarker` and `bitmapDescriptor(BitmapDescriptor)` to `AirMapMarker.Builder` (PR #84)
 
-# 1.3.2 Feb 19, 2016
+# 1.3.2 February 19, 2016
 
 * Added support for drawing GeoJson layers (PR #80)
 * Disable file access on Webview and prevent content success (PR #72)
 
-# 1.3.1 Jan 6, 2016
+# 1.3.1 January 6, 2016
 
 * Added support for drawing polygons (PR #64)
 * Fixed runtime permission for Android M (PR #65)

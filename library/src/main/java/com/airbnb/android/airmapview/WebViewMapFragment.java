@@ -1,6 +1,7 @@
 package com.airbnb.android.airmapview;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -499,5 +501,25 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override
   public void clearGeoJsonLayer() {
     webView.loadUrl(String.format("javascript:removeGeoJsonLayer();"));
+  }
+
+  @Override
+  public void getSnapshot(OnSnapshotReadyListener listener) {
+    boolean isDrawingCacheEnabled = webView.isDrawingCacheEnabled();
+    webView.setDrawingCacheEnabled(true);
+    webView.buildDrawingCache();
+    // copy to a new bitmap, otherwise the bitmap will be
+    // destroyed when the drawing cache is destroyed
+    // webView.getDrawingCache can return null if drawing cache is disabled or if the size is 0
+    Bitmap bitmap = webView.getDrawingCache();
+    Bitmap newBitmap = null;
+    if (bitmap != null) {
+      newBitmap = bitmap.copy(Bitmap.Config.RGB_565, false);
+    }
+
+    webView.destroyDrawingCache();
+    webView.setDrawingCacheEnabled(isDrawingCacheEnabled);
+
+    listener.onSnapshotReady(newBitmap);
   }
 }
