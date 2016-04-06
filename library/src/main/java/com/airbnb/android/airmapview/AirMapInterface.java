@@ -250,6 +250,6 @@ public interface AirMapInterface {
 
   /**
    * Get a Bitmap snapshot of the current
-     */
+   */
   void getSnapshot(OnSnapshotReadyListener listener);
 }
