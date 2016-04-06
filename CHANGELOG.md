@@ -1,6 +1,6 @@
 # 1.3.4 April 6, 2016
 
-* Adds an interface to get a bitmap snapshot of an AirMapView
+* Adds an interface to get a bitmap snapshot of an AirMapView (PR #86)
 
 # 1.3.3 March 28, 2016
 
