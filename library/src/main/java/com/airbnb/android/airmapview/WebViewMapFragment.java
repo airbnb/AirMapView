@@ -507,7 +507,6 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   public void getSnapshot(OnSnapshotReadyListener listener) {
     boolean isDrawingCacheEnabled = webView.isDrawingCacheEnabled();
     webView.setDrawingCacheEnabled(true);
-    webView.buildDrawingCache();
     // copy to a new bitmap, otherwise the bitmap will be
     // destroyed when the drawing cache is destroyed
     // webView.getDrawingCache can return null if drawing cache is disabled or if the size is 0
