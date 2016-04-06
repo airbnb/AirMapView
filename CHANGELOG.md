@@ -1,3 +1,7 @@
+# 1.3.4 April 6, 2016
+
+* Adds an interface to get a bitmap snapshot of an AirMapView (PR #86)
+
 # 1.3.3 March 28, 2016
 
 * Web map bug fixes (PR #76)
