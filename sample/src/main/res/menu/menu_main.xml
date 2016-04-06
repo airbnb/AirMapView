@@ -38,5 +38,10 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/take_snapshot"
+        android:title="Take snapshot"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
 </menu>
 

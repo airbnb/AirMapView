@@ -1,19 +1,18 @@
 package com.airbnb.android.airmapview;
 
-import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
-import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
-import com.google.maps.android.geojson.GeoJsonLayer;
+import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 
@@ -248,4 +247,9 @@ public interface AirMapInterface {
    * Remove GeoJson layer from map, if any.
    */
   void clearGeoJsonLayer();
+
+  /**
+   * Get a Bitmap snapshot of the current
+   */
+  void getSnapshot(OnSnapshotReadyListener listener);
 }

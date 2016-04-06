@@ -1,16 +1,18 @@
 package com.airbnb.airmapview.sample;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.android.airmapview.AirMapGeoJsonLayer;
@@ -31,8 +33,8 @@ import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
+import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import org.json.JSONException;
 
@@ -43,11 +45,12 @@ public class MainActivity extends AppCompatActivity
     OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
     OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
 
+  private final LogsAdapter adapter = new LogsAdapter();
+
   private static final String TAG = MainActivity.class.getSimpleName();
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
-  private TextView textLogs;
-  private ScrollView logsScrollView;
+  private RecyclerView logsRecyclerView;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,8 +58,9 @@ public class MainActivity extends AppCompatActivity
 
     mapViewBuilder = new DefaultAirMapViewBuilder(this);
     map = (AirMapView) findViewById(R.id.map);
-    textLogs = (TextView) findViewById(R.id.textLogs);
-    logsScrollView = (ScrollView) findViewById(R.id.logsScrollView);
+    logsRecyclerView = (RecyclerView) findViewById(R.id.logs);
+    ((LinearLayoutManager) logsRecyclerView.getLayoutManager()).setReverseLayout(true);
+    logsRecyclerView.setAdapter(adapter);
     Button btnMapTypeNormal = (Button) findViewById(R.id.btnMapTypeNormal);
     Button btnMapTypeSattelite = (Button) findViewById(R.id.btnMapTypeSattelite);
     Button btnMapTypeTerrain = (Button) findViewById(R.id.btnMapTypeTerrain);
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         airMapInterface = new WebAirMapViewBuilder().withOptions(new GoogleChinaMapType()).build();
         break;
       case R.id.action_clear_logs:
-        textLogs.setText("");
+        adapter.clearLogs();
         break;
       case R.id.add_geojson_layer:
         // Draws a layer on top of Australia
@@ -138,7 +142,19 @@ public class MainActivity extends AppCompatActivity
 
         break;
         case R.id.remove_geojson_layer:
-            map.getMapInterface().clearGeoJsonLayer();
+          map.getMapInterface().clearGeoJsonLayer();
+          break;
+      case R.id.take_snapshot:
+        map.getMapInterface().getSnapshot(new OnSnapshotReadyListener() {
+          @Override
+          public void onSnapshotReady(@Nullable Bitmap bitmap) {
+            if (bitmap != null) {
+              appendBitmap(bitmap);
+            } else {
+              appendLog("Null bitmap");
+            }
+          }
+        });
         break;
 
       default:
@@ -216,8 +232,13 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void appendLog(String msg) {
-    textLogs.setText(textLogs.getText() + "\n" + msg);
-    logsScrollView.fullScroll(View.FOCUS_DOWN);
+    adapter.addString(msg);
+    logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+  }
+
+  private void appendBitmap(Bitmap bitmap) {
+    adapter.addBitmap(bitmap);
+    logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
   @Override public void onMapMarkerClick(AirMapMarker airMarker) {
