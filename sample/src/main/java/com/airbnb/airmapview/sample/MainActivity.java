@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return new GroundOverlayDemoFragment();
       }
     });
+    addDemo("GeoJson", new DemoFragmentFactory() {
+      @Override
+      public BaseDemoFragment make() {
+        return new GeoJsonDemoFragment();
+      }
+    });
 
     startDemo(demos.get(0));
   }

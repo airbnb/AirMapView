@@ -49,8 +49,6 @@ public abstract class BaseDemoFragment extends Fragment
     OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
     OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
 
-  private static final String TAG = BaseDemoFragment.class.getSimpleName();
-
   AirMapView map;
   DefaultAirMapViewBuilder mapViewBuilder;
   LogsAdapter adapter = new LogsAdapter();
@@ -134,23 +132,6 @@ public abstract class BaseDemoFragment extends Fragment
         break;
       case R.id.action_clear_logs:
         adapter.clearLogs();
-        break;
-      case R.id.add_geojson_layer:
-        // Draws a layer on top of Australia
-        String geoJsonString = Util.readFromRawResource(getContext(), R.raw.google);
-        AirMapGeoJsonLayer layer = new AirMapGeoJsonLayer.Builder(geoJsonString)
-            .strokeColor(ContextCompat.getColor(getContext(), android.R.color.holo_green_dark))
-            .strokeWidth(10)
-            .fillColor(ContextCompat.getColor(getContext(), android.R.color.holo_green_light))
-            .build();
-        try {
-          map.getMapInterface().setGeoJsonLayer(layer);
-        } catch (JSONException e) {
-          Log.e(TAG, "Failed to add GeoJson layer", e);
-        }
-        break;
-      case R.id.remove_geojson_layer:
-        map.getMapInterface().clearGeoJsonLayer();
         break;
       case R.id.take_snapshot:
         map.getMapInterface().getSnapshot(new OnSnapshotReadyListener() {
