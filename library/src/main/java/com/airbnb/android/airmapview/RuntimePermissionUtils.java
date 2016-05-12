@@ -71,13 +71,10 @@ final class RuntimePermissionUtils {
   static void checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
     if (hasSelfPermissions(targetActivity, LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
-    } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        targetActivity.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
-      } else {
-        //Not have location permissions pre M, don't do anything.
-      }
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      targetActivity.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
     }
+    //else don't have location permissions in pre M, don't do anything.
   }
 
   /**
