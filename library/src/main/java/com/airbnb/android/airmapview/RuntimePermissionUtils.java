@@ -1,6 +1,5 @@
 package com.airbnb.android.airmapview;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -69,13 +68,13 @@ final class RuntimePermissionUtils {
    *
    * @param airMapInterface the callback interface if permission is granted.
    */
-  @TargetApi(Build.VERSION_CODES.M)
   static void checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
     if (hasSelfPermissions(targetActivity, LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
-    } else {
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       targetActivity.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
     }
+    //else don't have location permissions in pre M, don't do anything.
   }
 
   /**
