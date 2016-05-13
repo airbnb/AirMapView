@@ -19,6 +19,7 @@ var markers = {};
 var infoWindowContent = {};
 var polylines = {};
 var polygons = {};
+var groundOverlays = {};
 var moveTimeout;
 var GeoMarker = null;
 var markerIconPrefix;
@@ -223,6 +224,27 @@ function removePolygon(id) {
   var polygon = polygons[id];
   if (polygon != null) {
     polygon.setMap(null);
+  }
+}
+
+function addGroundOverlay(id, north, south, east, west, image) {
+  var imageBounds = {
+    north: north,
+    south: south,
+    east: east,
+    west: west
+  };
+
+  var overlay = new google.maps.GroundOverlay(image, imageBounds);
+  overlay.setMap(map);
+
+  groundOverlays[id] = overlay;
+}
+
+function removeGroundOverlay(id) {
+  var overlay = groundOverlays[id];
+  if (overlay != null) {
+    overlay.setMap(null);
   }
 }
 
