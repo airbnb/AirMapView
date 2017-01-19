@@ -17,7 +17,6 @@ android {
 }
 
 dependencies {
-//  compile 'com.android.support:appcompat-v7:25.1.0'
   compile 'com.google.android.gms:play-services-maps:10.0.1'
   compile 'com.google.maps.android:android-maps-utils:0.4'
 
