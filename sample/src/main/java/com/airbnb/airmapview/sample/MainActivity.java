@@ -156,7 +156,11 @@ public class MainActivity extends AppCompatActivity
           }
         });
         break;
-
+      case R.id.enable_location:
+        map.setMyLocationEnabled(true);
+        break;
+      case R.id.disable_location:
+        map.setMyLocationEnabled(false);
       default:
         break;
     }
@@ -203,7 +207,7 @@ public class MainActivity extends AppCompatActivity
     map.drawCircle(new LatLng(37.78443, -122.40805), 1000);
 
     // enable my location
-    map.setMyLocationEnabled(true);
+    map.setMyLocationEnabled(false);
   }
 
   private void addMarker(String title, LatLng latLng, int id) {

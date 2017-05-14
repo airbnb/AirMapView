@@ -43,5 +43,15 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/enable_location"
+        android:title="Enable Location"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/disable_location"
+        android:title="Disable Location"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
 </menu>
 
