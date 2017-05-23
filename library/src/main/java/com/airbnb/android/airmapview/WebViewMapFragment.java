@@ -241,6 +241,24 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   @Override public boolean isMyLocationEnabled() {
     return trackUserLocation;
   }
+  
+  @Override public boolean isZoomControlsEnabled() {
+    // no-op
+    return false;
+  }
+   
+  @Override public boolean isMyLocationButtonEnabled() {
+    // no-op
+    return false;
+  }
+  
+  @Override public void setZoomControlsEnabled(boolean enabled) {
+     // no-op
+  }
+  
+  @Override public void setMyLocationButtonEnabled(boolean enabled) {
+    // no-op
+  }
 
   @Override public void setMapToolbarEnabled(boolean enabled) {
     // no-op
