@@ -161,8 +161,20 @@ public interface AirMapInterface {
   /** Enable an indicator for the user's location on the map. */
   void setMyLocationEnabled(boolean enabled);
 
-  /** Check if the user location is being tracked and shown on te map. */
+  /** Check if the user location is being tracked and shown on the map. */
   boolean isMyLocationEnabled();
+  
+  /** Check if the zoom controls are enabled and shown on the map. */
+  boolean isZoomControlsEnabled();
+  
+  /** Check if the my location button is enabled and shown on the map */
+  boolean isMyLocationButtonEnabled();
+  
+  /** Enable or disable the zoom controls determining whether they're shown */
+  void setZoomControlsEnabled(boolean enabled);
+  
+  /** Enable or disable the my location button determining whether it's shown */
+  void setMyLocationButtonEnabled(boolean enabled);
 
   /** Enable a toolbar that displays various context-dependent actions. */
   void setMapToolbarEnabled(boolean enabled);
