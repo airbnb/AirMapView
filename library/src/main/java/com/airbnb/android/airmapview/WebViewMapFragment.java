@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public abstract class WebViewMapFragment extends Fragment implements AirMapInterface {
   private static final String TAG = WebViewMapFragment.class.getSimpleName();
@@ -59,7 +58,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean loaded;
   private boolean ignoreNextMapMove;
   private View infoWindowView;
-  private final Map<Long, AirMapMarker<?>> markers = new HashMap<>();
+  private final LongSparseArray<AirMapMarker<?>> markers = new LongSparseArray<>();
 
   private boolean trackUserLocation = false;
 
