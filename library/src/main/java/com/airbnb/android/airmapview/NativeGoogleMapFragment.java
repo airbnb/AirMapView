@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.maps.android.geojson.GeoJsonLayer;
@@ -91,18 +92,18 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.clear();
   }
 
-  @Override public void addMarker(AirMapMarker<?> airMarker) {
+  @Override public void addMarker(@NonNull AirMapMarker<?> airMarker) {
     Marker marker = googleMap.addMarker(airMarker.getMarkerOptions());
     airMarker.setGoogleMarker(marker);
     markers.put(marker, airMarker);
   }
 
-  @Override public void moveMarker(AirMapMarker<?> marker, LatLng to) {
+  @Override public void moveMarker(@NonNull AirMapMarker<?> marker, @NonNull LatLng to) {
     marker.setLatLng(to);
     marker.getMarker().setPosition(to);
   }
 
-  @Override public void removeMarker(AirMapMarker<?> marker) {
+  @Override public void removeMarker(@NonNull AirMapMarker<?> marker) {
     Marker nativeMarker = marker.getMarker();
     if (nativeMarker != null) {
       nativeMarker.remove();
@@ -126,19 +127,19 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.setInfoWindowAdapter(adapter);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius) {
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius) {
     drawCircle(latLng, radius, CIRCLE_BORDER_COLOR);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor) {
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor) {
     drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth) {
     drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth,
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth,
       int fillColor) {
     googleMap.addCircle(new CircleOptions()
         .center(latLng)
@@ -165,11 +166,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     callback.onMapBoundsReady(builder.build());
   }
 
-  @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+  @Override public void getScreenLocation(@NonNull LatLng latLng, OnLatLngScreenLocationCallback callback) {
     callback.onLatLngScreenLocationReady(googleMap.getProjection().toScreenLocation(latLng));
   }
 
-  @Override public void setCenter(LatLngBounds latLngBounds, int boundsPadding) {
+  @Override public void setCenter(@NonNull LatLngBounds latLngBounds, int boundsPadding) {
     googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, boundsPadding));
   }
 
@@ -178,11 +179,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
         CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target, zoom));
   }
 
-  @Override public void animateCenter(LatLng latLng) {
+  @Override public void animateCenter(@NonNull LatLng latLng) {
     googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
   }
 
-  @Override public void setCenter(LatLng latLng) {
+  @Override public void setCenter(@NonNull LatLng latLng) {
     googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
   }
 
@@ -210,11 +211,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     this.onMapLoadedListener = onMapLoadedListener;
   }
 
-  @Override public void setCenterZoom(LatLng latLng, int zoom) {
+  @Override public void setCenterZoom(@NonNull LatLng latLng, int zoom) {
     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
   }
 
-  @Override public void animateCenterZoom(LatLng latLng, int zoom) {
+  @Override public void animateCenterZoom(@NonNull LatLng latLng, int zoom) {
     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
   }
 
@@ -293,20 +294,20 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     googleMap.getUiSettings().setMapToolbarEnabled(enabled);
   }
 
-  @Override public <T> void addPolyline(AirMapPolyline<T> polyline) {
+  @Override public <T> void addPolyline(@NonNull AirMapPolyline<T> polyline) {
     polyline.addToGoogleMap(googleMap);
   }
 
-  @Override public <T> void removePolyline(AirMapPolyline<T> polyline) {
+  @Override public <T> void removePolyline(@NonNull AirMapPolyline<T> polyline) {
     polyline.removeFromGoogleMap();
   }
 
-  @Override public <T> void addPolygon(AirMapPolygon<T> polygon) {
+  @Override public <T> void addPolygon(@NonNull AirMapPolygon<T> polygon) {
     Polygon googlePolygon = googleMap.addPolygon(polygon.getPolygonOptions());
     polygon.setGooglePolygon(googlePolygon);
   }
 
-  @Override public <T> void removePolygon(AirMapPolygon<T> polygon) {
+  @Override public <T> void removePolygon(@NonNull AirMapPolygon<T> polygon) {
     Polygon nativePolygon = polygon.getGooglePolygon();
     if (nativePolygon != null) {
       nativePolygon.remove();
@@ -337,7 +338,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override
-  public void setGeoJsonLayer(final AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
+  public void setGeoJsonLayer(@NonNull final AirMapGeoJsonLayer airMapGeoJsonLayer) throws JSONException {
     // clear any existing layers
     clearGeoJsonLayer();
 
@@ -357,7 +358,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
     layerOnMap = null;
   }
 
-  @Override public void getSnapshot(final OnSnapshotReadyListener listener) {
+  @Override public void getSnapshot(@NonNull final OnSnapshotReadyListener listener) {
     getGoogleMap().snapshot(new GoogleMap.SnapshotReadyCallback() {
       @Override public void onSnapshotReady(Bitmap bitmap) {
         listener.onSnapshotReady(bitmap);

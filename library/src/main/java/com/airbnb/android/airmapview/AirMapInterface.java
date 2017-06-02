@@ -1,5 +1,7 @@
 package com.airbnb.android.airmapview;
 
+import android.support.annotation.NonNull;
+
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -33,7 +35,7 @@ public interface AirMapInterface {
    *
    * @param marker {@link AirMapMarker} instance to add
    */
-  void addMarker(AirMapMarker<?> marker);
+  void addMarker(@NonNull AirMapMarker<?> marker);
 
   /**
    * Move the marker to the given coordinates
@@ -41,14 +43,14 @@ public interface AirMapInterface {
    * @param marker {@link AirMapMarker} instance to move
    * @param to {@link LatLng} new destination of the marker
    */
-  void moveMarker(AirMapMarker<?> marker, LatLng to);
+  void moveMarker(@NonNull AirMapMarker<?> marker, @NonNull LatLng to);
 
   /**
    * Remove the given marker from the map
    *
    * @param marker {@link AirMapMarker} instance to remove
    */
-  void removeMarker(AirMapMarker<?> marker);
+  void removeMarker(@NonNull AirMapMarker<?> marker);
 
   /**
    * Set the callback for info window click events
@@ -65,18 +67,18 @@ public interface AirMapInterface {
   void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter, InfoWindowCreator creator);
 
   /** Draw a circle at the given LatLng, with the given radius */
-  void drawCircle(LatLng latLng, int radius);
+  void drawCircle(@NonNull LatLng latLng, int radius);
 
   /** Draw a circle at the given LatLng, with the given radius and stroke width */
-  void drawCircle(LatLng latLng, int radius, int borderColor);
+  void drawCircle(@NonNull LatLng latLng, int radius, int borderColor);
 
   /** Draw a circle at the given LatLng, with the given radius, stroke width, and stroke color */
-  void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth);
+  void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth);
 
   /**
    * Draw a circle at the given LatLng, with the given radius, stroke width, stroke and fill colors
    */
-  void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor);
+  void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth, int fillColor);
 
   /**
    * Returns the map screen bounds to the supplied
@@ -88,10 +90,10 @@ public interface AirMapInterface {
    * Returns the point coordinates of the LatLng in the container to the supplied
    * {@link OnLatLngScreenLocationCallback}
    */
-  void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
+  void getScreenLocation(@NonNull LatLng latLng, OnLatLngScreenLocationCallback callback);
 
   /** Sets the given {@link LatLngBounds} on the map with the specified padding */
-  void setCenter(LatLngBounds latLngBounds, int boundsPadding);
+  void setCenter(@NonNull LatLngBounds latLngBounds, int boundsPadding);
 
   /** Set the map zoom level */
   void setZoom(int zoom);
@@ -100,10 +102,10 @@ public interface AirMapInterface {
    * Animate the map to center the given {@link LatLng}. Web maps will currently only center the map
    * (no animation).
    */
-  void animateCenter(LatLng latLng);
+  void animateCenter(@NonNull LatLng latLng);
 
   /** Center the map to the given {@link LatLng} */
-  void setCenter(LatLng latLng);
+  void setCenter(@NonNull LatLng latLng);
 
   /** @return {@link LatLng} of the center of the map */
   LatLng getCenter();
@@ -122,7 +124,7 @@ public interface AirMapInterface {
    * @param latLng the {@link LatLng} to set as center
    * @param zoom   the zoom level
    */
-  void setCenterZoom(LatLng latLng, int zoom);
+  void setCenterZoom(@NonNull LatLng latLng, int zoom);
 
   /**
    * Animate the center of the map to the given location and zoom level
@@ -130,7 +132,7 @@ public interface AirMapInterface {
    * @param latLng the {@link LatLng} to animate to center
    * @param zoom   the zoom level
    */
-  void animateCenterZoom(LatLng latLng, int zoom);
+  void animateCenterZoom(@NonNull LatLng latLng, int zoom);
 
   /**
    * Register a callback to be invoked when a map marker is clicked
@@ -172,14 +174,14 @@ public interface AirMapInterface {
    *
    * @param polyline {@link AirMapPolyline} instance to add
    */
-  <T> void addPolyline(AirMapPolyline<T> polyline);
+  <T> void addPolyline(@NonNull AirMapPolyline<T> polyline);
 
   /**
    * Remove the given {@link AirMapPolyline}
    *
    * @param polyline the {@link AirMapPolyline} to remove
    */
-  <T> void removePolyline(AirMapPolyline<T> polyline);
+  <T> void removePolyline(@NonNull AirMapPolyline<T> polyline);
 
   /** Sets the type of map tiles that should be displayed */
   void setMapType(MapType type);
@@ -195,14 +197,14 @@ public interface AirMapInterface {
    *
    * @param polygon {@link AirMapPolygon} instance to add
    */
-  <T> void addPolygon(AirMapPolygon<T> polygon);
+  <T> void addPolygon(@NonNull AirMapPolygon<T> polygon);
 
   /**
    * Remove the given {@link AirMapPolygon}
    *
    * @param polygon the {@link AirMapPolygon} to remove
    */
-  <T> void removePolygon(AirMapPolygon<T> polygon);
+  <T> void removePolygon(@NonNull AirMapPolygon<T> polygon);
 
   /**
    * Adds a GeoJson layer to the map. Currently only supports adding one layer.
@@ -210,11 +212,11 @@ public interface AirMapInterface {
    *
    * @param layer An {@link AirMapGeoJsonLayer} layer with GeoJson and optional styling attributes
    */
-  void setGeoJsonLayer(AirMapGeoJsonLayer layer) throws JSONException;
+  void setGeoJsonLayer(@NonNull AirMapGeoJsonLayer layer) throws JSONException;
 
   /** Remove GeoJson layer from map, if any. */
   void clearGeoJsonLayer();
 
   /** Get a Bitmap snapshot of the current */
-  void getSnapshot(OnSnapshotReadyListener listener);
+  void getSnapshot(@NonNull OnSnapshotReadyListener listener);
 }
