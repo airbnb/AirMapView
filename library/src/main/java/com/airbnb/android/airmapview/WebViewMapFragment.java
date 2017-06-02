@@ -110,12 +110,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     return center;
   }
 
-  public void setCenter(LatLng latLng) {
+  public void setCenter(@NonNull LatLng latLng) {
     webView.loadUrl(String.format(Locale.US, "javascript:centerMap(%1$f, %2$f);", latLng.latitude,
         latLng.longitude));
   }
 
-  public void animateCenter(LatLng latLng) {
+  public void animateCenter(@NonNull LatLng latLng) {
     setCenter(latLng);
   }
 
@@ -123,19 +123,19 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webView.loadUrl(String.format(Locale.US, "javascript:setZoom(%1$d);", zoom));
   }
 
-  public void drawCircle(LatLng latLng, int radius) {
+  public void drawCircle(@NonNull LatLng latLng, int radius) {
     drawCircle(latLng, radius, CIRCLE_BORDER_COLOR);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor) {
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor) {
     drawCircle(latLng, radius, borderColor, CIRCLE_BORDER_WIDTH);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth) {
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth) {
     drawCircle(latLng, radius, borderColor, borderWidth, CIRCLE_FILL_COLOR);
   }
 
-  @Override public void drawCircle(LatLng latLng, int radius, int borderColor, int borderWidth,
+  @Override public void drawCircle(@NonNull LatLng latLng, int radius, int borderColor, int borderWidth,
       int fillColor) {
     webView.loadUrl(
         String.format(Locale.US, "javascript:addCircle(%1$f, %2$f, %3$d, %4$d, %5$d, %6$d);",
@@ -159,7 +159,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     return webView != null && loaded;
   }
 
-  @Override public void addMarker(AirMapMarker<?> marker) {
+  @Override public void addMarker(@NonNull AirMapMarker<?> marker) {
     LatLng latLng = marker.getLatLng();
     markers.put(marker.getId(), marker);
     webView.loadUrl(
@@ -169,14 +169,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
             marker.getSnippet(), marker.getMarkerOptions().isDraggable()));
   }
 
-  @Override public void moveMarker(AirMapMarker<?> marker, LatLng to) {
+  @Override public void moveMarker(@NonNull AirMapMarker<?> marker, @NonNull LatLng to) {
     marker.setLatLng(to);
     webView.loadUrl(
         String.format(Locale.US, "javascript:moveMarker(%1$f, %2$f, '%3$s');",
             to.latitude, to.longitude, marker.getId()));
   }
 
-  @Override public void removeMarker(AirMapMarker<?> marker) {
+  @Override public void removeMarker(@NonNull AirMapMarker<?> marker) {
     markers.remove(marker.getId());
     webView.loadUrl(String.format(Locale.US, "javascript:removeMarker(%1$d);", marker.getId()));
   }
@@ -197,12 +197,12 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
   }
 
-  @Override public void setCenterZoom(LatLng latLng, int zoom) {
+  @Override public void setCenterZoom(@NonNull LatLng latLng, int zoom) {
     setCenter(latLng);
     setZoom(zoom);
   }
 
-  @Override public void animateCenterZoom(LatLng latLng, int zoom) {
+  @Override public void animateCenterZoom(@NonNull LatLng latLng, int zoom) {
     setCenterZoom(latLng, zoom);
   }
 
@@ -245,7 +245,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     // no-op
   }
 
-  @Override public <T> void addPolyline(AirMapPolyline<T> polyline) {
+  @Override public <T> void addPolyline(@NonNull AirMapPolyline<T> polyline) {
     try {
       JSONArray array = new JSONArray();
       for (LatLng point : polyline.getPoints()) {
@@ -263,11 +263,11 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
   }
 
-  @Override public <T> void removePolyline(AirMapPolyline<T> polyline) {
+  @Override public <T> void removePolyline(@NonNull AirMapPolyline<T> polyline) {
     webView.loadUrl(String.format(Locale.US, "javascript:removePolyline(%1$d);", polyline.getId()));
   }
 
-  @Override public <T> void addPolygon(AirMapPolygon<T> polygon) {
+  @Override public <T> void addPolygon(@NonNull AirMapPolygon<T> polygon) {
     try {
       JSONArray array = new JSONArray();
       for (LatLng point : polygon.getPolygonOptions().getPoints()) {
@@ -288,7 +288,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
   }
 
-  @Override public <T> void removePolygon(AirMapPolygon<T> polygon) {
+  @Override public <T> void removePolygon(@NonNull AirMapPolygon<T> polygon) {
     webView.loadUrl(String.format(Locale.US, "javascript:removePolygon(%1$d);", polygon.getId()));
   }
 
@@ -310,13 +310,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webView.loadUrl("javascript:getBounds();");
   }
 
-  @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
+  @Override public void getScreenLocation(@NonNull LatLng latLng, OnLatLngScreenLocationCallback callback) {
     onLatLngScreenLocationCallback = callback;
     webView.loadUrl(String.format(Locale.US, "javascript:getScreenLocation(%1$f, %2$f);",
         latLng.latitude, latLng.longitude));
   }
 
-  @Override public void setCenter(LatLngBounds bounds, int boundsPadding) {
+  @Override public void setCenter(@NonNull LatLngBounds bounds, int boundsPadding) {
     webView.loadUrl(String.format(Locale.US, "javascript:setBounds(%1$f, %2$f, %3$f, %4$f);",
         bounds.northeast.latitude, bounds.northeast.longitude,
         bounds.southwest.latitude,
@@ -484,7 +484,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     }
   }
 
-  @Override public void setGeoJsonLayer(AirMapGeoJsonLayer layer) {
+  @Override public void setGeoJsonLayer(@NonNull AirMapGeoJsonLayer layer) {
     // clear any existing layer
     clearGeoJsonLayer();
     webView.loadUrl(String.format(Locale.US, "javascript:addGeoJsonLayer(%1$s, %2$f, %3$d, %4$d);",
@@ -495,7 +495,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     webView.loadUrl("javascript:removeGeoJsonLayer();");
   }
 
-  @Override public void getSnapshot(OnSnapshotReadyListener listener) {
+  @Override public void getSnapshot(@NonNull OnSnapshotReadyListener listener) {
     boolean isDrawingCacheEnabled = webView.isDrawingCacheEnabled();
     webView.setDrawingCacheEnabled(true);
     // copy to a new bitmap, otherwise the bitmap will be
