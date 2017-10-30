@@ -25,11 +25,13 @@ import com.airbnb.android.airmapview.AirMapViewTypes;
 import com.airbnb.android.airmapview.DefaultAirMapViewBuilder;
 import com.airbnb.android.airmapview.GoogleChinaMapType;
 import com.airbnb.android.airmapview.MapType;
+import com.airbnb.android.airmapview.RuntimePermissionUtils;
 import com.airbnb.android.airmapview.WebAirMapViewBuilder;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnLocationPermissionListener;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
@@ -43,7 +45,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity
     implements OnCameraChangeListener, OnMapInitializedListener,
     OnMapClickListener, OnCameraMoveListener, OnMapMarkerClickListener,
-    OnInfoWindowClickListener, OnLatLngScreenLocationCallback {
+    OnInfoWindowClickListener, OnLatLngScreenLocationCallback, OnLocationPermissionListener {
 
   private final LogsAdapter adapter = new LogsAdapter();
 
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity
     map.setOnMarkerClickListener(this);
     map.setOnMapInitializedListener(this);
     map.setOnInfoWindowClickListener(this);
+    map.setOnLocationPermissionListener(this);
     map.initialize(getSupportFragmentManager());
   }
 
@@ -255,5 +258,26 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    map.onCheckLocationPermissionResult(requestCode, permissions, grantResults);
+  }
+
+  @Override
+  public void onLocationPermissionGranted() {
+    Toast.makeText(this, "Permission is granted", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onLocationPermissionDenied() {
+    Toast.makeText(this, "Permission is denied", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onLocationPermissionPermanentlyDenied() {
+    Toast.makeText(this, "Permission is permanently denied", Toast.LENGTH_SHORT).show();
   }
 }

@@ -23,6 +23,7 @@ import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnLocationPermissionListener;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
@@ -53,6 +54,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private InfoWindowCreator infoWindowCreator;
   private OnMapBoundsCallback onMapBoundsCallback;
   private OnLatLngScreenLocationCallback onLatLngScreenLocationCallback;
+  private OnLocationPermissionListener onLocationPermissionListener;
   private LatLng center;
   private int zoom;
   private boolean loaded;
@@ -218,23 +220,52 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     // no-op
   }
 
+  @Override public void setOnLocationPermissionListener(final OnLocationPermissionListener listener) {
+    this.onLocationPermissionListener = listener;
+  }
+
   @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
     trackUserLocation = trackUserLocationEnabled;
     if (trackUserLocationEnabled) {
       RuntimePermissionUtils.checkLocationPermissions(getActivity(), this);
-    } else {
-      webView.loadUrl("javascript:stopTrackingUserLocation();");
     }
   }
 
   @Override public void onLocationPermissionsGranted() {
+    trackUserLocation = true;
     webView.loadUrl("javascript:startTrackingUserLocation();");
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionGranted();
+    }
+  }
+
+  @Override
+  public void onLocationPermissionsDenied() {
+    trackUserLocation = false;
+    webView.loadUrl("javascript:stopTrackingUserLocation();");
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionDenied();
+    }
+  }
+
+  @Override
+  public void onLocationPermissionsNeverAskAgain() {
+    trackUserLocation = false;
+    webView.loadUrl("javascript:stopTrackingUserLocation();");
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionPermanentlyDenied();
+    }
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
+                                                   @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
+    RuntimePermissionUtils.onRequestPermissionsResult(this.getActivity(), this, requestCode, permissions, grantResults);
+  }
+
+  @Override
+  public void onCheckLocationPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    RuntimePermissionUtils.onRequestPermissionsResult(this.getActivity(), this, requestCode, permissions, grantResults);
   }
 
   @Override public boolean isMyLocationEnabled() {
