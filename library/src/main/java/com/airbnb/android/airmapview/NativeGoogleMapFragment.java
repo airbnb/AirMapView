@@ -281,6 +281,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void onLocationPermissionsGranted() {
     myLocationEnabled = true;
+    //noinspection MissingPermission
     googleMap.setMyLocationEnabled(true);
     if (onLocationPermissionListener != null) {
       onLocationPermissionListener.onLocationPermissionGranted();
@@ -290,7 +291,6 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   @Override
   public void onLocationPermissionsDenied() {
     myLocationEnabled = false;
-    googleMap.setMyLocationEnabled(false);
     if (onLocationPermissionListener != null) {
       onLocationPermissionListener.onLocationPermissionDenied();
     }
@@ -299,7 +299,6 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   @Override
   public void onLocationPermissionsNeverAskAgain() {
     myLocationEnabled = false;
-    googleMap.setMyLocationEnabled(false);
     if (onLocationPermissionListener != null) {
       onLocationPermissionListener.onLocationPermissionPermanentlyDenied();
     }
