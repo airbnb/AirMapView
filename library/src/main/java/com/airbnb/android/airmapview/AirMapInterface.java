@@ -1,9 +1,12 @@
 package com.airbnb.android.airmapview;
 
+import android.support.annotation.NonNull;
+
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnLocationPermissionListener;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
@@ -57,6 +60,23 @@ public interface AirMapInterface {
    *                 instance
    */
   void setOnInfoWindowClickListener(OnInfoWindowClickListener listener);
+
+  /**
+   * Set the callback for permission request
+   *
+   * @param listener {@link com.airbnb.android.airmapview.listeners.OnLocationPermissionListener}
+   *                 instance
+   */
+  void setOnLocationPermissionListener(OnLocationPermissionListener listener);
+
+  /**
+   * Check the result of location permission request
+   *
+   * @param requestCode
+   * @param permissions
+   * @param grantResults
+   */
+  void onCheckLocationPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
   /**
    * Specific to Google Play Services maps. Sets the {@link GoogleMap.InfoWindowAdapter} and {@link
@@ -189,6 +209,16 @@ public interface AirMapInterface {
    * permissions should be executed here.
    */
   void onLocationPermissionsGranted();
+
+  /**
+   * Getting called when runtime location permissions got denied.
+   */
+  void onLocationPermissionsDenied();
+
+  /**
+   * Getting called when runtime location permissions got denied and checked the box of 'Never Ask Again'.
+   */
+  void onLocationPermissionsNeverAskAgain();
 
   /**
    * Add the given polygon to the map

@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 /**
@@ -32,6 +36,27 @@ final class RuntimePermissionUtils {
         return false;
       }
     }
+    return true;
+  }
+
+  /**
+   * Check the permissions are the requested permissions
+   *
+   * @param permissions
+   * @return true if the permissions are matched perfectly
+   */
+  static boolean isRequestedPermission(String[] permissions) {
+    if (permissions.length != LOCATION_PERMISSIONS.length) {
+      return false;
+    }
+
+    final Set<String> requestPermissions = new HashSet<>(Arrays.asList(LOCATION_PERMISSIONS));
+    for (String permission : permissions) {
+      if (!requestPermissions.contains(permission)) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -68,31 +93,41 @@ final class RuntimePermissionUtils {
    *
    * @param airMapInterface the callback interface if permission is granted.
    */
-  static boolean checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
+  static void checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
     if (hasSelfPermissions(targetActivity, LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
-      return true;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       targetActivity.requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
+    } else {
+      airMapInterface.onLocationPermissionsDenied();
     }
-    //else don't have location permissions in pre M, don't do anything.
-    return false;
   }
 
   /**
-   * Dispatch actions based off requested permission results.<br />
+   * Dispatch actions based off requested permission results.
+   * The activity or fragment must call this function in onRequestPermissionsResult
+   * {@link android.support.v4.app.Fragment#onRequestPermissionsResult(int, String[], int[])}
+   * {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])}<br />
    * Further actions like
    * 1> Rationale: showing a snack bar to explain why the permissions are needed and
    * 2> Denied: adding airMapInterface.onLocationPermissionsDenied()
    * should be added here if needed.
    *
    */
-  static void onRequestPermissionsResult(AirMapInterface airMapInterface, int requestCode,
-          int[] grantResults) {
+  static void onRequestPermissionsResult(Activity activity, AirMapInterface airMapInterface, int requestCode,
+          String[] permissions, int[] grantResults) {
     switch (requestCode) {
       case LOCATION_PERMISSION_REQUEST_CODE:
+        if (!isRequestedPermission(permissions)) {
+          break;
+        }
+
         if (verifyPermissions(grantResults)) {
           airMapInterface.onLocationPermissionsGranted();
+        } else if (!shouldShowRequestPermissionRationale(activity, LOCATION_PERMISSIONS)) {
+            airMapInterface.onLocationPermissionsNeverAskAgain();
+        } else {
+            airMapInterface.onLocationPermissionsDenied();
         }
         break;
       default:

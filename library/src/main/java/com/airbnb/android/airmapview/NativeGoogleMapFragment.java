@@ -12,6 +12,7 @@ import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnLocationPermissionListener;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
@@ -42,6 +43,7 @@ import java.util.Map;
 public class NativeGoogleMapFragment extends SupportMapFragment implements AirMapInterface {
   private GoogleMap googleMap;
   private OnMapLoadedListener onMapLoadedListener;
+  private OnLocationPermissionListener onLocationPermissionListener;
   private boolean myLocationEnabled;
   private GeoJsonLayer layerOnMap;
   private final Map<Marker, AirMapMarker<?>> markers = new HashMap<>();
@@ -119,6 +121,10 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
         }
       }
     });
+  }
+
+  @Override public void setOnLocationPermissionListener(final OnLocationPermissionListener listener) {
+    this.onLocationPermissionListener = listener;
   }
 
   @Override public void setInfoWindowCreator(GoogleMap.InfoWindowAdapter adapter,
@@ -267,22 +273,46 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void setMyLocationEnabled(boolean enabled) {
-    if (myLocationEnabled != enabled) {
-      if (RuntimePermissionUtils.checkLocationPermissions(getActivity(), this)) {
-        myLocationEnabled = enabled;
-      }
+    myLocationEnabled = enabled;
+    if (enabled) {
+      RuntimePermissionUtils.checkLocationPermissions(getActivity(), this);
     }
   }
 
   @Override public void onLocationPermissionsGranted() {
+    myLocationEnabled = true;
     //noinspection MissingPermission
-    googleMap.setMyLocationEnabled(myLocationEnabled);
+    googleMap.setMyLocationEnabled(true);
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionGranted();
+    }
+  }
+
+  @Override
+  public void onLocationPermissionsDenied() {
+    myLocationEnabled = false;
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionDenied();
+    }
+  }
+
+  @Override
+  public void onLocationPermissionsNeverAskAgain() {
+    myLocationEnabled = false;
+    if (onLocationPermissionListener != null) {
+      onLocationPermissionListener.onLocationPermissionPermanentlyDenied();
+    }
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    RuntimePermissionUtils.onRequestPermissionsResult(this, requestCode, grantResults);
+    RuntimePermissionUtils.onRequestPermissionsResult(this.getActivity(), this, requestCode, permissions, grantResults);
+  }
+
+  @Override
+  public void onCheckLocationPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    RuntimePermissionUtils.onRequestPermissionsResult(this.getActivity(), this, requestCode, permissions, grantResults);
   }
 
   @Override public boolean isMyLocationEnabled() {

@@ -13,6 +13,7 @@ import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnLocationPermissionListener;
 import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
@@ -41,6 +42,7 @@ public class AirMapView extends FrameLayout
   private OnMapMarkerDragListener onMapMarkerDragListener;
   private OnMapClickListener onMapClickListener;
   private OnInfoWindowClickListener onInfoWindowClickListener;
+  private OnLocationPermissionListener onLocationPermissionListener;
 
   public AirMapView(Context context) {
     super(context);
@@ -348,6 +350,14 @@ public class AirMapView extends FrameLayout
     mapInterface.setMyLocationEnabled(trackUserLocation);
   }
 
+  public void setOnLocationPermissionListener(OnLocationPermissionListener listener) {
+    onLocationPermissionListener = listener;
+  }
+
+  public void onCheckLocationPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    mapInterface.onCheckLocationPermissionResult(requestCode, permissions, grantResults);
+  }
+
   @Override public void onCameraChanged(LatLng latLng, int zoom) {
     if (onCameraChangeListener != null) {
       onCameraChangeListener.onCameraChanged(latLng, zoom);
@@ -409,6 +419,7 @@ public class AirMapView extends FrameLayout
       mapInterface.setOnMarkerClickListener(this);
       mapInterface.setOnMarkerDragListener(this);
       mapInterface.setOnInfoWindowClickListener(this);
+      mapInterface.setOnLocationPermissionListener(onLocationPermissionListener);
 
       if (onMapInitializedListener != null) {
         // only send map Initialized callback if map initialized successfully
