@@ -15,7 +15,7 @@ import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 /**
  * Utility class that handles runtime permissions
  */
-public final class RuntimePermissionUtils {
+final class RuntimePermissionUtils {
 
   private RuntimePermissionUtils() {
   }
@@ -39,25 +39,25 @@ public final class RuntimePermissionUtils {
     return true;
   }
 
-    /**
-     * Check the permissions are the requested permissions
-     *
-     * @param permissions
-     * @return true if the permissions are matched perfectly
-     */
+  /**
+   * Check the permissions are the requested permissions
+   *
+   * @param permissions
+   * @return true if the permissions are matched perfectly
+   */
   static boolean isRequestedPermission(String[] permissions) {
-      if (permissions.length != LOCATION_PERMISSIONS.length) {
-          return false;
-      }
+    if (permissions.length != LOCATION_PERMISSIONS.length) {
+      return false;
+    }
 
-      final Set<String> requestPermissions = new HashSet<>(Arrays.asList(LOCATION_PERMISSIONS));
-      for (String permission : permissions) {
-          if (!requestPermissions.contains(permission)) {
-              return false;
-          }
+    final Set<String> requestPermissions = new HashSet<>(Arrays.asList(LOCATION_PERMISSIONS));
+    for (String permission : permissions) {
+      if (!requestPermissions.contains(permission)) {
+        return false;
       }
+    }
 
-      return true;
+    return true;
   }
 
   /**
@@ -114,8 +114,8 @@ public final class RuntimePermissionUtils {
    * should be added here if needed.
    *
    */
-  public static void onRequestPermissionsResult(Activity activity, AirMapInterface airMapInterface, int requestCode,
-                                                String[] permissions, int[] grantResults) {
+  static void onRequestPermissionsResult(Activity activity, AirMapInterface airMapInterface, int requestCode,
+          String[] permissions, int[] grantResults) {
     switch (requestCode) {
       case LOCATION_PERMISSION_REQUEST_CODE:
         if (!isRequestedPermission(permissions)) {
