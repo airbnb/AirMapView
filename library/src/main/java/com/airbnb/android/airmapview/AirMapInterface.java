@@ -164,6 +164,9 @@ public interface AirMapInterface {
   /** Check if the user location is being tracked and shown on te map. */
   boolean isMyLocationEnabled();
 
+  /** Enable a button for centering on user location button. Works with GooglePlay Services maps. */
+  void setMyLocationButtonEnabled(boolean enabled);
+
   /** Enable a toolbar that displays various context-dependent actions. */
   void setMapToolbarEnabled(boolean enabled);
 

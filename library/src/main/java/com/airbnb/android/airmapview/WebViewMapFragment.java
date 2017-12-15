@@ -241,6 +241,10 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     return trackUserLocation;
   }
 
+  @Override public void setMyLocationButtonEnabled(boolean enabled) {
+    // no-op
+  }
+
   @Override public void setMapToolbarEnabled(boolean enabled) {
     // no-op
   }
