@@ -1,3 +1,7 @@
+# 1.6.0 Jan 16, 2018
+
+* Fix enabling location and show location button (PR #117)
+
 # 1.3.4 April 6, 2016
 
 * Adds an interface to get a bitmap snapshot of an AirMapView (PR #86)
