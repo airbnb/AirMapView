@@ -17,7 +17,7 @@ android {
 }
 
 dependencies {
-  compile 'com.google.android.gms:play-services-maps:10.2.4'
+  compile 'com.google.android.gms:play-services-maps:15.0.0'
   compile 'com.google.maps.android:android-maps-utils:0.4'
 
   testCompile 'junit:junit:4.12'
