@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="file:///android_asset/leaflet_1.3.1/leaflet.css" />
+    <script src="file:///android_asset/leaflet_1.3.1/leaflet.js" type="text/javascript"></script>
+    <script src="file:///android_asset/proj4leaflet.min.js" type="text/javascript"></script>
+    <style type="text/css">
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+    }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+var x_PI = Math.PI * 3000.0 / 180.0;
+function GCJ02toBD09(latlng) {
+  var lat, lng;
+  if (Array.isArray(latlng)) {
+    lat = latlng[0], lng = latlng[1];
+  } else {
+    lat = latlng.lat, lng = latlng.lng;
+  }
+  var z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * x_PI);
+  var theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * x_PI);
+  var bd_lng = z * Math.cos(theta) + 0.0065;
+  var bd_lat = z * Math.sin(theta) + 0.006;
+  if (Array.isArray(latlng)) {
+    return [bd_lat, bd_lng];
+  } else {
+    return {'lat': bd_lat, 'lng': bd_lng};
+  }
+}
+
+function BD09toGCJ02(latlng) {
+  var lat, lng;
+  if (Array.isArray(latlng)) {
+    lat = latlng[0], lng = latlng[1];
+  } else {
+    lat = latlng.lat, lng = latlng.lng;
+  }
+  var x = lng - 0.0065;
+  var y = lat - 0.006;
+  var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_PI);
+  var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_PI);
+  var gg_lng = z * Math.cos(theta);
+  var gg_lat = z * Math.sin(theta);
+  if (Array.isArray(latlng)) {
+    return [gg_lat, gg_lng];
+  } else {
+    return {'lat': gg_lat, 'lng': gg_lng};
+  }
+}
+
+function convertLatlng(latlng) {
+  if (isBaiduMap()) return GCJ02toBD09(latlng);
+  return latlng;
+}
+
+function reverseConvertLatlng(latlng) {
+  if (isBaiduMap()) return BD09toGCJ02(latlng);
+  return latlng;
+}
+
+function convertLatlngs(latlngs) {
+  len = latlngs.length;
+  var convertedLatlngs = new Array(len);
+  for (var i = 0; i < len; i++) {
+    convertedLatlngs[i] = convertLatlng(latlngs[i]);
+  }
+  return convertedLatlngs;
+}
+
+function isBaiduMap() {
+  return 'MAPURL'=='Baidu';
+}
+
+L.tileLayer.providers = {
+  Baidu: {
+    Normal: {
+      map: 'http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles=pl&scaler={scaler}&p=1',
+      subdomains: '0123456789',
+      tms: true
+    },
+    Satellite: {
+      map: 'http://shangetu{s}.map.bdimg.com/it/u=x={x};y={y};z={z};v=009;type=sate&fm=46',
+      subdomains: '0123456789',
+      tms: true
+    },
+    Information: {
+      attribution: 'Map data &copy; Baidu'
+    }
+  },
+  Gaode: {
+    Normal: {
+      map: 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&scl=1&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+      subdomains: ["1", "2", "3", "4"],
+      tms: false
+    },
+    Satellite: {
+      map: 'http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+      subdomains: ["1", "2", "3", "4"],
+      tms: false
+    },
+    Information: {
+      attribution: 'Map data &copy; Gaode'
+    }
+  },
+  Google: {
+    Normal: {
+      map: 'http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      subdomains: [],
+      tms: false
+    },
+    Satellite: {
+      map: 'http://maps.googleapis.com/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
+      subdomains: [],
+      tms: false
+    },
+    Terrain: {
+      map: 'http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      subdomains: [],
+      tms: false
+    },
+    Information: {
+      attribution: 'Map data &copy; Google'
+    }
+  },
+  GoogleChina: {
+    Normal: {
+      map: 'http://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      subdomains: [],
+      tms: false
+    },
+    Satellite: {
+      map: 'http://ditu.google.cn/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
+      subdomains: [],
+      tms: false
+    },
+    Terrain: {
+      map: 'http://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      subdomains: [],
+      tms: false
+    },
+    Information: {
+      attribution: 'Map data &copy; Google'
+    }
+  }
+};
+
+L.CRS.Baidu = new L.Proj.CRS('EPSG:900913', '+proj=merc +a=6378206 +b=6356584.314245179 +lat_ts=0.0 +lon_0=0.0 +x_0=0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs', {
+  resolutions: function () {
+    var level = 19
+    var res = [];
+    res[0] = Math.pow(2, 18);
+    for (var i = 1; i < level; i++) {
+      res[i] = Math.pow(2, (18 - i))
+    }
+    return res;
+  }(),
+  origin: [0, 0],
+  bounds: L.bounds([20037508.342789244, 0], [0, 20037508.342789244])
+});
+
+L.tileLayer.provide = function(mapType) {
+  var type = 'MAPURL';
+
+  var layerProvider = L.tileLayer.providers[type][mapType];
+  if (layerProvider == null) {
+    return null;
+  }
+
+  var layer = L.tileLayer(layerProvider.map, {
+    attribution: L.tileLayer.providers[type].Information.attribution,
+    subdomains: layerProvider.subdomains,
+    tms: layerProvider.tms,
+    maxZoom: 18,
+    minZoom: 2,
+    scaler: window.devicePixelRatio,
+  });
+
+  return layer;
+};
+
+var markers = {};
+var polylines = {};
+var polygons = {};
+var moveTimeout;
+var mapOption = {
+  center: [23.16, 113.23],
+  zoom: 12,
+  zoomControl: false
+};
+if (isBaiduMap()) {
+  mapOption['crs']=L.CRS.Baidu;
+};
+var map = L.map('map', mapOption);
+var tileLayer = L.tileLayer.provide('Normal');
+tileLayer.addTo(map);
+AirMapView.onMapLoaded();
+
+map.on('click', function(event) {
+  mapClick(event);
+});
+
+map.on('moveend', function(event) {
+  mapMove();
+});
+
+function clearMarkers() {
+  for (lc = 0; lc < markers.length; lc++) {
+    map.removeLayer(markers[lc]);
+  }
+  markers = {};
+}
+
+function setBounds(neLat, neLng, swLat, swLng) {
+  var neLatlng = convertLatlng([ neLat, neLng ]);
+  var swLatlng = convertLatlng([ swLat, swLng ]);
+  var southWest = L.latLng(neLatlng[0], neLatlng[1]);
+  var northEast = L.latLng(swLatlng[0], swLatlng[1]);
+  var bounds = L.latLngBounds(southWest, northEast);
+  map.fitBounds(bounds);
+}
+
+function centerMap(lat, lng) {
+  map.panTo(convertLatlng([lat, lng]));
+}
+
+function setZoom(zoom) {
+  map.setZoom(zoom);
+}
+
+function icon(highlight) {
+  var size = window.devicePixelRatio;
+  if (highlight) size = size * 2 / 3;
+  return L.icon({
+    iconUrl: 'file:///android_asset/images/marker-icon.png',
+    iconSize: [50 / size, 82 / size],
+    iconAnchor: [25 / size, 82 / size],
+    popupAnchor: [0, -82 / size],
+    shadowUrl: 'file:///android_asset/images/marker-shadow.png',
+    shadowSize: [40 / size, 40 / size],
+    shadowAnchor: [25 / size, 82 / size]
+  });
+}
+
+function iconWithImage(imgHtml, width, height) {
+  return L.divIcon({
+    className: 'leaflet-div-ico',
+    html: imgHtml,
+    popupAnchor: [0, -height],
+    iconAnchor: [width / 2, height]
+  });
+}
+
+function highlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(icon(true));
+  }
+}
+
+function unhighlightMarker(markerId) {
+  var marker = markers[markerId];
+  if (marker != null) {
+    marker.setIcon(icon(false));
+  }
+}
+
+function setMapTypeId(mapType) {
+  var newTileLayer = L.tileLayer.provide(mapType);
+  if (newTileLayer != null) {
+    map.removeLayer(tileLayer);
+    tileLayer = newTileLayer;
+    tileLayer.addTo(map);
+  }
+}
+
+function addMarker(lat, lng) {
+  var marker = L.marker(convertLatlng([lat, lng]), {
+    icon: icon(false)
+  });
+  marker.addTo(map);
+  markers.push(marker);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet) {
+  addMarkerWithId(lat, lng, id, title, snippet, false);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet, draggable) {
+  addMarkerWithId(lat, lng, id, title, snippet, draggable, null, 0, 0);
+}
+
+function addMarkerWithId(lat, lng, id, title, snippet, draggable, imgHtml, imgWidth, imgHeight) {
+  var markerIcon;
+  if (imgHtml != null) {
+    markerIcon = iconWithImage(imgHtml, imgWidth, imgHeight);
+  } else {
+    markerIcon = icon(false);
+  }
+  var marker = L.marker(convertLatlng([lat, lng]), {
+    icon: markerIcon,
+    draggable: draggable
+  });
+  marker.addTo(map);
+
+  if(title != "null" || snippet != "null") {
+    var content = document.createElement("div");
+    if(title != "null")  {
+      content.innerHTML += '<div id="title"><b>' + title + '</b></div>';
+    }
+
+    if(snippet != "null") {
+      content.innerHTML += '<div id="snippet">' + snippet + '</div>';
+    }
+
+    marker.bindPopup(content);
+  }
+
+  markers[id] = marker;
+
+  marker.on("click", function(ev) {
+    AirMapView.markerClick(id);
+  });
+  marker.on("dragstart", function(ev) {
+    var latlng = reverseConvertLatlng([ev.target.getLatLng().lat, ev.target.getLatLng().lng]);
+    AirMapView.markerDragStart(id, latlng[0], latlng[1]);
+  });
+  marker.on("drag", function(ev) {
+    var latlng = reverseConvertLatlng([ev.target.getLatLng().lat, ev.target.getLatLng().lng]);
+    AirMapView.markerDrag(id, latlng[0], latlng[1]);
+  });
+  marker.on("dragend", function(ev) {
+    var latlng = reverseConvertLatlng([ev.target.getLatLng().lat, ev.target.getLatLng().lng]);
+    AirMapView.markerDragEnd(id, latlng[0], latlng[1]);
+  });
+}
+
+function moveMarker(lat, long, id) {
+  var marker = markers[id];
+  if (marker != null) {
+    var latlng = convertLatlng([lat, long]);
+    marker.setLatLng(L.latLng(latlng[0], latlng[1]));
+  }
+}
+
+function showDefaultInfoWindow(id){
+// Not needed
+}
+
+function removeMarker(id) {
+  var marker = markers[id];
+  if (marker != null) {
+    map.removeLayer(marker);
+  }
+}
+
+function addPolyline(points, id, width, color) {
+  color = formatColor(color);
+  var polyLine = L.polyline(convertLatlngs(points), {color: color, weight: width / 2}).addTo(map);
+
+  polylines[id] = polyLine;
+}
+
+function removePolyline(id) {
+  var polyline = polylines[id];
+  if (polyline != null) {
+    map.removeLayer(polyline);
+  }
+}
+
+function removeAllPolylines() {
+  for (var key in polylines) {
+    removePolyline(key);
+  }
+  polylines = {};
+}
+
+function addPolygon(points, id, width, strokeColor, fillColor) {
+  strokeColor = formatColor(strokeColor);
+  fillColor = formatColor(fillColor);
+  var polygon = L.polygon(convertLatlngs(points), {color: strokeColor, fillColor: fillColor, weight: width / 2}).addTo(map);
+
+  polygons[id] = polygon;
+}
+
+function removePolygon(id) {
+  var polygon = polygon[id];
+  if (polygon != null) {
+    map.removeLayer(polygon);
+  }
+}
+
+function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
+  strokeColor = formatColor(strokeColor);
+  fillColor = formatColor(fillColor);
+  L.circle(convertLatlng([lat, lng]), radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
+}
+
+function mapClick(event) {
+  var latlng = reverseConvertLatlng([ event.latlng.lat, event.latlng.lng ]);
+  AirMapView.mapClick(latlng[0], latlng[1]);
+}
+
+function mapMove() {
+  if (moveTimeout != null) {
+    clearTimeout(moveTimeout);
+  }
+  // javascript bridge not fast enough to handle events immediately.
+  moveTimeout = setTimeout(function() {
+    var latLng = map.getCenter();
+    if (latLng != null) {
+      var convertedLatlng = reverseConvertLatlng([ latLng.lat, latLng.lng ]);
+      AirMapView.mapMove(convertedLatlng[0], convertedLatlng[1], map.getZoom());
+    }
+  }, 200);
+}
+
+function getCenter() {
+  var latLng = map.getCenter();
+  if (latLng != null) {
+    var convertedLatlng = reverseConvertLatlng([ latLng.lat(), latLng.lng() ]);
+    AirMapView.mapCenterCallback(convertedLatlng[0], convertedLatlng[1]);
+  }
+}
+
+function getBounds() {
+  bounds = map.getBounds();
+  ne = bounds.getNorthEast();
+  sw = bounds.getSouthWest();
+  var convertedNe = reverseConvertLatlng([ ne.lat(), ne.lng() ]);
+  var convertedSw = reverseConvertLatlng([ sw.lat(), sw.lng() ]);
+  AirMapView.getBoundsCallback(convertedNe[0], convertedNe[1], convertedSw[0], convertedSw[1]);
+}
+
+function getScreenLocation(lat, lng) {
+  var latlng = convertLatlng([lat, lng]);
+  latLng = L.latLng(latlng[0], latlng[1]);
+  screenLocation = latLngToLayerPoint(latLng);
+  AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y);
+}
+
+// converts an android int color to a web color :)
+function formatColor(color) {
+  return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
+}
+
+</script>
+
+
+
+</body>
+</html>

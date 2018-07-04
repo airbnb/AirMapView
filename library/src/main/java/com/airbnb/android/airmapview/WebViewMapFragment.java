@@ -58,7 +58,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean loaded;
   private boolean ignoreNextMapMove;
   private View infoWindowView;
-  private final LongSparseArray<AirMapMarker<?>> markers = new LongSparseArray<>();
+  protected final LongSparseArray<AirMapMarker<?>> markers = new LongSparseArray<>();
 
   private boolean trackUserLocation = false;
 

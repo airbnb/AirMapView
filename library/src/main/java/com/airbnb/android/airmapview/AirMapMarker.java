@@ -18,11 +18,22 @@ public class AirMapMarker<T> {
   private final long id;
   private final MarkerOptions markerOptions;
   private Marker marker;
+  // uses a simple <div> element instead of an image, only available in leaflet map
+  private final LeafletDivIcon divIcon;
 
   private AirMapMarker(T object, long id, MarkerOptions markerOptions) {
+    this(object, id, markerOptions, null);
+  }
+
+  private AirMapMarker(T object, long id, LeafletDivIcon divIcon) {
+    this(object, id, null, divIcon);
+  }
+
+  private AirMapMarker(T object, long id, MarkerOptions markerOptions, LeafletDivIcon divIcon) {
     this.object = object;
     this.id = id;
     this.markerOptions = markerOptions;
+    this.divIcon = divIcon;
   }
 
   public T object() {
@@ -49,6 +60,10 @@ public class AirMapMarker<T> {
     return markerOptions.getSnippet();
   }
 
+  public LeafletDivIcon getDivIcon() {
+    return divIcon;
+  }
+
   public MarkerOptions getMarkerOptions() {
     return markerOptions;
   }
@@ -62,6 +77,9 @@ public class AirMapMarker<T> {
     return new Builder<T>()
         .id(id)
         .object(object)
+        .divIconHtml(divIcon.getHtml())
+        .divIconWidth(divIcon.getWidth())
+        .divIconHeight(divIcon.getHeight())
         .position(markerOptions.getPosition())
         .alpha(markerOptions.getAlpha())
         .anchor(markerOptions.getAnchorU(), markerOptions.getAnchorV())
@@ -84,6 +102,7 @@ public class AirMapMarker<T> {
     private T object;
     private long id;
     private final MarkerOptions markerOptions = new MarkerOptions();
+    private LeafletDivIcon divIcon = new LeafletDivIcon();
 
     public Builder() {
     }
@@ -115,6 +134,21 @@ public class AirMapMarker<T> {
 
     public Builder<T> title(String title) {
       markerOptions.title(title);
+      return this;
+    }
+
+    public Builder<T> divIconHtml(String divIconHtml) {
+      divIcon.setHtml(divIconHtml);
+      return this;
+    }
+
+    public Builder<T> divIconWidth(int width) {
+      divIcon.setWidth(width);
+      return this;
+    }
+
+    public Builder<T> divIconHeight(int height) {
+      divIcon.setHeight(height);
       return this;
     }
 
@@ -172,7 +206,7 @@ public class AirMapMarker<T> {
     }
 
     public AirMapMarker<T> build() {
-      return new AirMapMarker<>(object, id, markerOptions);
+      return new AirMapMarker<>(object, id, markerOptions, divIcon);
     }
   }
 }
