@@ -205,6 +205,7 @@ var paddingLeft = 0;
 var paddingRight = 0;
 var paddingTop = 0;
 var paddingBottom = 0;
+var singleClick = false;
 if (isBaiduMap()) {
   mapOption['crs']=L.CRS.Baidu;
 };
@@ -214,7 +215,17 @@ tileLayer.addTo(map);
 AirMapView.onMapLoaded();
 
 map.on('click', function(event) {
-  mapClick(event);
+  singleClick = true;
+  setTimeout(function() {
+    if (singleClick) {
+      mapClick(event);
+      singleClick = false;
+    }
+  }, 200);
+});
+
+map.on('dblclick', function(event) {
+  singleClick = false;
 });
 
 map.on('moveend', function(event) {
