@@ -397,9 +397,9 @@ function removeMarker(id) {
   }
 }
 
-function addPolyline(points, id, width, color) {
+function addPolyline(points, id, strokeWeight, color) {
   color = formatColor(color);
-  var polyLine = L.polyline(convertLatlngs(points), {color: color, weight: width / 2}).addTo(map);
+  var polyLine = L.polyline(convertLatlngs(points), {color: color, weight: strokeWeight / window.devicePixelRatio}).addTo(map);
 
   polylines[id] = polyLine;
 }
@@ -418,10 +418,10 @@ function removeAllPolylines() {
   polylines = {};
 }
 
-function addPolygon(points, id, width, strokeColor, fillColor) {
+function addPolygon(points, id, strokeWeight, strokeColor, fillColor) {
   strokeColor = formatColor(strokeColor);
   fillColor = formatColor(fillColor);
-  var polygon = L.polygon(convertLatlngs(points), {color: strokeColor, fillColor: fillColor, weight: width / 2}).addTo(map);
+  var polygon = L.polygon(convertLatlngs(points), {color: strokeColor, fillColor: fillColor, weight: strokeWeight / window.devicePixelRatio}).addTo(map);
 
   polygons[id] = polygon;
 }
@@ -436,7 +436,7 @@ function removePolygon(id) {
 function addCircle(lat, lng, radius, strokeColor, strokeWeight, fillColor) {
   strokeColor = formatColor(strokeColor);
   fillColor = formatColor(fillColor);
-  L.circle(convertLatlng([lat, lng]), radius, {color: strokeColor, weight: strokeWeight, fillColor: fillColor}).addTo(map);
+  L.circle(convertLatlng([lat, lng]), radius, {color: strokeColor, weight: strokeWeight / window.devicePixelRatio, fillColor: fillColor}).addTo(map);
 }
 
 function mapClick(event) {
