@@ -431,7 +431,7 @@ function mapMove() {
 function getCenter() {
   var latLng = map.getCenter();
   if (latLng != null) {
-    var convertedLatlng = reverseConvertLatlng([ latLng.lat(), latLng.lng() ]);
+    var convertedLatlng = reverseConvertLatlng([ latLng.lat, latLng.lng ]);
     AirMapView.mapCenterCallback(convertedLatlng[0], convertedLatlng[1]);
   }
 }
@@ -440,15 +440,15 @@ function getBounds() {
   bounds = map.getBounds();
   ne = bounds.getNorthEast();
   sw = bounds.getSouthWest();
-  var convertedNe = reverseConvertLatlng([ ne.lat(), ne.lng() ]);
-  var convertedSw = reverseConvertLatlng([ sw.lat(), sw.lng() ]);
+  var convertedNe = reverseConvertLatlng([ ne.lat, ne.lng ]);
+  var convertedSw = reverseConvertLatlng([ sw.lat, sw.lng ]);
   AirMapView.getBoundsCallback(convertedNe[0], convertedNe[1], convertedSw[0], convertedSw[1]);
 }
 
 function getScreenLocation(lat, lng) {
   var latlng = convertLatlng([lat, lng]);
-  latLng = L.latLng(latlng[0], latlng[1]);
-  screenLocation = latLngToLayerPoint(latLng);
+  var latlngObject = L.latLng(latlng[0], latlng[1]);
+  var screenLocation = map.latLngToContainerPoint(latlngObject);
   AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y);
 }
 
