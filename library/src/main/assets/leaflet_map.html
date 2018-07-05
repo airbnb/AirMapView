@@ -201,6 +201,10 @@ var mapOption = {
   zoom: 12,
   zoomControl: false
 };
+var paddingLeft = 0;
+var paddingRight = 0;
+var paddingTop = 0;
+var paddingBottom = 0;
 if (isBaiduMap()) {
   mapOption['crs']=L.CRS.Baidu;
 };
@@ -233,8 +237,23 @@ function setBounds(neLat, neLng, swLat, swLng) {
   map.fitBounds(bounds);
 }
 
+function paddingLatLngFromLatLng(latLng) {
+  var centerPoint = map.latLngToContainerPoint(latLng);
+  centerPoint.x = centerPoint.x - (paddingLeft - paddingRight) / 2;
+  centerPoint.y = centerPoint.y - (paddingTop - paddingBottom) / 2;
+  return map.containerPointToLatLng(centerPoint);
+}
+
+function LatLngFromPaddingLatLng(paddingLatLng) {
+  var centerPoint = map.latLngToContainerPoint(paddingLatLng);
+  centerPoint.x = centerPoint.x + (paddingLeft - paddingRight) / 2;
+  centerPoint.y = centerPoint.y + (paddingTop - paddingBottom) / 2;
+  return map.containerPointToLatLng(centerPoint);
+}
+
 function centerMap(lat, lng) {
-  map.panTo(convertLatlng([lat, lng]));
+  var latlng = convertLatlng([lat, lng]);
+  map.panTo(paddingLatLngFromLatLng(L.latLng(latlng[0], latlng[1])));
 }
 
 function setZoom(zoom) {
@@ -429,7 +448,7 @@ function mapMove() {
 }
 
 function getCenter() {
-  var latLng = map.getCenter();
+  var latLng = LatLngFromPaddingLatLng(map.getCenter());
   if (latLng != null) {
     var convertedLatlng = reverseConvertLatlng([ latLng.lat, latLng.lng ]);
     AirMapView.mapCenterCallback(convertedLatlng[0], convertedLatlng[1]);
@@ -452,14 +471,21 @@ function getScreenLocation(lat, lng) {
   AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y);
 }
 
+function setPadding(left, top, right, bottom) {
+  var centerLatlng = LatLngFromPaddingLatLng(map.getCenter());
+  paddingLeft = left / window.devicePixelRatio;
+  paddingTop = top / window.devicePixelRatio;
+  paddingRight = right / window.devicePixelRatio;
+  paddingBottom = bottom / window.devicePixelRatio;
+  map.panTo(paddingLatLngFromLatLng(centerLatlng));
+}
+
 // converts an android int color to a web color :)
 function formatColor(color) {
   return '#' + ('000000' + (0xFFFFFF & color).toString(16)).slice(-6);
 }
 
 </script>
-
-
 
 </body>
 </html>

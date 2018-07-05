@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onMapInitialized() {
     appendLog("Map onMapInitialized triggered");
+    map.setPadding(0, 0, 500, 500);
     if (map.getMapInterface() instanceof LeafletWebViewMapFragment) {
       // Baidu map is unavailable in America, so we show points in China.
       final LatLng airbnbLatLng = new LatLng(39.918786, 116.459273);

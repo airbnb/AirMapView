@@ -215,7 +215,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void setPadding(int left, int top, int right, int bottom) {
-    // no-op
+    // is available in leafletWebViewMap
+    webView.loadUrl(String.format(Locale.US, "javascript:setPadding(%1$d, %2$d, %3$d, %4$d);",
+        left, top, right, bottom));
   }
 
   @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
