@@ -75,12 +75,9 @@ public class AirMapMarker<T> {
   }
 
   public Builder<T> toBuilder() {
-    return new Builder<T>()
+    Builder<T> builder = new Builder<T>()
         .id(id)
         .object(object)
-        .divIconHtml(divIcon.getHtml())
-        .divIconWidth(divIcon.getWidth())
-        .divIconHeight(divIcon.getHeight())
         .position(markerOptions.getPosition())
         .alpha(markerOptions.getAlpha())
         .anchor(markerOptions.getAnchorU(), markerOptions.getAnchorV())
@@ -93,6 +90,12 @@ public class AirMapMarker<T> {
         .alpha(markerOptions.getAlpha())
         .rotation(markerOptions.getRotation())
         .flat(markerOptions.isFlat());
+    if (divIcon != null) {
+      builder.divIconHtml(divIcon.getHtml())
+          .divIconWidth(divIcon.getWidth())
+          .divIconHeight(divIcon.getHeight());
+    }
+    return builder;
   }
   
   public Marker getMarker() {
