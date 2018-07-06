@@ -218,6 +218,8 @@ var paddingLeft = 0;
 var paddingRight = 0;
 var paddingTop = 0;
 var paddingBottom = 0;
+<!--It's a logic to keep new marker on top, see https://leafletjs.com/reference-1.3.0.html#marker-zindexoffset-->
+var newMarkerZIndexOffset = 1000;
 var singleClick = false;
 var tileLayer = L.tileLayer.provide('Normal');
 if (CRS != null) {
@@ -332,8 +334,10 @@ function setMapTypeId(mapType) {
 
 function addMarker(lat, lng) {
   var marker = L.marker(convertLatLng([lat, lng]), {
-    icon: icon(false)
+    icon: icon(false),
+    zIndexOffset: newMarkerZIndexOffset
   });
+  newMarkerZIndexOffset += 1000;
   marker.addTo(map);
   markers.push(marker);
 }
@@ -355,8 +359,10 @@ function addMarkerWithId(lat, lng, id, title, snippet, draggable, imgHtml, imgWi
   }
   var marker = L.marker(convertLatLng([lat, lng]), {
     icon: markerIcon,
-    draggable: draggable
+    draggable: draggable,
+    zIndexOffset: newMarkerZIndexOffset
   });
+  newMarkerZIndexOffset += 1000;
   marker.addTo(map);
 
   if(title != "null" || snippet != "null") {
