@@ -1,6 +1,7 @@
 package com.airbnb.android.airmapview;
 
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -19,17 +20,17 @@ public class AirMapMarker<T> {
   private final MarkerOptions markerOptions;
   private Marker marker;
   // uses a simple <div> element instead of an image, only available in leaflet map
-  private final LeafletDivIcon divIcon;
+  private final @Nullable LeafletDivIcon divIcon;
 
   private AirMapMarker(T object, long id, MarkerOptions markerOptions) {
     this(object, id, markerOptions, null);
   }
 
-  private AirMapMarker(T object, long id, LeafletDivIcon divIcon) {
-    this(object, id, null, divIcon);
+  private AirMapMarker(T object, long id, @Nullable LeafletDivIcon divIcon) {
+    this(object, id, new MarkerOptions(), divIcon);
   }
 
-  private AirMapMarker(T object, long id, MarkerOptions markerOptions, LeafletDivIcon divIcon) {
+  private AirMapMarker(T object, long id, MarkerOptions markerOptions, @Nullable LeafletDivIcon divIcon) {
     this.object = object;
     this.id = id;
     this.markerOptions = markerOptions;
@@ -60,7 +61,7 @@ public class AirMapMarker<T> {
     return markerOptions.getSnippet();
   }
 
-  public LeafletDivIcon getDivIcon() {
+  public @Nullable LeafletDivIcon getDivIcon() {
     return divIcon;
   }
 
@@ -102,7 +103,9 @@ public class AirMapMarker<T> {
     private T object;
     private long id;
     private final MarkerOptions markerOptions = new MarkerOptions();
-    private LeafletDivIcon divIcon = new LeafletDivIcon();
+    private String divIconHtml;
+    private int divIconHeight;
+    private int divIconWidth;
 
     public Builder() {
     }
@@ -138,17 +141,17 @@ public class AirMapMarker<T> {
     }
 
     public Builder<T> divIconHtml(String divIconHtml) {
-      divIcon.setHtml(divIconHtml);
+      this.divIconHtml = divIconHtml;
       return this;
     }
 
     public Builder<T> divIconWidth(int width) {
-      divIcon.setWidth(width);
+      this.divIconWidth = width;
       return this;
     }
 
     public Builder<T> divIconHeight(int height) {
-      divIcon.setHeight(height);
+      this.divIconHeight = height;
       return this;
     }
 
@@ -206,7 +209,8 @@ public class AirMapMarker<T> {
     }
 
     public AirMapMarker<T> build() {
-      return new AirMapMarker<>(object, id, markerOptions, divIcon);
+      return new AirMapMarker<>(object, id, markerOptions,
+          divIconHtml == null ? null : new LeafletDivIcon(divIconHtml, divIconWidth, divIconHeight));
     }
   }
 }

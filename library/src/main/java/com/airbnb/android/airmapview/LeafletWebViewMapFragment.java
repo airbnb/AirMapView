@@ -11,15 +11,17 @@ public class LeafletWebViewMapFragment extends WebViewMapFragment {
 
   @Override
   public void setMapType(MapType type) {
-    String webType;
-    if (type == MapType.MAP_TYPE_NORMAL) {
-      webType = "Normal";
-    } else if (type == MapType.MAP_TYPE_SATELLITE) {
-      webType = "Satellite";
-    } else if (type == MapType.MAP_TYPE_TERRAIN) {
-      webType = "Terrain";
-    } else {
-      webType = "Normal";
+    String webType = null;
+    switch (type) {
+      case MAP_TYPE_NORMAL:
+        webType = "Normal";
+        break;
+      case MAP_TYPE_SATELLITE:
+        webType = "Satellite";
+        break;
+      case MAP_TYPE_TERRAIN:
+        webType = "Terrain";
+        break;
     }
     webView.loadUrl(String.format(Locale.US, "javascript:setMapTypeId('%1$s');", webType));
   }
