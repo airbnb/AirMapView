@@ -408,7 +408,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface public void markerClick(long markerId) {
+    @JavascriptInterface public void markerClick(final long markerId) {
       final AirMapMarker<?> airMapMarker = markers.get(markerId);
       handler.post(new Runnable() {
         @Override public void run() {
@@ -437,7 +437,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
           } else {
             webView.loadUrl(
                 String.format(Locale.US, "javascript:showDefaultInfoWindow(%1$d);",
-                    airMapMarker.getId()));
+                    markerId));
           }
 
           ignoreNextMapMove = true;
