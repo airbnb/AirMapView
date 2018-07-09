@@ -248,8 +248,8 @@ map.on('moveend', function(event) {
 });
 
 function clearMarkers() {
-  for (lc = 0; lc < markers.length; lc++) {
-    map.removeLayer(markers[lc]);
+  for (var key in markers) {
+    map.removeLayer(markers[key]);
   }
   markers = {};
 }
@@ -413,6 +413,7 @@ function removeMarker(id) {
   var marker = markers[id];
   if (marker != null) {
     map.removeLayer(marker);
+    markers.delete(id);
   }
 }
 
@@ -427,6 +428,7 @@ function removePolyline(id) {
   var polyline = polylines[id];
   if (polyline != null) {
     map.removeLayer(polyline);
+    polylines.delete(id);
   }
 }
 
@@ -446,9 +448,10 @@ function addPolygon(points, id, strokeWeight, strokeColor, fillColor) {
 }
 
 function removePolygon(id) {
-  var polygon = polygon[id];
+  var polygon = polygons[id];
   if (polygon != null) {
     map.removeLayer(polygon);
+    polygons.delete(id);
   }
 }
 
