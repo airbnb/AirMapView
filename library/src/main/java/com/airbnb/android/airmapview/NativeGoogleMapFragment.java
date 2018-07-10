@@ -319,15 +319,17 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
   }
 
   @Override public void setMapType(MapType type) {
-    int nativeType;
-    if (type == MapType.MAP_TYPE_NORMAL) {
-      nativeType = GoogleMap.MAP_TYPE_NORMAL;
-    } else if (type == MapType.MAP_TYPE_SATELLITE) {
-      nativeType = GoogleMap.MAP_TYPE_SATELLITE;
-    } else if (type == MapType.MAP_TYPE_TERRAIN) {
-      nativeType = GoogleMap.MAP_TYPE_TERRAIN;
-    } else {
-      nativeType = GoogleMap.MAP_TYPE_NORMAL;
+    int nativeType = 0;
+    switch (type) {
+      case MAP_TYPE_NORMAL:
+        nativeType = GoogleMap.MAP_TYPE_NORMAL;
+        break;
+      case MAP_TYPE_SATELLITE:
+        nativeType = GoogleMap.MAP_TYPE_SATELLITE;
+        break;
+      case MAP_TYPE_TERRAIN:
+        nativeType = GoogleMap.MAP_TYPE_TERRAIN;
+        break;
     }
     googleMap.setMapType(nativeType);
   }

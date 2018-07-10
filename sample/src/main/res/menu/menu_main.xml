@@ -18,6 +18,26 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_leaflet_google_web_map"
+        android:title="Use Leaflet Google Web Map"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_leaflet_google_china_web_map"
+        android:title="Use Leaflet Google China Web Map"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_baidu_web_map"
+        android:title="Use Baidu Web Map"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_gaode_web_map"
+        android:title="Use Gaode Web Map"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_mapbox_map"
           android:title="Use MapBox Map"
           android:orderInCategory="100"

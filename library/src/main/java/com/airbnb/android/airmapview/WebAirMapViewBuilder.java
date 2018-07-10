@@ -27,6 +27,9 @@ public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragmen
     if (options instanceof GoogleChinaMapType) {
       return GoogleChinaWebViewMapFragment.newInstance(options);
     }
+    if (options instanceof LeafletMapType) {
+      return LeafletWebViewMapFragment.newInstance(options);
+    }
     return null;
   }
 }

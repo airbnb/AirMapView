@@ -58,7 +58,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private boolean loaded;
   private boolean ignoreNextMapMove;
   private View infoWindowView;
-  private final LongSparseArray<AirMapMarker<?>> markers = new LongSparseArray<>();
+  protected final LongSparseArray<AirMapMarker<?>> markers = new LongSparseArray<>();
 
   private boolean trackUserLocation = false;
 
@@ -215,7 +215,9 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   }
 
   @Override public void setPadding(int left, int top, int right, int bottom) {
-    // no-op
+    // is available in leafletWebViewMap
+    webView.loadUrl(String.format(Locale.US, "javascript:setPadding(%1$d, %2$d, %3$d, %4$d);",
+        left, top, right, bottom));
   }
 
   @Override public void setMyLocationEnabled(boolean trackUserLocationEnabled) {
@@ -406,7 +408,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       });
     }
 
-    @JavascriptInterface public void markerClick(long markerId) {
+    @JavascriptInterface public void markerClick(final long markerId) {
       final AirMapMarker<?> airMapMarker = markers.get(markerId);
       handler.post(new Runnable() {
         @Override public void run() {
@@ -435,7 +437,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
           } else {
             webView.loadUrl(
                 String.format(Locale.US, "javascript:showDefaultInfoWindow(%1$d);",
-                    airMapMarker.getId()));
+                    markerId));
           }
 
           ignoreNextMapMove = true;
