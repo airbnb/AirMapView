@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity
     setContentView(R.layout.activity_main);
 
     mapViewBuilder = new DefaultAirMapViewBuilder(this);
-    map = (AirMapView) findViewById(R.id.map);
-    logsRecyclerView = (RecyclerView) findViewById(R.id.logs);
+    map = findViewById(R.id.map);
+    logsRecyclerView = findViewById(R.id.logs);
     ((LinearLayoutManager) logsRecyclerView.getLayoutManager()).setReverseLayout(true);
     logsRecyclerView.setAdapter(adapter);
-    Button btnMapTypeNormal = (Button) findViewById(R.id.btnMapTypeNormal);
-    Button btnMapTypeSattelite = (Button) findViewById(R.id.btnMapTypeSattelite);
-    Button btnMapTypeTerrain = (Button) findViewById(R.id.btnMapTypeTerrain);
+    Button btnMapTypeNormal = findViewById(R.id.btnMapTypeNormal);
+    Button btnMapTypeSattelite = findViewById(R.id.btnMapTypeSattelite);
+    Button btnMapTypeTerrain = findViewById(R.id.btnMapTypeTerrain);
 
     btnMapTypeNormal.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(@NonNull View v) {
@@ -299,11 +299,11 @@ public class MainActivity extends AppCompatActivity
     logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
-  @Override public void onMapMarkerClick(AirMapMarker airMarker) {
+  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
     appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
   }
 
-  @Override public void onInfoWindowClick(AirMapMarker airMarker) {
+  @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {
     appendLog("Map onInfoWindowClick triggered with id " + airMarker.getId());
   }
 

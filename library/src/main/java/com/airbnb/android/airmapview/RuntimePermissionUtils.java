@@ -18,8 +18,8 @@ final class RuntimePermissionUtils {
 
   private static final byte LOCATION_PERMISSION_REQUEST_CODE = 1;
   private static final String[] LOCATION_PERMISSIONS =
-          new String[]{"android.permission.ACCESS_FINE_LOCATION",
-                  "android.permission.ACCESS_COARSE_LOCATION"};
+      new String[] { "android.permission.ACCESS_FINE_LOCATION",
+          "android.permission.ACCESS_COARSE_LOCATION" };
 
   /**
    * Verifies that any of the given permissions have been granted.
@@ -68,7 +68,8 @@ final class RuntimePermissionUtils {
    *
    * @param airMapInterface the callback interface if permission is granted.
    */
-  static boolean checkLocationPermissions(Activity targetActivity, AirMapInterface airMapInterface) {
+  static boolean checkLocationPermissions(Activity targetActivity,
+      AirMapInterface airMapInterface) {
     if (hasSelfPermissions(targetActivity, LOCATION_PERMISSIONS)) {
       airMapInterface.onLocationPermissionsGranted();
       return true;
@@ -85,10 +86,9 @@ final class RuntimePermissionUtils {
    * 1> Rationale: showing a snack bar to explain why the permissions are needed and
    * 2> Denied: adding airMapInterface.onLocationPermissionsDenied()
    * should be added here if needed.
-   *
    */
   static void onRequestPermissionsResult(AirMapInterface airMapInterface, int requestCode,
-          int[] grantResults) {
+      int[] grantResults) {
     switch (requestCode) {
       case LOCATION_PERMISSION_REQUEST_CODE:
         if (verifyPermissions(grantResults)) {

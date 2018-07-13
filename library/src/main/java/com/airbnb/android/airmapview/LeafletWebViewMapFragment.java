@@ -1,8 +1,8 @@
 package com.airbnb.android.airmapview;
 
-import java.util.Locale;
-
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Locale;
 
 public class LeafletWebViewMapFragment extends WebViewMapFragment {
   public static LeafletWebViewMapFragment newInstance(AirMapType mapType) {
@@ -34,7 +34,8 @@ public class LeafletWebViewMapFragment extends WebViewMapFragment {
       markers.put(marker.getId(), marker);
       webView.loadUrl(
           String.format(Locale.US,
-              "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s', %6$b, '%7$s', %8$d, %9$d);",
+              "javascript:addMarkerWithId(%1$f, %2$f, %3$d, '%4$s', '%5$s', %6$b, '%7$s', %8$d, " +
+                  "%9$d);",
               latLng.latitude, latLng.longitude, marker.getId(), marker.getTitle(),
               marker.getSnippet(), marker.getMarkerOptions().isDraggable(),
               marker.getDivIcon().getHtml(), marker.getDivIcon().getWidth(),

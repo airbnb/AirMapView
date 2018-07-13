@@ -30,8 +30,8 @@ public class DefaultAirMapViewBuilder {
 
   /**
    * @param isNativeMapSupported Whether or not Google Play services is available on the
-   *                                      device. If you set this to true and it is not available,
-   *                                      bad things can happen.
+   * device. If you set this to true and it is not available,
+   * bad things can happen.
    */
   public DefaultAirMapViewBuilder(Context context, boolean isNativeMapSupported) {
     this.isNativeMapSupported = isNativeMapSupported;
