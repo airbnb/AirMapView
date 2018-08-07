@@ -171,6 +171,11 @@ public class AirMapMarker<T> {
       return this;
     }
 
+    public Builder<T> zIndex(float zIndex) {
+      markerOptions.zIndex(zIndex);
+      return this;
+    }
+
     public AirMapMarker<T> build() {
       return new AirMapMarker<>(object, id, markerOptions);
     }
