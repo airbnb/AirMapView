@@ -41,6 +41,6 @@ public class MapboxWebMapViewBuilder implements AirMapViewBuilder<WebViewMapFrag
       return MapboxWebViewMapFragment.newInstance(options);
     }
     throw new IllegalStateException("Unable to build MapboxWebMapViewFragment." +
-            "  options == '" + options + "'");
+        "  options == '" + options + "'");
   }
 }

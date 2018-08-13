@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
@@ -28,7 +29,7 @@ import org.json.JSONException;
 
 public class AirMapView extends FrameLayout
     implements OnCameraChangeListener, OnMapClickListener, OnMapMarkerDragListener,
-               OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
+    OnMapMarkerClickListener, OnMapLoadedListener, OnInfoWindowClickListener {
 
   private static final int INVALID_ZOOM = -1;
 
@@ -226,7 +227,7 @@ public class AirMapView extends FrameLayout
   }
 
   public void drawCircle(LatLng latLng, int radius, int strokeColor, int strokeWidth,
-                         int fillColor) {
+      int fillColor) {
     if (isInitialized()) {
       mapInterface.drawCircle(latLng, radius, strokeColor, strokeWidth, fillColor);
     }

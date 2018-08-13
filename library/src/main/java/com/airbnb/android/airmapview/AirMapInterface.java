@@ -54,7 +54,7 @@ public interface AirMapInterface {
    * Set the callback for info window click events
    *
    * @param listener {@link com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener}
-   *                 instance
+   * instance
    */
   void setOnInfoWindowClickListener(OnInfoWindowClickListener listener);
 
@@ -120,7 +120,7 @@ public interface AirMapInterface {
    * Set the center of the map, and zoom level
    *
    * @param latLng the {@link LatLng} to set as center
-   * @param zoom   the zoom level
+   * @param zoom the zoom level
    */
   void setCenterZoom(LatLng latLng, int zoom);
 
@@ -128,7 +128,7 @@ public interface AirMapInterface {
    * Animate the center of the map to the given location and zoom level
    *
    * @param latLng the {@link LatLng} to animate to center
-   * @param zoom   the zoom level
+   * @param zoom the zoom level
    */
   void animateCenterZoom(LatLng latLng, int zoom);
 
@@ -136,19 +136,19 @@ public interface AirMapInterface {
    * Register a callback to be invoked when a map marker is clicked
    *
    * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener}
-   *                 callback
+   * callback
    */
   void setOnMarkerClickListener(OnMapMarkerClickListener listener);
 
   /**
-  * Register a callback to be invoked when a map marker is dragged
-  *
-  * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener}
-  *                 callback
-  */
+   * Register a callback to be invoked when a map marker is dragged
+   *
+   * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener}
+   * callback
+   */
   void setOnMarkerDragListener(OnMapMarkerDragListener listener);
 
-   /**
+  /**
    * Register a callback to be invoked when the map is clicked
    *
    * @param listener {@link com.airbnb.android.airmapview.listeners.OnMapClickListener} callback

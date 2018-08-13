@@ -14,7 +14,7 @@ public class MapboxWebMapType extends AirMapType {
    * Primary Constructor
    *
    * @param accessToken Mapbox Access Token
-   * @param mapId       Mapbox Map Id
+   * @param mapId Mapbox Map Id
    */
   public MapboxWebMapType(String accessToken, String mapId) {
     super("mapbox.html", "https://api.tiles.mapbox.com/mapbox.js/v2.2.1", "www.mapbox.com");
@@ -25,14 +25,14 @@ public class MapboxWebMapType extends AirMapType {
   /**
    * Private Constructor used for Bundle Serialization
    *
-   * @param fileName    File Name
-   * @param mapUrl      Map URL
-   * @param domain      Map Domain
+   * @param fileName File Name
+   * @param mapUrl Map URL
+   * @param domain Map Domain
    * @param accessToken Mapbox Access Token
-   * @param mapId       Mapbox Map Id
+   * @param mapId Mapbox Map Id
    */
   private MapboxWebMapType(String fileName, String mapUrl, String domain,
-                           String accessToken, String mapId) {
+      String accessToken, String mapId) {
     super(fileName, mapUrl, domain);
     this.accessToken = accessToken;
     this.mapId = mapId;
@@ -50,7 +50,7 @@ public class MapboxWebMapType extends AirMapType {
     String mapboxAccessToken = bundle.getString(ARG_MAPBOX_ACCESS_TOKEN, "");
     String mapboxMapId = bundle.getString(ARG_MAPBOX_MAPID, "");
     return new MapboxWebMapType(airMapType.getFileName(), airMapType.getMapUrl(),
-            airMapType.getDomain(), mapboxAccessToken, mapboxMapId);
+        airMapType.getDomain(), mapboxAccessToken, mapboxMapId);
   }
 
   @Override

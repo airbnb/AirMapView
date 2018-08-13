@@ -20,7 +20,7 @@ public class MapboxWebViewMapFragment extends WebViewMapFragment {
 
     MapboxWebMapType mapType = MapboxWebMapType.fromBundle(getArguments());
     webView.loadDataWithBaseURL(mapType.getDomain(), mapType.getMapData(getResources()),
-            "text/html", "base64", null);
+        "text/html", "base64", null);
 
     return view;
   }

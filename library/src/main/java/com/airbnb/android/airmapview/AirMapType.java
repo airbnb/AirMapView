@@ -2,6 +2,7 @@ package com.airbnb.android.airmapview;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+
 import java.util.Locale;
 
 /** Defines maps to be used with {@link com.airbnb.android.airmapview.WebViewMapFragment} */
