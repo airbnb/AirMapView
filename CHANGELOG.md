@@ -1,3 +1,7 @@
+# 1.8.1 Oct 11, 2018
+
+* Migrate Google Map tile api to `https` (PR #129)
+
 # 1.8.0 Aug 7, 2018
 
 * Added support for marker z-index (PR #126)
