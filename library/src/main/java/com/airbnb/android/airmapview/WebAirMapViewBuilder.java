@@ -7,7 +7,8 @@ public class WebAirMapViewBuilder implements AirMapViewBuilder<WebViewMapFragmen
 
   private AirMapType options;
 
-  @Override public AirMapViewBuilder<WebViewMapFragment, AirMapType> withOptions(AirMapType options) {
+  @Override
+  public AirMapViewBuilder<WebViewMapFragment, AirMapType> withOptions(AirMapType options) {
     this.options = options;
     return this;
   }

@@ -1,11 +1,11 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Color;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import android.graphics.Color;
 
 import java.util.List;
 
@@ -90,9 +90,9 @@ public class AirMapPolyline<T> {
   public void addToGoogleMap(GoogleMap googleMap) {
     // add the polyline and keep a reference so it can be removed
     googlePolyline = googleMap.addPolyline(new PolylineOptions()
-                                                .addAll(points)
-                                                .width(strokeWidth)
-                                                .color(strokeColor));
+        .addAll(points)
+        .width(strokeWidth)
+        .color(strokeColor));
   }
 
   /**

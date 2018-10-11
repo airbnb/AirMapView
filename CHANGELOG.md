@@ -1,3 +1,11 @@
+# 1.8.0 Aug 7, 2018
+
+* Added support for marker z-index (PR #126)
+
+# 1.7.0 Jul 10, 2018
+
+* Added Leaflet map type which supports Google, Baidu and Gaode map (PR #123)
+
 # 1.6.0 Jan 16, 2018
 
 * Fix enabling location and show location button (PR #117)

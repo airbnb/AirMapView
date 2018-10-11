@@ -30,7 +30,8 @@ public class AirMapMarker<T> {
     this(object, id, new MarkerOptions(), divIcon);
   }
 
-  private AirMapMarker(T object, long id, MarkerOptions markerOptions, @Nullable LeafletDivIcon divIcon) {
+  private AirMapMarker(T object, long id, MarkerOptions markerOptions,
+      @Nullable LeafletDivIcon divIcon) {
     this.object = object;
     this.id = id;
     this.markerOptions = markerOptions;
@@ -82,7 +83,8 @@ public class AirMapMarker<T> {
         .alpha(markerOptions.getAlpha())
         .anchor(markerOptions.getAnchorU(), markerOptions.getAnchorV())
         .bitmapDescriptor(markerOptions.getIcon())
-        .infoWindowAnchor(markerOptions.getInfoWindowAnchorU(), markerOptions.getInfoWindowAnchorV())
+        .infoWindowAnchor(markerOptions.getInfoWindowAnchorU(),
+            markerOptions.getInfoWindowAnchorV())
         .snippet(markerOptions.getSnippet())
         .title(markerOptions.getTitle())
         .draggable(markerOptions.isDraggable())
@@ -97,7 +99,7 @@ public class AirMapMarker<T> {
     }
     return builder;
   }
-  
+
   public Marker getMarker() {
     return marker;
   }
@@ -211,9 +213,15 @@ public class AirMapMarker<T> {
       return this;
     }
 
+    public Builder<T> zIndex(float zIndex) {
+      markerOptions.zIndex(zIndex);
+      return this;
+    }
+
     public AirMapMarker<T> build() {
       return new AirMapMarker<>(object, id, markerOptions,
-          divIconHtml == null ? null : new LeafletDivIcon(divIconHtml, divIconWidth, divIconHeight));
+          divIconHtml == null ? null :
+              new LeafletDivIcon(divIconHtml, divIconWidth, divIconHeight));
     }
   }
 }
