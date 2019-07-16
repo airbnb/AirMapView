@@ -1,3 +1,9 @@
+# 1.9.0 Jul 16, 2019
+
+* Fix crash from OnMapInitializedListener being called before map is laid out (PR #134)
+
+* Migrate Google Map tile api to `https` (PR #129)
+
 # 1.8.0 Aug 7, 2018
 
 * Added support for marker z-index (PR #126)
