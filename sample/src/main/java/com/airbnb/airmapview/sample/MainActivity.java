@@ -35,11 +35,13 @@ import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.airbnb.android.airmapview.listeners.OnLatLngScreenLocationCallback;
+import com.airbnb.android.airmapview.listeners.OnMapBoundsCallback;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 
@@ -309,5 +311,9 @@ public class MainActivity extends AppCompatActivity
 
   @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
+  }
+
+  @Override public boolean onMakerClickEventIsHandled() {
+    return true;
   }
 }

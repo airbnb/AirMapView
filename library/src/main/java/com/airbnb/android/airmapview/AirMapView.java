@@ -371,6 +371,14 @@ public class AirMapView extends FrameLayout
     }
   }
 
+  @Override public boolean onMakerClickEventIsHandled() {
+    if (onMapMarkerClickListener != null) {
+      return onMapMarkerClickListener.onMakerClickEventIsHandled();
+    } else {
+      return false;
+    }
+  }
+
   @Override public void onMapMarkerDragStart(Marker marker) {
     if (onMapMarkerDragListener != null) {
       onMapMarkerDragListener.onMapMarkerDragStart(marker);

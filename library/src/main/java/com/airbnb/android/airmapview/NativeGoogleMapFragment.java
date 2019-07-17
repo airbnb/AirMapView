@@ -225,7 +225,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
         if (airMarker != null) {
           listener.onMapMarkerClick(airMarker);
         }
-        return false;
+        return listener.onMakerClickEventIsHandled();
       }
     });
   }

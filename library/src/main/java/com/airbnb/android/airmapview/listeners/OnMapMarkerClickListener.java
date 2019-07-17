@@ -4,4 +4,6 @@ import com.airbnb.android.airmapview.AirMapMarker;
 
 public interface OnMapMarkerClickListener {
   void onMapMarkerClick(AirMapMarker<?> airMarker);
+
+  boolean onMakerClickEventIsHandled();
 }
