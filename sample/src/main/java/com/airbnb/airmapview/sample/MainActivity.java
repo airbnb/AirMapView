@@ -311,5 +311,4 @@ public class MainActivity extends AppCompatActivity
   @Override public void onLatLngScreenLocationReady(Point point) {
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
   }
-
 }
