@@ -299,8 +299,9 @@ public class MainActivity extends AppCompatActivity
     logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
-  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
     appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
+    return false;
   }
 
   @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {
@@ -311,7 +312,4 @@ public class MainActivity extends AppCompatActivity
     appendLog("LatLng location on screen (x,y): (" + point.x + "," + point.y + ")");
   }
 
-  @Override public boolean onMakerClickEventIsHandled() {
-    return true;
-  }
 }
