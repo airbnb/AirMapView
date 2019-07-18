@@ -223,7 +223,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       @Override public boolean onMarkerClick(Marker marker) {
         AirMapMarker<?> airMarker = markers.get(marker);
         if (airMarker != null) {
-          listener.onMapMarkerClick(airMarker);
+          return listener.onMapMarkerClick(airMarker);
         }
         return false;
       }
