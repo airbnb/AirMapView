@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 27
+  compileSdkVersion 28
 
   defaultConfig {
     applicationId "com.airbnb.airmapview.sample"
     minSdkVersion 26
-    targetSdkVersion 27
+    targetSdkVersion 28
     versionCode 1
     versionName "1.0"
     multiDexEnabled true
@@ -23,8 +23,8 @@ android {
 
 dependencies {
   implementation project(':library')
-  implementation 'com.android.support:multidex:1.0.3'
-  implementation 'com.android.support:recyclerview-v7:27.1.1'
-  implementation 'com.android.support:appcompat-v7:27.1.1'
-  implementation 'com.google.android.gms:play-services-maps:15.0.1'
+  implementation 'androidx.multidex:multidex:2.0.1'
+  implementation 'androidx.recyclerview:recyclerview:1.0.0'
+  implementation 'androidx.appcompat:appcompat:1.0.2'
+  implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }

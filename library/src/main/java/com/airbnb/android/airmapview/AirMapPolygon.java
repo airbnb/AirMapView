@@ -1,8 +1,8 @@
 package com.airbnb.android.airmapview;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;

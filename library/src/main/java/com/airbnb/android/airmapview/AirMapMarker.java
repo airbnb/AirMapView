@@ -1,8 +1,8 @@
 package com.airbnb.android.airmapview;
 
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
 
+import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;

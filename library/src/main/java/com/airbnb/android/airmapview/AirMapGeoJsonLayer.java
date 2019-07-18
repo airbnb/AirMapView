@@ -1,7 +1,6 @@
 package com.airbnb.android.airmapview;
 
-import android.support.annotation.ColorInt;
-
+import androidx.annotation.ColorInt;
 import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
 public class AirMapGeoJsonLayer {

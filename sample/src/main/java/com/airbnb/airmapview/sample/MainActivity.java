@@ -3,11 +3,11 @@ package com.airbnb.airmapview.sample;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -299,8 +299,9 @@ public class MainActivity extends AppCompatActivity
     logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
-  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
     appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
+    return false;
   }
 
   @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {
