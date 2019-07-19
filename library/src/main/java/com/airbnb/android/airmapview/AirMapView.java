@@ -365,11 +365,9 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
     if (onMapMarkerClickListener != null) {
-      return onMapMarkerClickListener.onMapMarkerClick(airMarker);
-    } else {
-      return false;
+      onMapMarkerClickListener.onMapMarkerClick(airMarker);
     }
   }
 
