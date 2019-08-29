@@ -282,6 +282,11 @@ function centerMap(lat, lng) {
   map.panTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
 }
 
+function animateCenterMap(lat, lng) {
+  var latLng = convertLatLng([lat, lng]);
+  map.flyTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
+}
+
 function setZoom(zoom) {
   map.setZoom(zoom);
 }
