@@ -1,14 +1,14 @@
 package com.airbnb.android.airmapview;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnCameraMoveListener;
@@ -365,9 +365,11 @@ public class AirMapView extends FrameLayout
     }
   }
 
-  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
     if (onMapMarkerClickListener != null) {
-      onMapMarkerClickListener.onMapMarkerClick(airMarker);
+      return onMapMarkerClickListener.onMapMarkerClick(airMarker);
+    } else {
+      return false;
     }
   }
 
@@ -416,9 +418,9 @@ public class AirMapView extends FrameLayout
       mapInterface.setOnInfoWindowClickListener(this);
 
       if (onMapInitializedListener != null) {
-        // only send map Initialized callback if map initialized successfully
+        // only send map Initialized callback if map initialized successfully and is laid out
         // initialization can fail if the map leaves the screen before it loads
-        onMapInitializedListener.onMapInitialized();
+        MapLaidOutCheckKt.doWhenMapIsLaidOut(this, () -> onMapInitializedListener.onMapInitialized());
       }
     }
   }

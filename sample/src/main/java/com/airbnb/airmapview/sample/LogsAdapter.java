@@ -1,8 +1,8 @@
 package com.airbnb.airmapview.sample;
 
 import android.graphics.Bitmap;
-import android.support.annotation.IntDef;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.IntDef;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;

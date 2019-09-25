@@ -3,11 +3,11 @@ package com.airbnb.android.airmapview;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -223,7 +223,7 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
       @Override public boolean onMarkerClick(Marker marker) {
         AirMapMarker<?> airMarker = markers.get(marker);
         if (airMarker != null) {
-          listener.onMapMarkerClick(airMarker);
+          return listener.onMapMarkerClick(airMarker);
         }
         return false;
       }

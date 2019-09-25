@@ -1,7 +1,7 @@
 package com.airbnb.android.airmapview.listeners;
 
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public interface OnSnapshotReadyListener {
   void onSnapshotReady(@Nullable Bitmap bitmap);

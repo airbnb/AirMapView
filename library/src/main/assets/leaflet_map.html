@@ -137,17 +137,17 @@ L.tileLayer.providers = {
   },
   Google: {
     Normal: {
-      map: 'http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      map: 'https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
       subdomains: [],
       tms: false
     },
     Satellite: {
-      map: 'http://maps.googleapis.com/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
+      map: 'https://maps.googleapis.com/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
       subdomains: [],
       tms: false
     },
     Terrain: {
-      map: 'http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      map: 'https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
       subdomains: [],
       tms: false
     },
@@ -157,17 +157,17 @@ L.tileLayer.providers = {
   },
   GoogleChina: {
     Normal: {
-      map: 'http://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      map: 'https://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i423123272!3m9!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
       subdomains: [],
       tms: false
     },
     Satellite: {
-      map: 'http://ditu.google.cn/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
+      map: 'https://ditu.google.cn/maps/vt?lyrs=s@189&gl=LANGTOKEN&x={x}&y={y}&z={z}',
       subdomains: [],
       tms: false
     },
     Terrain: {
-      map: 'http://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
+      map: 'https://ditu.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i427!2m3!1e0!2sr!3i427129704!3m12!2sLANGTOKEN!3sREGIONTOKEN!5e18!12m4!1e68!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875',
       subdomains: [],
       tms: false
     },
@@ -280,6 +280,11 @@ function latLngFromPaddingLatLng(paddingLatLng) {
 function centerMap(lat, lng) {
   var latLng = convertLatLng([lat, lng]);
   map.panTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
+}
+
+function animateCenterMap(lat, lng) {
+  var latLng = convertLatLng([lat, lng]);
+  map.flyTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
 }
 
 function setZoom(zoom) {
