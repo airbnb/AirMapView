@@ -299,9 +299,8 @@ public class MainActivity extends AppCompatActivity
     logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
-  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
     appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
-    return false;
   }
 
   @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {
