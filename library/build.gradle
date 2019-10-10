@@ -17,11 +17,6 @@ android {
   }
 }
 
-// Disable Javadoc task as it is not compatible with Kotlin
-tasks.withType(Javadoc).all {
-    enabled = false
-}
-
 dependencies {
   api 'com.google.android.gms:play-services-maps:17.0.0'
   api 'com.google.maps.android:android-maps-utils:0.4'
