@@ -263,32 +263,40 @@ function setBounds(neLat, neLng, swLat, swLng) {
   map.fitBounds(bounds);
 }
 
-function paddingLatLngFromLatLng(latLng) {
-  var centerPoint = map.latLngToContainerPoint(latLng);
-  centerPoint.x = centerPoint.x - (paddingLeft - paddingRight) / 2;
-  centerPoint.y = centerPoint.y - (paddingTop - paddingBottom) / 2;
-  return map.containerPointToLatLng(centerPoint);
+function paddingLatLngFromLatLng(latlng, zoom) {
+  var point = map.project(latlng, zoom);
+  point.x = point.x - (paddingLeft - paddingRight) / 2
+  point.y = point.y - (paddingTop - paddingBottom) / 2;
+  return map.unproject(point, zoom);
 }
 
-function latLngFromPaddingLatLng(paddingLatLng) {
-  var centerPoint = map.latLngToContainerPoint(paddingLatLng);
-  centerPoint.x = centerPoint.x + (paddingLeft - paddingRight) / 2;
-  centerPoint.y = centerPoint.y + (paddingTop - paddingBottom) / 2;
-  return map.containerPointToLatLng(centerPoint);
+function latLngFromPaddingLatLng(latlng, zoom) {
+  var point = map.project(latlng, zoom);
+  point.x = point.x + (paddingLeft - paddingRight) / 2
+  point.y = point.y + (paddingTop - paddingBottom) / 2;
+  return map.unproject(point, zoom);
 }
 
 function centerMap(lat, lng) {
+  centerZoomMap(lat, lng, map.getZoom())
+}
+
+function centerZoomMap(lat, lng, zoom) {
   var latLng = convertLatLng([lat, lng]);
-  map.panTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
+  map.setView(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1]), zoom), zoom, {animate:false});
 }
 
 function animateCenterMap(lat, lng) {
+  animateCenterZoomMap(lat, lng, map.getZoom())
+}
+
+function animateCenterZoomMap(lat, lng, zoom) {
   var latLng = convertLatLng([lat, lng]);
-  map.flyTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1])));
+  map.flyTo(paddingLatLngFromLatLng(L.latLng(latLng[0], latLng[1]), zoom), zoom, {duration:0.5});
 }
 
 function setZoom(zoom) {
-  map.setZoom(zoom);
+  map.setZoomAround(getPaddingCenter(), zoom)
 }
 
 function icon(highlight) {
@@ -477,7 +485,7 @@ function mapMove() {
   }
   // javascript bridge not fast enough to handle events immediately.
   moveTimeout = setTimeout(function() {
-    var latLng = map.getCenter();
+    var latLng = getPaddingCenter();
     if (latLng != null) {
       var convertedLatLng = reverseConvertLatLng([ latLng.lat, latLng.lng ]);
       AirMapView.mapMove(convertedLatLng[0], convertedLatLng[1], map.getZoom());
@@ -486,11 +494,15 @@ function mapMove() {
 }
 
 function getCenter() {
-  var latLng = latLngFromPaddingLatLng(map.getCenter());
+  var latLng = getPaddingCenter();
   if (latLng != null) {
     var convertedLatLng = reverseConvertLatLng([ latLng.lat, latLng.lng ]);
     AirMapView.mapCenterCallback(convertedLatLng[0], convertedLatLng[1]);
   }
+}
+
+function getPaddingCenter() {
+  return latLngFromPaddingLatLng(map.getCenter(), map.getZoom());
 }
 
 function getBounds() {
@@ -506,16 +518,14 @@ function getScreenLocation(lat, lng) {
   var latLng = convertLatLng([lat, lng]);
   var latLngObject = L.latLng(latLng[0], latLng[1]);
   var screenLocation = map.latLngToContainerPoint(latLngObject);
-  AirMapView.getLatLngScreenLocationCallback(screenLocation.x, screenLocation.y);
+  AirMapView.getLatLngScreenLocationCallback(screenLocation.x * window.devicePixelRatio, screenLocation.y * window.devicePixelRatio);
 }
 
 function setPadding(left, top, right, bottom) {
-  var centerLatLng = latLngFromPaddingLatLng(map.getCenter());
   paddingLeft = left / window.devicePixelRatio;
   paddingTop = top / window.devicePixelRatio;
   paddingRight = right / window.devicePixelRatio;
   paddingBottom = bottom / window.devicePixelRatio;
-  map.panTo(paddingLatLngFromLatLng(centerLatLng));
 }
 
 // converts an android int color to a web color :)
