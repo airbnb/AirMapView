@@ -1,5 +1,7 @@
 package com.airbnb.android.airmapview;
 
+import android.graphics.Point;
+
 import com.airbnb.android.airmapview.listeners.InfoWindowCreator;
 import com.airbnb.android.airmapview.listeners.OnCameraChangeListener;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -9,6 +11,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnScreenLocationLatLngCallback;
 import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -89,6 +92,12 @@ public interface AirMapInterface {
    * {@link OnLatLngScreenLocationCallback}
    */
   void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback);
+
+  /**
+   * Returns LatLng of the the point coordinates in the container to the supplied
+   * {@link OnLatLngScreenLocationCallback}
+   */
+  void fromScreenLocation(Point point, OnScreenLocationLatLngCallback callback);
 
   /** Sets the given {@link LatLngBounds} on the map with the specified padding */
   void setCenter(LatLngBounds latLngBounds, int boundsPadding);
