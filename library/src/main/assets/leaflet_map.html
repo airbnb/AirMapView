@@ -265,20 +265,20 @@ function setBounds(neLat, neLng, swLat, swLng) {
 
 function paddingLatLngFromLatLng(latlng, zoom) {
   var point = map.project(latlng, zoom);
-  point.x = point.x - (paddingLeft - paddingRight) / 2
+  point.x = point.x - (paddingLeft - paddingRight) / 2;
   point.y = point.y - (paddingTop - paddingBottom) / 2;
   return map.unproject(point, zoom);
 }
 
 function latLngFromPaddingLatLng(latlng, zoom) {
   var point = map.project(latlng, zoom);
-  point.x = point.x + (paddingLeft - paddingRight) / 2
+  point.x = point.x + (paddingLeft - paddingRight) / 2;
   point.y = point.y + (paddingTop - paddingBottom) / 2;
   return map.unproject(point, zoom);
 }
 
 function centerMap(lat, lng) {
-  centerZoomMap(lat, lng, map.getZoom())
+  centerZoomMap(lat, lng, map.getZoom());
 }
 
 function centerZoomMap(lat, lng, zoom) {
@@ -296,7 +296,7 @@ function animateCenterZoomMap(lat, lng, zoom) {
 }
 
 function setZoom(zoom) {
-  map.setZoomAround(getPaddingCenter(), zoom)
+  map.setZoomAround(getPaddedCenter(), zoom);
 }
 
 function icon(highlight) {
@@ -485,7 +485,7 @@ function mapMove() {
   }
   // javascript bridge not fast enough to handle events immediately.
   moveTimeout = setTimeout(function() {
-    var latLng = getPaddingCenter();
+    var latLng = getPaddedCenter();
     if (latLng != null) {
       var convertedLatLng = reverseConvertLatLng([ latLng.lat, latLng.lng ]);
       AirMapView.mapMove(convertedLatLng[0], convertedLatLng[1], map.getZoom());
@@ -494,14 +494,17 @@ function mapMove() {
 }
 
 function getCenter() {
-  var latLng = getPaddingCenter();
+  var latLng = getPaddedCenter();
   if (latLng != null) {
     var convertedLatLng = reverseConvertLatLng([ latLng.lat, latLng.lng ]);
     AirMapView.mapCenterCallback(convertedLatLng[0], convertedLatLng[1]);
   }
 }
 
-function getPaddingCenter() {
+/**
+* Get center latLng of the map view with padding
+*/
+function getPaddedCenter() {
   return latLngFromPaddingLatLng(map.getCenter(), map.getZoom());
 }
 
