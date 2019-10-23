@@ -18,39 +18,49 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/bottom_tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="bottom">
 
-            <Button
-                android:id="@+id/btnMapTypeNormal"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Normal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btnMapTypeNormal"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Normal" />
 
-            <Button
-                android:id="@+id/btnMapTypeSattelite"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Satellite" />
+                <Button
+                    android:id="@+id/btnMapTypeSattelite"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Satellite" />
 
-            <Button
-                android:id="@+id/btnMapTypeTerrain"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Terrain" />
+                <Button
+                    android:id="@+id/btnMapTypeTerrain"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Terrain" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/logs"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@android:color/white"
+                app:layoutManager="LinearLayoutManager" />
 
         </LinearLayout>
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/logs"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layoutManager="LinearLayoutManager" />
+
 
 </LinearLayout>

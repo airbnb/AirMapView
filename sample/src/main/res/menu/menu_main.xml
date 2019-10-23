@@ -73,5 +73,30 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/add_padding"
+        android:title="Add Padding"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/center_map"
+        android:title="Center map"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/animateCenter"
+        android:title="Animate Center"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/zoom"
+        android:title="Zoom"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/animateCenterZoom"
+        android:title="Animate Center Zoom"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
 </menu>
 

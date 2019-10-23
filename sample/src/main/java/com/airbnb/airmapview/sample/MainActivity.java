@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
   private RecyclerView logsRecyclerView;
+  private View bottomToolsView;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
 
     mapViewBuilder = new DefaultAirMapViewBuilder(this);
     map = findViewById(R.id.map);
+    bottomToolsView = findViewById(R.id.bottom_tools);
     logsRecyclerView = findViewById(R.id.logs);
     ((LinearLayoutManager) logsRecyclerView.getLayoutManager()).setReverseLayout(true);
     logsRecyclerView.setAdapter(adapter);
@@ -178,6 +180,27 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.disable_location:
         map.setMyLocationEnabled(false);
+      case R.id.add_padding:
+        map.setPadding(0, 0, 0, bottomToolsView.getHeight());
+        break;
+      case R.id.center_map: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.setCenter(wfcLatLng);
+        break;
+      }
+      case R.id.animateCenter: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.animateCenter(wfcLatLng);
+        break;
+      }
+      case R.id.zoom:
+        map.setZoom(15);
+        break;
+      case R.id.animateCenterZoom: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.animateCenterZoom(wfcLatLng, 15);
+        break;
+      }
       default:
         break;
     }
