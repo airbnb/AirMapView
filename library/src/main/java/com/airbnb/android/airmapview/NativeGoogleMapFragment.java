@@ -17,6 +17,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnScreenLocationLatLngCallback;
 import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -167,6 +168,11 @@ public class NativeGoogleMapFragment extends SupportMapFragment implements AirMa
 
   @Override public void getScreenLocation(LatLng latLng, OnLatLngScreenLocationCallback callback) {
     callback.onLatLngScreenLocationReady(googleMap.getProjection().toScreenLocation(latLng));
+  }
+
+  @Override
+  public void fromScreenLocation(Point point, OnScreenLocationLatLngCallback callback) {
+    callback.onScreenLocationLatLngReady(googleMap.getProjection().fromScreenLocation(point));
   }
 
   @Override public void setCenter(LatLngBounds latLngBounds, int boundsPadding) {

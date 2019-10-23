@@ -524,6 +524,16 @@ function getScreenLocation(lat, lng) {
   AirMapView.getLatLngScreenLocationCallback(screenLocation.x * window.devicePixelRatio, screenLocation.y * window.devicePixelRatio);
 }
 
+function fromScreenLocation(x, y) {
+  x = x / window.devicePixelRatio;
+  y = y / window.devicePixelRatio;
+  var latLng = map.containerPointToLatLng(L.point(x, y));
+  if (latLng != null) {
+    var convertedLatLng = reverseConvertLatLng([ latLng.lat, latLng.lng ]);
+    AirMapView.getScreenLocationLatLngCallback(convertedLatLng[0], convertedLatLng[1]);
+  }
+}
+
 function setPadding(left, top, right, bottom) {
   paddingLeft = left / window.devicePixelRatio;
   paddingTop = top / window.devicePixelRatio;
