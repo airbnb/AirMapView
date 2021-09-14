@@ -1,4 +1,4 @@
-# AirMapView
+# AirMapView2
 
 [![Build Status](https://travis-ci.org/airbnb/AirMapView.svg)](https://travis-ci.org/airbnb/AirMapView)
 
