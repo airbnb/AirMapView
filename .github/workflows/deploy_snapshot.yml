@@ -18,6 +18,14 @@ jobs:
         with:
           distribution: liberica
           java-version: '8'
+      - name: Create sytem gradle.properties
+        env:
+          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
+        shell: bash
+        run: |
+          mkdir -p ~/.gradle/
+          echo "GRADLE_USER_HOME=${HOME}/.gradle" >> $GITHUB_ENV
+          echo "${GRADLE_PROPERTIES}" > ~/.gradle/gradle.properties
       - name: Deploy new snapshot of AirMapView
         shell: bash
         env:
