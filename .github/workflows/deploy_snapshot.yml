@@ -28,7 +28,4 @@ jobs:
           echo "${GRADLE_PROPERTIES}" > ~/.gradle/gradle.properties
       - name: Deploy new snapshot of AirMapView
         shell: bash
-        env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: ./gradlew uploadArchives
