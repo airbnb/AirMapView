@@ -38,5 +38,6 @@ if (JavaVersion.current().isJava8Compatible()) {
   }
 }
 repositories {
+  google()
   mavenCentral()
 }
