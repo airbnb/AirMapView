@@ -30,7 +30,7 @@ dependencies {
   testImplementation 'org.hamcrest:hamcrest-library:1.3'
 }
 
-if (JavaVersion.current().isJava8Compatible()) {
+if (JavaVersion.current().isJava8Compatible() || JavaVersion.current().isJava11Compatible()) {
   allprojects {
     tasks.withType(Javadoc) {
       options.addStringOption('Xdoclint:none', '-quiet')
@@ -38,5 +38,6 @@ if (JavaVersion.current().isJava8Compatible()) {
   }
 }
 repositories {
+  google()
   mavenCentral()
 }
