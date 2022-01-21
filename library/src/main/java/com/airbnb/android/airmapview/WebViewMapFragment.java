@@ -28,6 +28,7 @@ import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapLoadedListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerClickListener;
 import com.airbnb.android.airmapview.listeners.OnMapMarkerDragListener;
+import com.airbnb.android.airmapview.listeners.OnScreenLocationLatLngCallback;
 import com.airbnb.android.airmapview.listeners.OnSnapshotReadyListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,6 +54,7 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
   private InfoWindowCreator infoWindowCreator;
   private OnMapBoundsCallback onMapBoundsCallback;
   private OnLatLngScreenLocationCallback onLatLngScreenLocationCallback;
+  private OnScreenLocationLatLngCallback onScreenLocationLatLngCallback;
   private LatLng center;
   private int zoom;
   private boolean loaded;
@@ -322,6 +324,13 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
         latLng.latitude, latLng.longitude));
   }
 
+  @Override
+  public void fromScreenLocation(Point point, OnScreenLocationLatLngCallback callback) {
+    onScreenLocationLatLngCallback = callback;
+    webView.loadUrl(String.format(Locale.US, "javascript:fromScreenLocation(%1$d, %2$d);",
+            point.x, point.y));
+  }
+
   @Override public void setCenter(LatLngBounds bounds, int boundsPadding) {
     webView.loadUrl(String.format(Locale.US, "javascript:setBounds(%1$f, %2$f, %3$f, %4$f);",
         bounds.northeast.latitude, bounds.northeast.longitude,
@@ -382,6 +391,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
       handler.post(new Runnable() {
         @Override public void run() {
           onLatLngScreenLocationCallback.onLatLngScreenLocationReady(point);
+        }
+      });
+    }
+
+    @JavascriptInterface public void getScreenLocationLatLngCallback(final double lat, final double lng) {
+      handler.post(new Runnable() {
+        @Override public void run() {
+          onScreenLocationLatLngCallback.onScreenLocationLatLngReady(new LatLng(lat, lng));
         }
       });
     }
